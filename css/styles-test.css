@@ -1,0 +1,734 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p,
+	blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn,
+	em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var,
+	b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend,
+	table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas,
+	details, embed, figure, figcaption, footer, header, hgroup, menu, nav,
+	output, ruby, section, summary, time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup,
+	menu, nav, section {
+	display: block;
+}
+
+ie6 img {
+	width: 100%;
+}
+
+body {
+	line-height: 1;
+	font-family: 'Roboto Condensed', Segoe UI, sans-serif;
+	font-size: 0.8em;
+	background:
+		url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAG0lEQVQIW2MsLS39393dzcgABXAGhgBMJYYKAFftCAV8LvT5AAAAAElFTkSuQmCC)
+		repeat, #888;
+	overflow-x: hidden;
+	height: 100%;
+}
+
+ol, ul {
+	list-style: none;
+}
+
+blockquote, q {
+	quotes: none;
+}
+
+blockquote:before, blockquote:after, q:before, q:after {
+	content: '';
+	content: none;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+ol, ul {
+	list-style: none;
+}
+
+h1 {
+	font-size: 1.2em;
+	font-weight: bold;
+	margin-bottom: 0.4em;
+}
+
+figure {
+	text-align: center;
+	position: relative;
+	margin: 0;
+	padding: 0;
+}
+
+figure.ad {
+	margin-bottom: 10px;
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+	margin-right: 0;
+	border: 0;
+}
+
+img.commercial {
+	margin-bottom: 10px;
+}
+
+.clear {
+	clear: both;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.left {
+	float: left;
+}
+
+video {
+	max-width: 100%;
+	height: auto;
+}
+
+/* STRUKTUR */
+#container {
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+header {
+	background: url(../images/mario-himmel-50.png);
+	background-repeat: repeat-x;
+	height: 50px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	/* box-sizing */
+	*behavior: url(/scripts/boxsizing.htc);
+	text-align: center;
+	padding-top: 0.5em;
+}
+
+#logo {
+	display: block;
+	background: url(../images/marioquiz-logo2.png) no-repeat;
+	height: 20px;
+	width: 152px;
+	background-position: center; /* IE fix */
+	margin: 0 auto;
+}
+
+#antwort, #einleitung {
+	width: 100%;
+	padding: 0.6em 2.083333333333333%;
+	background: url(../images/background.png) repeat, #fff;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	/* box-sizing */
+	*behavior: url(/scripts/boxsizing.htc);
+	text-align: center;
+	overflow: auto;
+}
+
+#antwort h1 {
+	position: relative;
+}
+
+#inhaltswrapper {
+	width: 100%;
+	margin: 0 auto;
+	text-align: left;
+}
+
+#einleitung h1 {
+	text-align: center;
+}
+
+#einleitung p {
+	font-size: 1.2em;
+	text-align: left;
+	padding-top: 2%;
+	padding-bottom: 2%;
+	line-height: 1.4em;
+}
+
+#einleitung h2 {
+	font-size: 1.4em;
+	margin-bottom: 0.4em;
+	margin-top: 0.8em;
+	font-weight: bold;
+}
+
+#einleitung p.richtigeantwort {
+	font-weight: bold;
+}
+
+#antwort a, #einleitung a {
+	padding: 0.3em 2%;
+	display: inline-block;
+	text-align: left;
+	font-size: 1.1em;
+	line-height: normal;
+	width: 100%;
+	text-decoration: none;
+	margin-top: 0.4em;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	/* box-sizing */
+	*behavior: url(/scripts/boxsizing.htc);
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	color: white;
+	border: 0.15em solid #15aeec;
+	-webkit-border-radius: 0.2em;
+	-moz-border-radius: 0.2em;
+	border-radius: 0.2em;
+	background-color: #49c0f0;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#49c0f0),
+		to(#2CAFE3));
+	background-image: -webkit-linear-gradient(top, #49c0f0, #2CAFE3);
+	background-image: -moz-linear-gradient(top, #49c0f0, #2CAFE3);
+	background-image: -ms-linear-gradient(top, #49c0f0, #2CAFE3);
+	background-image: -o-linear-gradient(top, #49c0f0, #2CAFE3);
+	background-image: linear-gradient(to bottom, #49c0f0, #2CAFE3);
+	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,
+		startColorstr=#49c0f0, endColorstr=#2CAFE3);
+	position: relative;
+}
+
+#antwort em {
+	padding: 0.3em 2%;
+	display: inline-block;
+	text-align: left;
+	font-size: 1.1em;
+	line-height: normal;
+	width: 100%;
+	text-decoration: none;
+	margin-top: 0.4em;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	/* box-sizing */
+	*behavior: url(/scripts/boxsizing.htc);
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	color: #f2f2f2;
+	border: 0.15em solid #888;
+	-webkit-border-radius: 0.2em;
+	-moz-border-radius: 0.2em;
+	border-radius: 0.2em;
+	background-color: #ccc;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#999),
+		to(#CCC));
+	background-image: -webkit-linear-gradient(top, #999, #ccc);
+	background-image: -moz-linear-gradient(top, #999, #ccc);
+	background-image: -ms-linear-gradient(top, #999, #ccc);
+	background-image: -o-linear-gradient(top, #999, #ccc);
+	background-image: linear-gradient(to bottom, #999, #ccc);
+	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,
+		startColorstr=#999, endColorstr=#ccc);
+	position: relative;
+}
+
+#einleitung a {
+	text-align: center;
+	font-size: 1.2em;
+	margin-bottom: 4%;
+	padding-top: 1.8%;
+	padding-bottom: 1.8%;
+}
+
+#einleitung a:after {
+	content: '\f101';
+	font-family: FontAwesome;
+	margin-left: 10px;
+}
+
+#antwort li:last-child {
+	margin-bottom: 1em;
+}
+
+#antwort a:after, #antwort em:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background: url(../images/rauschen.png);
+	opacity: 0.04;
+	z-index: 0;
+}
+
+#antwort a span, #antwort em span {
+	display: block;
+	float: left;
+	width: 90%;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	/* box-sizing */
+	*behavior: url(/scripts/boxsizing.htc);
+}
+
+#antwort a.a1:before, #antwort em.a1:before {
+	content: 'A:';
+	float: left;
+	width: 10%;
+	display: block;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	/* box-sizing */
+	*behavior: url(/scripts/boxsizing.htc);
+}
+
+#antwort a.a2:before, #antwort em.a2:before {
+	content: 'B:';
+	float: left;
+	width: 10%;
+	display: block;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	/* box-sizing */
+	*behavior: url(/scripts/boxsizing.htc);
+}
+
+#antwort a.a3:before, #antwort em.a3:before {
+	content: 'C:';
+	float: left;
+	width: 10%;
+	display: block;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	/* box-sizing */
+	*behavior: url(/scripts/boxsizing.htc);
+}
+
+#antwort a.a4:before, #antwort em.a4:before {
+	content: 'D:';
+	float: left;
+	width: 10%;
+	display: block;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	/* box-sizing */
+	*behavior: url(/scripts/boxsizing.htc);
+}
+
+#antwort a:hover, #einleitung a:hover {
+	border: 0.15em solid #1090c3;
+	background-color: #1ab0ec;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#1ab0ec),
+		to(#1a92c2));
+	background-image: -webkit-linear-gradient(top, #1ab0ec, #1a92c2);
+	background-image: -moz-linear-gradient(top, #1ab0ec, #1a92c2);
+	background-image: -ms-linear-gradient(top, #1ab0ec, #1a92c2);
+	background-image: -o-linear-gradient(top, #1ab0ec, #1a92c2);
+	background-image: linear-gradient(to bottom, #1ab0ec, #1a92c2);
+	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,
+		startColorstr=#1ab0ec, endColorstr=#1a92c2);
+}
+
+/* ASIDE - NAME, PUNKTE, ZEIT */
+aside {
+	width: 100%;
+	color: #333;
+	margin-top: 0.3em;
+	font-size: 0.9em;
+}
+
+aside li {
+	display: inline-block;
+	margin-right: 1.225em;
+}
+
+aside li#paused:after {
+	content: '\f04c';
+	font-family: FontAwesome;
+	margin-left: 10px;
+}
+
+aside li:last-child {
+	margin-right: 0;
+}
+
+/* NAVIGATION - JOKER */
+#joker {
+	text-align: center;
+	width: 100%;
+}
+
+#joker li {
+	display: inline-block;
+	padding: 0.4em 0;
+	margin-right: 1.8em;
+}
+
+#joker li.jokertitle {
+	color: white;
+}
+
+#joker li:last-child {
+	margin-right: 0;
+}
+
+#joker li a {
+	display: block;
+	height: 2.0em;
+	width: 2.0em;
+	color: white;
+	text-decoration: none;
+	border-bottom: 2px solid #3c2b00;
+	border-top: 2px solid #f2de01;
+	border-right: 2px solid #9d8300;
+	border-left: 2px solid #be9b01;
+	text-shadow: 1px 1px #be9b01;
+	background: url(../images/background-joker.png) no-repeat 100% 100%,
+		#f2cb01;
+	background-color: #f2cb01;
+	background-size: contain;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 2.0em;
+	font-size: 1.2em;
+}
+
+#joker li a:hover {
+	border-top: 2px solid #3c2b00;
+	border-bottom: 2px solid #f2de01;
+	border-left: 2px solid #9d8300;
+	border-right: 2px solid #be9b01;
+	text-shadow: 1px 1px #be9b01;
+	background: url(../images/background-joker.png) no-repeat 100% 100%,
+		#d9b603;
+	background-color: #d9b603;
+	background-size: contain;
+	color: #F3F2ED;
+}
+
+#joker li a:active {
+	position: relative;
+	top: 1px;
+}
+
+#joker li em.skip:after {
+	content: '\f051 ';
+	font-family: FontAwesome;
+}
+
+#joker li em.fifty:after {
+	content: '\f123 ';
+	font-family: FontAwesome;
+}
+
+#joker li em.pause:after {
+	content: '\f04c ';
+	font-family: FontAwesome;
+}
+
+#joker li em.highscore:after {
+	content: '\f0cb ';
+	font-family: FontAwesome;
+}
+
+#joker li em.manual:after {
+	content: '\f0eb ';
+	font-family: FontAwesome;
+}
+
+#joker li em.start:after {
+	content: '\f101 ';
+	font-family: FontAwesome;
+}
+
+#joker li em.home:after {
+	content: '\f015 ';
+	font-family: FontAwesome;
+}
+
+#joker li em.login:after {
+	content: '\f007 ';
+	font-family: FontAwesome;
+}
+
+#ad {
+	margin-top: 2em;
+}
+
+/* FOOTER */
+footer {
+	width: 100%;
+	padding: 1em 2.083333333333333%;
+	text-align: center;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	/* box-sizing */
+	*behavior: url(/scripts/boxsizing.htc);
+	overflow: auto;
+}
+
+footer li {
+	display: inline-block;
+	padding: 0.6em 1.2em 0.5em 0;
+}
+
+footer li:last-child {
+	padding-right: 0;
+}
+
+footer li a, footer a {
+	text-decoration: none;
+	color: white;
+	border: 0;
+}
+
+footer img.logo {
+	margin-top: 0.6em;
+}
+
+/* FORMULAR */
+input.login {
+	width: 100%;
+	display: block;
+	padding: 0.25em 0;
+	margin: 0.5em 0em;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	/* box-sizing */
+	*behavior: url(/scripts/boxsizing.htc);
+}
+
+span.login-p {
+	text-align: left;
+	font-size: 1em;
+	padding: 0.25em 0;
+	margin: 0;
+}
+
+@media screen and (min-width:500px) {
+	aside li {
+		display: inline-block;
+		margin-right: 4em;
+	}
+	#antwort .a1, #antwort .a2, #antwort .a3, #antwort .a4 {
+		width: 49%;
+		height: 3.3em;
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		/* box-sizing */
+		*behavior: url(/scripts/boxsizing.htc);
+	}
+	#antwort .a1, #antwort .a3 {
+		float: left;
+		margin-right: 0.5%;
+	}
+	#joker li {
+		margin-right: 1.4em;
+	}
+	#joker li a {
+		height: 2.6em;
+		width: 2.6em;
+		line-height: 2.6em;
+		font-size: 1.4em;
+	}
+	#antwort .a2, #antwort .a4 {
+		float: right;
+		margin-left: 0.5%;
+	}
+	#antwort .a1, #antwort .a2 {
+		margin-top: 0;
+	}
+	#antwort a span {
+		width: 90%;
+	}
+	#inhaltswrapper {
+		width: 50%;
+		margin: 0 auto;
+	}
+	footer li a, footer a {
+		padding: 0.6em 1.2em 0.5em 0;
+	}
+	input.login {
+		padding: 0.25em 0;
+		font-size: 1.1em;
+		margin-bottom: 1.5em;
+	}
+}
+
+@media screen and (min-height:560px) {
+	h1 {
+		font-size: 1.4em;
+		margin-bottom: 2%;
+	}
+	header {
+		background: url(../images/mario-himmel-90.png);
+		background-repeat: repeat-x;
+		height: 90px;
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		/* box-sizing */
+		*behavior: url(/scripts/boxsizing.htc);
+		text-align: center;
+		padding-top: 0.5em;
+	}
+	#logo {
+		display: block;
+		background: url(../images/marioquiz-logo-300.png) no-repeat;
+		height: 40px;
+		width: 300px;
+		background-position: center; /* IE fix */
+		margin: 0 auto;
+		margin-bottom: 1.2em;
+	}
+	#joker li.jokertitle {
+		font-size: 1.1em;
+	}
+	#antwort, #einleitung {
+		padding-top: 3%;
+		padding-bottom: 4%;
+	}
+	#antwort a {
+		padding: 0.5em 2%;
+	}
+}
+
+@media screen and (min-height:750px) {
+	body {
+		font-size: 0.9em;
+	}
+	header {
+		background: url(../images/mario-himmel-110.png);
+		background-repeat: repeat-x;
+		height: 110px;
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		/* box-sizing */
+		*behavior: url(/scripts/boxsizing.htc);
+		text-align: center;
+		padding-top: 0.5em;
+	}
+	#logo {
+		display: block;
+		background: url(../images/marioquiz-logo-300.png) no-repeat;
+		height: 40px;
+		width: 300px;
+		background-position: center; /* IE fix */
+		margin: 0 auto;
+		margin-bottom: 1.2em;
+		margin-top: 1em;
+	}
+	aside ul li {
+		font-size: 1.4em;
+	}
+	#antwort, #einleitung {
+		padding-top: 2%;
+		padding-bottom: 2%;
+	}
+	#joker li {
+		margin-right: 2.0em;
+	}
+	#joker li.jokertitle {
+		font-size: 1.2em;
+	}
+	h1 {
+		margin-bottom: 3%;
+	}
+	#logo {
+		background: url(../images/marioquiz-logo-300.png) no-repeat center;
+		height: 40px;
+		margin-bottom: 1.4%;
+	}
+	#antwort .a1, #antwort .a2, #antwort .a3, #antwort .a4 {
+		height: 3.6em;
+	}
+}
+
+@media screen and (min-height:900px) {
+	header {
+		background: url(../images/mario-himmel-180.png);
+		background-repeat: repeat-x;
+		height: 180px;
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		/* box-sizing */
+		*behavior: url(/scripts/boxsizing.htc);
+		text-align: center;
+		padding-top: 0.5em;
+	}
+	#logo {
+		display: block;
+		background: url(../images/marioquiz-logo-400.png) no-repeat;
+		height: 53px;
+		width: 400px;
+		background-position: center; /* IE fix */
+		margin: 0 auto;
+		margin-bottom: 2.3em;
+		margin-top: 1em;
+	}
+	#antwort, #einleitung {
+		padding-top: 4%;
+		padding-bottom: 8%;
+	}
+	#inhaltswrapper {
+		width: 50%;
+		margin: 0 auto;
+	}
+	#joker li {
+		padding: 0.46em 0;
+		margin-right: 3.2em;
+	}
+	#joker li.jokertitle {
+		font-size: 1.3em;
+	}
+	#joker li:last-child {
+		margin-right: 0;
+	}
+	#einleitung a {
+		width: 100%;
+		padding-top: 1.1em;
+		padding-bottom: 1.1em;
+	}
+	h1 {
+		margin-bottom: 5%;
+		font-size: 1.6em;
+	}
+	#antwort .a3, #antwort .a4 {
+		margin-top: 2%;
+	}
+	#antwort .a1, #antwort .a2 {
+		margin-top: 3%;
+	}
+}
+
+@media only screen and (min-device-width: 1366px) , ( min-device-height
+	: 1366px) { @
+	-ms-viewport {
+		width: device-width;
+	}
+}

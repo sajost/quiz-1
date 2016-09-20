@@ -1,0 +1,16 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_driver: pdo_mysql
+    database_host: localhost
+    database_port: null
+    database_name: d01f2e47
+    database_user: d01f2e47
+    database_password: 4Y4E5p3aErY4JrMN
+    mailer_transport: sendmail
+    mailer_host: smtp.1und1.de
+    mailer_port: 587
+    mailer_user: support@quiz.de
+    mailer_password: ??????
+    mailer_encryption: tls
+    notify_off: 0
+    notify_use: 2 #2-PHP,1-SWIFT

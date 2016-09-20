@@ -1,0 +1,12 @@
+parameters:
+    locale: de
+    secret: 581a67fb21eeb454739df31586bbb1b9c665fde7
+    app_web_name: quiz.de
+    # App contact email address
+    #app.emails.contact_email: alexandr.stoian@gmail.de
+    mail_from_adr: support@quiz.de
+    mail_reg_subj: Quiz - Willkommen
+    mail_reg_from_adr: support@quiz.de
+    mail_reg_from_nam: Support 
+    #navigation titles
+    navi_user_home: Home
