@@ -64,4 +64,4 @@ twig:
     strict_variables: "%kernel.debug%"
     exception_controller:  app.twig.exception_controller:showAction
     globals:
-      url_activate: "http://localhost/quiz/app.php/me/activate"
+      var_some: "value_some"

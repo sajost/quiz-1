@@ -4,7 +4,7 @@ parameters:
     database_host: 127.0.0.1
     database_port: null
     database_name: quiz
-    database_user: quiz
+    database_user: root
     database_password: null
     notify_off: 1
     notify_use: 2
@@ -12,11 +12,11 @@ parameters:
     mailer_host: smtp.1und1.de
     mailer_port: 587
     mailer_user: support@quiz.de
-    mailer_password: ?????
+    mailer_password: null
     mailer_encryption: tls
     #mailer_encryption: ssl
     #mailer_transport: gmail
     #mailer_host: smtp.gmail.com
     #mailer_port: ~
     #mailer_user: alexandr.stoian
-    #mailer_password: stopAids
+    #mailer_password: ~

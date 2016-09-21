@@ -28,8 +28,8 @@ End If
 
 Set wss = CreateObject("WScript.Shell")
 'remove cache
-If (fso.FolderExists(InputFolder & "quiz\app\cache\")) Then
-	Set folder = fso.GetFolder(InputFolder & "quiz\app\cache\" )
+If (fso.FolderExists(InputFolder & "quiz\var\cache\")) Then
+	Set folder = fso.GetFolder(InputFolder & "quiz\var\cache\" )
 	' delete all files in  folder
 	for each f in folder.Files
 	   On Error Resume Next
@@ -59,8 +59,8 @@ If (fso.FolderExists(InputFolder & "quiz\app\cache\")) Then
 End If
 
 'remove logs
-If (fso.FolderExists(InputFolder & "quiz\app\logs\")) Then
-	Set folder = fso.GetFolder(InputFolder & "quiz\app\logs\" )
+If (fso.FolderExists(InputFolder & "quiz\var\logs\")) Then
+	Set folder = fso.GetFolder(InputFolder & "quiz\var\logs\" )
 	' delete all files in  folder
 	for each f in folder.Files
 	   On Error Resume Next

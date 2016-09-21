@@ -93,13 +93,15 @@ Else
 end if
 Input = ""
 
+CONST HIDDEN = 2
+set objFSO = CreateObject("Scripting.FileSystemObject")
 If (fso.FolderExists(InputFolder & ".git\")) Then
-	set objFSO = CreateObject("Scripting.FileSystemObject")
 	set objFolder = objFSO.GetFolder(InputFolder & ".git\")
-	CONST HIDDEN = 2
 	If (objFolder.Attributes AND HIDDEN) then
 		objFolder.Attributes = 0
 	End if
+End if
+If (fso.FolderExists(InputFolder & ".up\")) Then
 	set objFolder = objFSO.GetFolder(InputFolder & ".up\")
 	If (objFolder.Attributes AND HIDDEN) then
 		objFolder.Attributes = 0

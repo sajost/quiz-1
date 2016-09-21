@@ -4,21 +4,24 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
-use Doctrine\Common\Collections\ArrayCollection;
-use AppBundle\Utils\Ses;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\QuestionCat;
 use Symfony\Component\Form\CallbackTransformer;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class AdminController extends QController {
 	
-	public function indexAction() {
+	/**
+	 * @Route("admin/", name="admin")
+	 * yes
+	 */
+	public function indexAction(Request $request) {
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
 		$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page, ADMINs only!');
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
 	
-		return $this->render ( 'AppBundle:Admin:index.html.twig', array (
+		return $this->render ( 'admin/index.html.twig', array (
 		) );
 	}
 
