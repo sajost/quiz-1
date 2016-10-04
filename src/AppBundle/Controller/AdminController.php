@@ -24,6 +24,10 @@ use AppBundle\Form\QuestionType;
 use AppBundle\Entity\Quiz;
 use AppBundle\Form\QuizType;
 use AppBundle\Entity\Answer;
+use AppBundle\Entity\QuizQuestion;
+use AppBundle\Form\QuizQuestionType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class AdminController extends QController {
 	
@@ -626,7 +630,7 @@ class AdminController extends QController {
 	
 	
 	/**
-	 * @Route("admin/q", name="admin_q")
+	 * @Route("admin/question", name="admin_question")
 	 */
 	public function questionAction(Request $request) {
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
@@ -660,14 +664,14 @@ class AdminController extends QController {
 			}
 		}
 		$questions = $this->em()->getRepository('AppBundle:Question')->findBy(array(), array('title' => 'ASC'));
-		return $this->render ( 'admin/q.html.twig', array (
+		return $this->render ( 'admin/question.html.twig', array (
 				'questions' => $questions,
 				'form'=>$form->createView()
 		) );
 	}
 	
 	/**
-	 * @Route("admin/qe/{eid}", name="admin_qe")
+	 * @Route("admin/questione/{eid}", name="admin_questione")
 	 */
 	public function questioneAction(Request $request,$eid=null) {
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
@@ -695,7 +699,7 @@ class AdminController extends QController {
 				$this->get('session')->set('admin_question_ok', 'Question is OK');
 				
 				//redirect for full data submit
-				return $this->redirect ( $this->generateUrl ( 'admin_qe',array(
+				return $this->redirect ( $this->generateUrl ( 'admin_questione',array(
 						'eid' => $question->getId(),
 						'_'=>'y'
 				)) );
@@ -708,13 +712,17 @@ class AdminController extends QController {
 			}
 		}
 	
-		return $this->render ( 'admin/qe.html.twig', array (
+		return $this->render ( 'admin/questione.html.twig', array (
 				'question' => $question,
 				'form'=>$form->createView(),
 				'answercount'=>$question->answercount
 		) );
 	}
 	
+	/**
+	 * @param unknown $eid
+	 * @return \AppBundle\Entity\Question|object
+	 */
 	private function getQuestionForm($eid=null){
 		if ($eid==null){
 			$question = new Question();
@@ -808,7 +816,6 @@ class AdminController extends QController {
 		if ($request->isMethod ( 'POST' )) {
 			$form->handleRequest ( $request );
 			if ($form->isValid ()) {
-	
 				$this->em()->persist ( $quiz );
 				$this->em()->flush ();
 				$this->get('session')->set('admin_quiz_ok', 'Quiz is OK');
@@ -818,8 +825,113 @@ class AdminController extends QController {
 			}
 		}
 		$quizs = $this->em()->getRepository('AppBundle:Quiz')->findBy(array(), array('title' => 'ASC'));
-		return $this->render ( 'admin/q.html.twig', array (
+		return $this->render ( 'admin/quiz.html.twig', array (
 				'quizs' => $quizs,
+				'form'=>$form->createView()
+		) );
+	}
+	
+	/**
+	 * @Route("admin/quize/{eid}", name="admin_quize")
+	 */
+	public function quizeAction(Request $request,$eid=null) {
+		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
+		//$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page, ADMINs only!');
+		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
+	
+		$quiz = $this->em()->getRepository('AppBundle:Quiz')->find($eid);
+		//$quizs = array();
+	
+		$form = $this->createForm ( QuizType::class, $quiz );
+		$form2 = clone $form;
+			
+		if ($request->isMethod ( 'POST' )) {
+			$form->handleRequest ( $request );
+			if ($form->isValid ()) {
+				$this->em()->persist ( $quiz );
+				$this->em()->flush ();
+				$this->get('session')->set('admin_quiz_ok', 'Quiz is OK');
+				$form = $form2;
+				return $this->redirect ( $this->generateUrl ( 'admin_quize',array(
+						'eid' => $quiz->getId(),
+						'_'=>'y'
+				)) );
+			}else{
+				$this->get('session')->set('admin_quiz_ok', 'Nothing is created');
+			}
+		}
+		return $this->render ( 'admin/quize.html.twig', array (
+				'quiz' => $quiz,
+				'form'=>$form->createView()
+		) );
+	}
+	
+	/**
+	 * @Route("admin/quizquestione/{eid}", name="admin_quizquestione")
+	 */
+	public function quizquestioneAction(Request $request,$eid=null) {
+		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
+		//$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page, ADMINs only!');
+		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
+	
+		$quiz = $this->em()->getRepository('AppBundle:Quiz')->find($eid);
+		//$quizs = array();
+		$questions = $this->em()->getRepository('AppBundle:Question')->getQuestionsAll();
+		
+		//$qq = new QuizQuestion($quiz,null);
+		
+		$defaultData = array('message' => 'Type here');
+		$form = $this->createFormBuilder($defaultData)
+// 		->add('questions', CollectionType::class, array(
+// 				'entry_type' => ChoiceType::class,
+// 				'entry_options'  => array(
+// 					'class' => 'AppBundle:Question',
+// 					'choices' => $questions,
+// 					'choice_label' => 'title',
+// 					'multiple' => true,
+// 					'expanded' => true,
+// 				)
+// 		))
+		->add('questions', EntityType::class, array(
+			'class' => 'AppBundle:Question',
+			'choices' => $questions,
+			'choice_label' => 'title',
+			'multiple' => true,
+			'expanded' => true,
+		))
+		->getForm();
+		
+		$form2 = clone $form;
+			
+		if ($request->isMethod ( 'POST' )) {
+			$form->handleRequest ( $request );
+			if ($form->isValid ()) {
+				
+// 				$removeImages = $form->get('fns')->getData();
+// 				foreach($removeImages as $ri) {
+// 					if (file_exists(Ses::getUpDirImg()."/".$ri)) {
+// 						unlink(Ses::getUpDirImg()."/".$ri);
+// 					} else {
+// 						// code when file not found
+// 					}
+// 				}
+				dump($form->getData());
+				
+				//$this->em()->persist ( $quiz );
+				//$this->em()->flush ();
+				$this->get('session')->set('admin_quizquestion_ok', 'Quiz is OK');
+				$form = $form2;
+// 				return $this->redirect ( $this->generateUrl ( 'admin_quizquestione',array(
+// 						'eid' => $quiz->getId(),
+// 						'_'=>'y'
+// 				)) );
+			}else{
+				$this->get('session')->set('admin_quizquestion_ok', 'Nothing is created');
+			}
+		}
+		return $this->render ( 'admin/quiz.questione.html.twig', array (
+				'quiz' => $quiz,
+				'questions' => $questions,
 				'form'=>$form->createView()
 		) );
 	}

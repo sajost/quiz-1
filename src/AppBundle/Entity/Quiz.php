@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity(repositoryClass="AppBundle\Repository\Quiz")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\QuizRepository")
  * @ORM\Table(name="quiz")
  * @ORM\HasLifecycleCallbacks
  */

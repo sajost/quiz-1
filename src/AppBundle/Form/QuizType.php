@@ -96,21 +96,21 @@ class QuizType extends AbstractType{
 					'expanded' => true,
 					'required' => true
 			))
-			>add('joker5050', ChoiceType::class, array(
+			->add('joker5050', ChoiceType::class, array(
 					'choices' => $yn,
 					'data' => "1",
 					'multiple' => false,
 					'expanded' => true,
 					'required' => true
 			))
-			>add('jokerpause', ChoiceType::class, array(
+			->add('jokerpause', ChoiceType::class, array(
 					'choices' => $yn,
 					'data' => "1",
 					'multiple' => false,
 					'expanded' => true,
 					'required' => true
 			))
-			>add('jokerskip', ChoiceType::class, array(
+			->add('jokerskip', ChoiceType::class, array(
 					'choices' => $yn,
 					'data' => "1",
 					'multiple' => false,
@@ -127,34 +127,34 @@ class QuizType extends AbstractType{
 			->add('timelimit', IntegerType::class, array (
 					'required' => false,
 			))
-			->add('random', RangeType::class, array (
+			->add('random', ChoiceType::class, array (
 					'choices' => $yn,
 					'data' => "1",
 					'multiple' => false,
 					'expanded' => true,
 					'required' => true
 			))
-			->add('repeat', RangeType::class, array (
+			->add('repeat', ChoiceType::class, array (
 					'choices' => $yn,
 					'data' => "1",
 					'multiple' => false,
 					'expanded' => true,
 					'required' => true
 			))
-			->add('trueanswer', RangeType::class, array (
+			->add('trueanswer', ChoiceType::class, array (
 					'choices' => $answers,
 					'data' => "1",
 					'multiple' => false,
 					'expanded' => true,
 					'required' => true
 			))
-            ->add('questions', EntityType::class, array(
-			    // query choices from this entity
-			    'class' => 'AppBundle:Question',
-			    'choice_label' => 'title',
-			    'multiple' => true,
-			    'expanded' => false,
-			))
+//             ->add('questions', EntityType::class, array(
+// 			    // query choices from this entity
+// 			    'class' => 'AppBundle:QuizQuestion',
+// 			    'choice_label' => 'question.title',
+// 			    'multiple' => true,
+// 			    'expanded' => false,
+// 			))
         ;
             
 //             $builder->get('hidename')->addModelTransformer(

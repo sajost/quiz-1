@@ -7,34 +7,12 @@
 
 		<div id="panel" class="panel panel-default">
 			<div class="panel-heading">
-            	<h3 class="panel-title">Da ist die ganze Liste von allen Frage, kLicken auf Titel zum Bearbeiten, , kLicken auf ID zum Fragenornden</h3>
+            	<a class="" href="{{ path('admin_quiz') }}" style="">Back to Quizs</a>
             </div>
 			<div class="panel-body">
-				<div class="panel-scroll">
-				<table class="table table-bordered" fixed-header>
-					<thead>
-                        <tr>
-                          <th style="width:50px">#</th>
-                          <th style="width:250px">Titel</th>
-                        </tr>
-                    </thead>
-                    {% for e in quizs %}
-                    	<tr>
-                    		<td style="width:50px">
-                    			<a class="" href="{{ path('admin_quizquestione',{'eid':e.id}) }}" style="">{{ e.id }}</a>
-                    		</td>
-                    		<td style="width:250px">
-                    			<a class="" href="{{ path('admin_quize',{'eid':e.id}) }}" style="">{{ e.title }}</a>
-                    		</td>
-                		</tr>
-                	{% endfor %}
-				</table>
-            	</div>
-            	<br/>
-        	
-                <form action="{{ path('admin_quiz') }}" method="post" id="f-admin-quiz" data-toggle="validator" role="form">
+                <form action="{{ path('admin_quize',{'eid':quiz.id}) }}" method="post" id="f-admin-quiz" data-toggle="validator" role="form">
                 	
-            		<h3>Da kannst eine neue Quiz erstellen und speichern</h3>
+            		<h3>Da kannst eine Quiz bearbeiten und speichern</h3>
             		<br/>
             		
             		<div class="form-group">
