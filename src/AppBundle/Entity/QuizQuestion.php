@@ -27,7 +27,7 @@ class QuizQuestion
 	public $quiz;
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="Car")
+	 * @ORM\ManyToOne(targetEntity="Question")
 	 * @ORM\JoinColumn(name="question_id", referencedColumnName="id", nullable=FALSE)
 	 */
 	public $question;
@@ -91,6 +91,28 @@ class QuizQuestion
 		$this->updated = $updated;
 		return $this;
 	}
+	public function getQuiz() {
+		return $this->quiz;
+	}
+	public function setQuiz($quiz) {
+		$this->quiz = $quiz;
+		return $this;
+	}
+	public function getQuestion() {
+		return $this->question;
+	}
+	public function setQuestion($question) {
+		$this->question = $question;
+		return $this;
+	}
+	public function getInfo() {
+		return $this->info;
+	}
+	public function setInfo($info) {
+		$this->info = $info;
+		return $this;
+	}
+	
 	
     
         

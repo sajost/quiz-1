@@ -62,6 +62,5 @@ swiftmailer:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
-    exception_controller:  app.twig.exception_controller:showAction
     globals:
       var_some: "value_some"

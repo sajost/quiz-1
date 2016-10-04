@@ -33,11 +33,11 @@ security:
                 path: /.*
 
     access_control:
-          - { path: ^/admin, roles: ROLE_ADMIN }
-          - { path: /me/activate, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-          - { path: /login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-          - { path: /me/profile/real, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-          - { path: /me/profile, roles: ROLE_USER }
-          - { path: /test, roles: IS_AUTHENTICATED_ANONYMOUSLY }          
+          #- { path: ^/admin, roles: ROLE_ADMIN }
+          #- { path: /me/activate, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+          #- { path: /login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+          #- { path: /me/profile/real, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+          #- { path: /me/profile, roles: ROLE_USER }
+          #- { path: /test, roles: IS_AUTHENTICATED_ANONYMOUSLY }          
           - { path: /.*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
           

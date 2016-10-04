@@ -1,0 +1,16 @@
+form > div {
+  border-bottom: 1px solid #84dda5;
+  margin-bottom: 6px;
+  padding-bottom: 6px;
+}
+
+header {
+	text-align: center;
+	background: #84dda5 none repeat scroll 0 0 !important; 
+}
+
+
+.panel-scroll{
+	max-height: 500px !important;
+    overflow-y: auto;
+}

@@ -3,7 +3,7 @@
 namespace AppBundle\Controller;
 
 
-class TestController extends FAFAController {
+class TestController extends QController {
 	public function emailPHPAction() {
 		
 // 		$protocol = "ssl";	//tcp ssl tls

@@ -1,19 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8" />
-<title>{% block title %}Welcome!{% endblock %}</title>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>{% block title %}{{ app_web_name }}{% endblock %}</title>
+		
+
 {% block stylesheets %}
+    <link href="{{ asset('bs/css/bootstrap.min.css') }}" type="text/css"	rel="stylesheet">
+    <link href="{{ asset('css/qtip.css') }}" type="text/css"	rel="stylesheet" />
+    <link href="{{ asset('css/styles.css') }}" type="text/css"	rel="stylesheet" />
 {% endblock %}
-<link
-	rel="icon"
-	type="image/x-icon"
-	href="{{ asset('favicon.ico') }}"
-/>
+
+
+<link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+{% block js %}
+    <script>
+    	var twig = twig || {};
+    	var u = u || {};
+    	/* 
+    	twig.some_var				= "{{ app_web_name }}";
+    	*/
+    </script>
+    <script type="text/javascript" src="{{ asset('js/jquery.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bs/js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/qtip.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/validator.js') }}"></script>
+    {# <script src="{{ asset('js/modernizr.js') }}"></script>#}
+    <script type="text/javascript" src="{{ asset('js/sys.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/q.js') }}"></script>
+{% endblock %}
 </head>
+
 <body>
-	{% block body %}
+	
+	{% if app.user %}
+        {% set user_id = app.user.id %}
+    {% else %}
+        {% set user_id = 0 %}
+    {% endif %}
+
+	{% block head1 %}
+		{# for head-1 #}
 	{% endblock %}
+	
+	
+	{% block head2 %}
+		{# for head-2 #}
+	{% endblock %}
+	
+	
+	{% block body %}
+		{# all other content stuff #}
+	{% endblock %}
+
+	{% block footer %} 
+		<footer class="footer" >
+			<div class="container">
+				<a href="javascript:alert('Help yourself!')">Etwas 2</a> 
+				<a href="javascript:alert('Help yourself!')">Etwas 2</a>
+				<a href="javascript:alert('Help yourself!')">Etwas 3</a> 
+				<a href="javascript:alert('Help yourself!')">About</a>
+				<p>&copy;  {{ 'now'|date('Y') }} {{ app_web_name }}</p>
+			</div>
+		</footer>
+	 {% endblock %}
+	
+	
 	{% block javascripts %}
 	{% endblock %}
 </body>

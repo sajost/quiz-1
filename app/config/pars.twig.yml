@@ -1,9 +1,6 @@
 # Twig Configuration
 twig:
     globals:
-      navi_brands: "%navi_brands%"
-      url_activate: "http://localhost/fafa/web/app_dev.php/me/activate"
       app_web_name: "%app_web_name%"    
       navi_user_home: "%navi_user_home%"
-      navi_user_feed: "%navi_user_feed%"
     

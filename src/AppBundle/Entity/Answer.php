@@ -25,6 +25,13 @@ class Answer
      * @ORM\Column(type="text")
      */
     public $title;
+    
+    /**
+     * 0 = falsch; 1 = richtig;
+     *
+     * @ORM\Column(type="smallint", nullable=true, options={"default":0})
+     */
+    public $status = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="Question", inversedBy="answers")
@@ -120,6 +127,31 @@ class Answer
 	public function getTyp() {
 		return $this->typ;
 	}
+	
+	
+	public function getTitle() {
+		return $this->title;
+	}
+	public function setTitle($title) {
+		$this->title = $title;
+		return $this;
+	}
+	public function getParent() {
+		return $this->parent;
+	}
+	public function setParent($parent) {
+		$this->parent = $parent;
+		return $this;
+	}
+	public function getStatus() {
+		return $this->status;
+	}
+	public function setStatus($status) {
+		$this->status = $status;
+		return $this;
+	}
+	
+	
 	
 	
 	

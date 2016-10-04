@@ -1,0 +1,158 @@
+{# src/AppBundle/Resources/views/Admin/carlogtage.html.twig #} 
+{% extends 'admin/init.html.twig' %} 
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/cropper.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+    <script src="{{ asset('js/cropper.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+	<div id="" class="container">
+
+		<div id="panel" class="panel panel-default">
+			<div class="panel-heading">
+            	<a class="" href="{{ path('admin_user') }}" style="">Back to Users</a>
+            </div>
+			<div class="panel-body">
+        	
+               <form action="{{ path('admin_usere',{'eid':user.id}) }}" method="post" class="f-admin" id="f-admin-user">
+                	
+                	<h3>Here u can edit User and save: {{ user.username }}</h3>
+                	<br/>
+                	
+                	<div class="" id="f-username">
+                		Bentuzername - nur Benutzer kann Ändern
+                	</div>
+                	<div class="" id="f-email">
+                		Email - nur Benutzer kann Ändern
+                	</div>
+                	<div class="" id="f-password">
+                		Passwor - nur Benutzer kann Ändern -> 
+                		<span
+            				class="but but-green but-small"
+            				id="but-user-password"
+            				style=""
+            				onclick="javascript:alert('kommt noch')"
+            			>Passwortänderung senden</span>
+            		</div>
+            		
+            		<div class="form-group">
+        				<label for="{{ form.status.vars.id }}">Status</label>
+        				{{ form_widget(form.status) }}
+        				{{ form_errors(form.status) }}
+        			</div>
+        			
+            		{{ form_row(form.fname) }}
+            		
+            		<div class="form-group">
+        				<label for="{{ form.lname.vars.id }}">Nachname</label>
+        				{{ form_widget(form.lname) }}
+        				{{ form_errors(form.lname) }}
+        			</div>
+            		
+            		{{ form_row(form.tel1) }}
+            		
+            		{{ form_row(form.tel2) }}
+            		
+            		{{ form_row(form.tel3) }}
+            		
+            		{{ form_row(form.sex) }}
+            		
+            		{{ form_row(form.dborn) }}
+            		
+            		{{ form_row(form.about) }}
+            		
+            		{# AVATAR BLOCK #}
+    				<div class="f-label" id="f-avatar">
+    					<label for="{{ form.avatar.vars.id }}">Avatar</label> 
+    					<span
+    						class="form-notes"> 
+    						Minimal größe ist 100x100 px, Maximal 200x200 px
+    					</span>
+    					<div id="images-avatar" class="imagelist" data-path="{{ path('admin_usere_avatar') }}">
+    						{% if user.avatar!='' %}
+        						<div d-idx="1" class="imagelist-item" id="avatar">
+        
+        							<div class="item-pre item-avatar">
+                						<img
+                							width=""
+                							height=""
+                							alt="avatar"
+                							src="{{ asset(['images/'~user.username~'/', user.avatar]|join) }}?timestamp={{ 'now'|date("s.u")|round(3) }}"
+                							class=""
+                						>
+                					</div>
+        
+        							<div class="imagelist-ctrl">
+        								<div class="btn btn-default btn-xs">
+                                			<span
+                                				class="glyphicon glyphicon-upload"
+                                				id="change-avatar-1"
+                                			>Ändern</span>
+                                		</div>
+                                		<div class="btn btn-default btn-xs">
+                                			<span
+                                				class="glyphicon glyphicon-remove-circle"
+                                				id="rem-avatar-1"
+                                			>Entfernen</span>
+                                		</div>
+        							</div>
+        						</div>
+    						{% endif %}
+    					</div>
+    					<div>
+    						<div class="uploader" style="">
+            					<div
+            						class="uploader-sub"
+            						id="ctrl-up-avatar"
+            						style="{% if user.avatar!='' %}display:none;{% endif %}"
+            					>
+            						<span
+            							class="btn btn-default btn-xs"
+            							id="but-up-avatar"
+            							style="z-index: 0;"
+            						>Auswahl</span>
+            						<div
+            							id=""
+            							class="filer"
+            						>
+            							{# <input type="file" accept="image/jpeg" id="generate_html5"> #}
+            							{{ form_widget(form.avatar_f) }}
+            							{{ form_errors(form.avatar_f) }}
+            						</div>
+            					</div>
+            					<div class="progress progress-avatar" style="display:none">
+	                                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                                </div>
+    						</div>
+        				</div>
+    				</div>
+            		
+                	
+                	<div style="display:none ">
+                		<input id="user_username" type="hidden" value="{{ user.username }}"></input>
+                	    {{ form_rest(form) }}
+                	</div>
+            		<div class="form-field">
+            			<button class="btn btn-primary btn-sm" type="submit">Speichern</button>
+            		</div>
+                
+            		<script type="text/javascript">
+            		//
+            		$( "#" ).each(function(index) {
+            			
+            		 });
+            		</script>
+               </form>
+			</div>
+		</div>
+		
+	</div>
+
+
+{% endblock %} 

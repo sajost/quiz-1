@@ -1,7 +1,7 @@
 parameters:
     locale: de
     secret: 581a67fb21eeb454739df31586bbb1b9c665fde7
-    app_web_name: quiz.de
+    app_web_name: Quizz
     # App contact email address
     #app.emails.contact_email: alexandr.stoian@gmail.de
     mail_from_adr: support@quiz.de

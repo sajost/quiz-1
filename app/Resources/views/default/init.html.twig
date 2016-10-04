@@ -1,0 +1,47 @@
+{# app//Resources/views/Admin/init.html.twig #} 
+{% extends 'layout.html.twig' %} 
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/default.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+{#     <script src="{{ asset('js/default.js') }}"></script>#}
+{% endblock %}
+
+{# put input + label of checkbox in the div#}
+{% if form is defined %}
+	{% form_theme form _self %}
+	{% block choice_widget_expanded %}
+	{% spaceless %}
+	    <div {{ block('widget_container_attributes') }}>
+	    {% for child in form %}
+	    	<div>
+	        	{{ form_widget(child) }}
+	        	{{ form_label(child) }}
+	        </div>
+	    {% endfor %}
+	    </div>
+	{% endspaceless %}
+	{% endblock choice_widget_expanded %}
+{% endif %}
+
+
+{# head1 in layout#}
+{% block head1 %}
+	<header>
+		<div id="logo"></div>
+	</header>
+{% endblock %}
+
+
+{# head2 in layout#}
+
+
+{% block body %}
+
+{% endblock %}
+
+{# foot in layout#}

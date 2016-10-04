@@ -13,5 +13,23 @@ use Doctrine\ORM\EntityRepository;
  */
 class QuestionRepository extends EntityRepository
 {
-   
+	public function getQuestionsAll() {
+	
+		$qb = $this->createQueryBuilder ( 'e' )
+		->select ( 'e' )
+		->addOrderBy ( 'e.title', 'ASC' )
+		;
+	
+		return $qb->getQuery ()->getResult ();
+	}
+	
+	public function getQuestionsAllQB() {
+	
+		$qb = $this->createQueryBuilder ( 'e' )
+		->select ( 'e' )
+		->addOrderBy ( 'e.title', 'ASC' )
+		;
+	
+		return $qb;
+	}
 }

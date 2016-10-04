@@ -1,0 +1,63 @@
+<div d-idx="{{ id }}" class="imagelist-item" id="avatar">
+	
+	<div class="item-pre item-avatar" style="">
+		<img
+			width=""
+			height="100px"
+			alt="avatar"
+			src="{{ asset(['images/'~un~'/', fnor]|join) }}?timestamp={{ 'now'|date("s.u")|round(3) }}"
+			class=""
+		>
+	</div>
+	
+	<div class="imagelist-ctrl">
+		<div class="btn btn-default btn-xs">
+			<span
+				class="glyphicon glyphicon-edit"
+				id="crop-avatar-{{ id }}"
+				data-toggle="modal" data-target="#modal-avatar"
+			>Scheren</span>
+		</div>
+		<div class="btn btn-default btn-xs">
+			<span
+				class="glyphicon glyphicon-upload"
+				id="change-avatar-{{ id }}"
+			>Ändern</span>
+		</div>
+		<div class="btn btn-default btn-xs">
+			<span
+				class="glyphicon glyphicon-remove-circle"
+				id="rem-avatar-{{ id }}"
+			>Entfernen</span>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modal-avatar">
+  <div class="modal-dialog modal-avatar" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Bildauschnitt</h4>
+      </div>
+      <div class="modal-body">
+      	<div class="crop-avatar">
+            <img
+    			id="img-crop-avatar-{{ id }}"
+    			style=""
+    			width=""
+    			height=""
+    			alt="{{ un }}"
+    			src="{{ asset(['images/'~un~'/', fnor]|join) }}?timestamp={{ 'now'|date("s.u")|round(3) }}"
+    			class=""
+    		>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" id="modal-cancel-avatar">Close</button>
+        <button type="button" class="btn btn-primary" id="modal-ok-avatar">OK</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+

@@ -13,5 +13,34 @@ use Doctrine\ORM\EntityRepository;
  */
 class QuestionCatRepository extends EntityRepository
 {
-   
+	public function getQuestionCatsAll() {
+	
+		$qb = $this->createQueryBuilder ( 'e' )
+		->select ( 'e' )
+		->addOrderBy ( 'e.title', 'ASC' )
+		;
+	
+		return $qb->getQuery ()->getResult ();
+	}
+	
+	public function getQuestionCatsAllQB() {
+	
+		$qb = $this->createQueryBuilder ( 'e' )
+		->select ( 'e' )
+		->addOrderBy ( 'e.title', 'ASC' )
+		;
+	
+		return $qb;
+	}
+	
+	public function getQuestionCatByCat($title=null) {
+	
+		$qb = $this->createQueryBuilder ( 'e' )
+		->select ( 'e' )
+		->where ( 'lower(e.title) = :title' )
+		->setParameter ( 'title', $title )
+		;
+	
+		return $qb->getQuery ()->getOneOrNullResult();
+	}
 }

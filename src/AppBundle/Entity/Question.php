@@ -27,11 +27,15 @@ class Question
     public $user;
     
     /**
+     * Text der Frage
+     * 
      * @ORM\Column(type="string")
      */
     public $title;
     
     /**
+     * 0 = aktiv, nicht geprüft; 1 = aktiv, geprüft; 2 = pausiert, nicht geprüft; 3 = pausiert, geprüft
+     * 
      * @ORM\Column(type="smallint", nullable=true, options={"default":0})
      */
     public $status = 1;
@@ -42,16 +46,22 @@ class Question
     public $truecount = 1;
     
     /**
-     * @ORM\Column(type="datetime")
+     * Tag, an dem die Frage in die Datenbank eingetragen wurde (wird automatisch befüllt)
+     * 
+     * @ORM\Column(type="datetime", nullable=true)
      */
     public $published;
 
     /**
-     * @ORM\Column(type="text")
+     * Quelle, die die Frage hervorgebracht hat (z. B. "Wikipedia")
+     * 
+     * @ORM\Column(type="text", nullable=true)
      */
     public $source;
     
     /**
+     * Schwierigkeitsgrad von 0 = sehr enfach bis 9 = schwer (für den User als 1 bis 10 dargestellt)
+     * 
      * @ORM\Column(type="smallint", nullable=true, options={"default":0})
      */
     public $difficulty = 0;
@@ -86,6 +96,11 @@ class Question
      */
     public $updated;
     
+    /**
+     * temp value for count of answers in the form
+     * @var integer
+     */
+    public $answercount = 4;
     
     /**
      * @var string
@@ -150,6 +165,112 @@ class Question
 	{
 		$tag->addQuestion($this); // synchronously updating inverse side
 		$this->tags[] = $tag;
+	}
+	public function getTitle() {
+		return $this->title;
+	}
+	public function setTitle($title) {
+		$this->title = $title;
+		return $this;
+	}
+	public function getStatus() {
+		return $this->status;
+	}
+	public function setStatus($status) {
+		$this->status = $status;
+		return $this;
+	}
+	public function getTruecount() {
+		return $this->truecount;
+	}
+	public function setTruecount($truecount) {
+		$this->truecount = $truecount;
+		return $this;
+	}
+	public function getPublished() {
+		return $this->published;
+	}
+	public function setPublished($published) {
+		$this->published = $published;
+		return $this;
+	}
+	public function getSource() {
+		return $this->source;
+	}
+	public function setSource($source) {
+		$this->source = $source;
+		return $this;
+	}
+	public function getDifficulty() {
+		return $this->difficulty;
+	}
+	public function setDifficulty($difficulty) {
+		$this->difficulty = $difficulty;
+		return $this;
+	}
+	public function getCats() {
+		return $this->cats;
+	}
+	public function setCats($cats) {
+		$this->cats = $cats;
+		return $this;
+	}
+	public function getTags() {
+		return $this->tags;
+	}
+	public function setTags($tags) {
+		$this->tags = $tags;
+		return $this;
+	}
+	public function getAnswers() {
+		return $this->answers;
+	}
+	public function setAnswers($answers) {
+		$this->answers = $answers;
+		return $this;
+	}
+	public function getCreated() {
+		return $this->created;
+	}
+	public function setCreated($created) {
+		$this->created = $created;
+		return $this;
+	}
+	public function getUpdated() {
+		return $this->updated;
+	}
+	public function setUpdated($updated) {
+		$this->updated = $updated;
+		return $this;
+	}
+	
+	/**
+	 * Add answers
+	 *
+	 * @param \AppBundle\Entity\CarBookmark $answers
+	 * @return Car
+	 */
+	public function addAnswer(Answer $answer)
+	{
+		if (!$this->answers->contains($answer)) {
+			$this->answers->add($answer);
+			$answer->setParent($this);
+		}
+		return $this;
+	}
+	
+	/**
+	 * Remove answers
+	 *
+	 * @param \AppBundle\Entity\CarBookmark $answers
+	 */
+	public function removeAnswer(Answer $answer)
+	{
+		if ($this->answers->contains($answer)) {
+			$this->answers->removeElement($answer);
+			$answer->setParent(null);
+		}
+		return $this;
 	}
 	
 	

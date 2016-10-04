@@ -6,7 +6,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="AppBundle\Repository\QuestionTag")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\QuestionTagRepository")
  * @ORM\Table(name="questiontag")
  * @ORM\HasLifecycleCallbacks
  */
@@ -62,5 +62,45 @@ class QuestionTag
     {
     	$this->questions[] = $question;
     }
+	public function getId() {
+		return $this->id;
+	}
+	public function setId($id) {
+		$this->id = $id;
+		return $this;
+	}
+	public function getTitle() {
+		return $this->title;
+	}
+	public function setTitle($title) {
+		$this->title = $title;
+		return $this;
+	}
+	public function getQuestions() {
+		return $this->questions;
+	}
+	public function setQuestions($questions) {
+		$this->questions = $questions;
+		return $this;
+	}
+	public function getCreated() {
+		return $this->created;
+	}
+	public function setCreated($created) {
+		$this->created = $created;
+		return $this;
+	}
+	public function getUpdated() {
+		return $this->updated;
+	}
+	public function setUpdated($updated) {
+		$this->updated = $updated;
+		return $this;
+	}
+	public function getTyp() {
+		return $this->typ;
+	}
+	
+	
 
 }

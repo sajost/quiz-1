@@ -13,5 +13,34 @@ use Doctrine\ORM\EntityRepository;
  */
 class QuestionTagRepository extends EntityRepository
 {
-   
+	public function getQuestionTagsAll() {
+	
+		$qb = $this->createQueryBuilder ( 'e' )
+		->select ( 'e' )
+		->addOrderBy ( 'e.title', 'ASC' )
+		;
+	
+		return $qb->getQuery ()->getResult ();
+	}
+	
+	public function getQuestionTagsAllQB() {
+	
+		$qb = $this->createQueryBuilder ( 'e' )
+		->select ( 'e' )
+		->addOrderBy ( 'e.title', 'ASC' )
+		;
+	
+		return $qb;
+	}
+	
+	public function getQuestionTagByTag($title=null) {
+	
+		$qb = $this->createQueryBuilder ( 'e' )
+		->select ( 'e' )
+		->where ( 'lower(e.title) = :title' )
+		->setParameter ( 'title', $title )
+		;
+	
+		return $qb->getQuery ()->getOneOrNullResult();
+	}
 }

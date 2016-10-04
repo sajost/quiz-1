@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
@@ -230,15 +231,15 @@ class User implements AdvancedUserInterface, \Serializable {
 	/**
 	 * Overwrite it if roles in the DB
 	 */
-	// public function getRoles()
-	// {
-	// //return array('ROLE_USER');
-	// $r = array();
-	// foreach ($this->getUserroles() as $ur) {
-	// $r[]=$ur->getRole();
-	// }
-	// return $r;
-	// }
+	public function getRoles()
+	{
+		return array('ROLE_USER');
+// 	$r = array();
+// 	foreach ($this->getUserroles() as $ur) {
+// 	$r[]=$ur->getRole();
+// 	}
+// 	return $r;
+	}
 	
 	/**
 	 * @inheritDoc
@@ -385,6 +386,12 @@ class User implements AdvancedUserInterface, \Serializable {
 		$this->avatar = $avatar;
 		return $this;
 	}
+	public function getTyp() {
+		return $this->typ;
+	}
+	
+	
+	
 	
 	// public function __sleep()
 	// {
