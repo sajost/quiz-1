@@ -1,0 +1,19 @@
+{# app/Resources/views/Emails/registration.html.twig #}
+<h3>Anmedung ist erfolgreich: </h3>
+
+<br/><br/>
+
+Willkommen, krafter Mensch {{user.username}}
+
+<br/><br/>
+
+{# example, assuming you have a route named "login" #}
+
+Willkommen!
+<br>
+<a href="{{ url('home') }}">Link zum uns</a>
+
+Danke!
+<br/>
+<br/>
+<img src="{{ absolute_url(asset('images/welcome.png')) }}">

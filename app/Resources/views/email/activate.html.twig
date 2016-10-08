@@ -1,0 +1,20 @@
+{# app/Resources/views/Emails/registration.html.twig #}
+<h3>Anmedung ist erfolgreich: </h3>
+
+<br/><br/>
+
+Willkommen, krafter Mensch {{username}}
+
+<br/><br/>
+
+{# example, assuming you have a route named "login" #}
+Bitte aktivieren Sie ihre Benutzerprofil, gehe zu: <a href="{{ url('security_confirm',{'username':username,'token':token,'_':'a'}) }}">aktivieren</a>.
+<br/>
+Benutzername: {{username}}
+<br/>
+Aktivation: {{ token }}
+<br/> 
+Danke!
+<br/>
+<br/>
+<img src="{{ absolute_url(asset('images/welcome.png')) }}">

@@ -6,13 +6,13 @@ parameters:
     database_name: quiz
     database_user: root
     database_password: null
-    notify_off: 1
-    notify_use: 2
+    notify_off: 0
+    notify_use: 1
     mailer_transport: smtp
-    mailer_host: smtp.1und1.de
+    mailer_host: smtp.web.de
     mailer_port: 587
-    mailer_user: support@quiz.de
-    mailer_password: null
+    mailer_user: sascha.stayan@web.de
+    mailer_password: niggazz3200
     mailer_encryption: tls
     #mailer_encryption: ssl
     #mailer_transport: gmail

@@ -2,18 +2,17 @@
 // src/AppBundle/Controller/SecurityController.php
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\User;
+use AppBundle\Form\UserActivate;
+use AppBundle\Form\UserActivateType;
+use AppBundle\Form\UserRegType;
+use AppBundle\Utils\Ses;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use AppBundle\Entity\User;
-use AppBundle\Form\UserRegType;
-use AppBundle\Form\UserActivateType;
-use AppBundle\Utils\Ses;
-use AppBundle\Form\UserActivate;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Security;
 
 class SecurityController extends QController {
 	
@@ -69,7 +68,7 @@ class SecurityController extends QController {
 					//create role
 					//$ur = $this->em()->getRepository('AppBundle:UserRole')->findOneBy(array('role'=>'ROLE_USER'));//new UserRole();
 					//$user->addUserRole($ur);
-					//copy avatar.jpg & selfi.jpg to user folder
+					//copy avatar.jpg to user folder
 					if (!file_exists(Ses::getUpDirTmp($user->getUsername()).'/')) {
 						mkdir(Ses::getUpDirTmp($user->getUsername()).'/', 0777, true);
 					}
@@ -84,7 +83,7 @@ class SecurityController extends QController {
 						$nm = $this->get('app.notify.manager');
 						if (!$nm->send(array(
 								'to'=>$user->getEmail(),
-								'from'=>'support@quizcom.de',
+								'from'=>$this->p('mail_reg_from_adr'),
 								's'=>'Aktivierungscode',
 								'bn'=>'activate',
 								'bo'=>array('username' => $user->getUsername(),'token'=>$user->getUnid())
@@ -92,7 +91,7 @@ class SecurityController extends QController {
 							//TODO Show error-page: Mail is not send, try again
 						}
 					}
-					//return $this->redirect($this->generateUrl('me_activate', array('user' => $user)));
+					//return $this->redirect($this->generateUrl('security_activate', array('user' => $user)));
 					return $this->redirect($this->generateUrl('security_activate',array('username' => $user->getUsername(),'token'=>$user->getUnid())));
 				}else{
 					//@TODO Error hanlder write to log and show to user
@@ -191,6 +190,21 @@ class SecurityController extends QController {
 					$user->setStatus(1);
 					$this->em()->persist($user);
 					$this->em()->flush();
+					
+					if ($this->p("notify_off")=="1"){
+						//TODO - Log it for admins
+					}else{
+						$nm = $this->get('app.notify.manager');
+						if (!$nm->send(array(
+								'to'=>$user->getEmail(),
+								'from'=>$this->p('mail_reg_from_adr'),
+								's'=>'Willkommen',
+								'bn'=>'wellcome',
+								'bo'=>array('user' => $user)
+						))){
+							//TODO Show error-page: Mail is not send, try again
+						}
+					}
 					//$session->set ( "me_acktivate_valid","" );
 					return $this->redirect($this->generateUrl('security_wellcome', array ('_' => 'a' )));
 				}else{
@@ -262,7 +276,7 @@ class SecurityController extends QController {
 				$nm = $this->get('app.notify.manager');
 				if (!$nm->send(array(
 						'to'=>$user->getEmail(),
-						'from'=>'support@quizcom.de',
+						'from'=>$this->p('mail_reg_from_adr'),
 						's'=>'Aktivierungscode',
 						'bn'=>'activate',
 						'bo'=>array('username' => $user->getUsername(),'token'=>$user->getUnid())
@@ -289,20 +303,20 @@ class SecurityController extends QController {
 			//  authenticated (NON anonymous)
 			return $this->redirect($this->generateUrl('home'));
 		}else{
-			if ($this->p("notify_off")=="1"){
-				//TODO - Log it for admins
-			}else{
-				$nm = $this->get('app.notify.manager');
-				if (!$nm->send(array(
-						'to'=>$this->u(),
-						'from'=>'support@quizcom.de',
-						's'=>'Willkommen',
-						'bn'=>'wellcome',
-						'bo'=>array('username' => '???')
-				))){
-					//TODO Show error-page: Mail is not send, try again
-				}
-			}
+// 			if ($this->p("notify_off")=="1"){
+// 				//TODO - Log it for admins
+// 			}else{
+// 				$nm = $this->get('app.notify.manager');
+// 				if (!$nm->send(array(
+// 						'to'=>$this->u(),
+// 						'from'=>$this->p('mail_reg_from_adr'),
+// 						's'=>'Willkommen',
+// 						'bn'=>'wellcome',
+// 						'bo'=>array('username' => '???')
+// 				))){
+// 					//TODO Show error-page: Mail is not send, try again
+// 				}
+// 			}
 			return $this->render ('security/wellcome.html.twig', array (
 			) );
 		}

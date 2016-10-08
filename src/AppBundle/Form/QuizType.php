@@ -150,7 +150,7 @@ class QuizType extends AbstractType{
 			))
 			->add('cats', EntityType::class, array(
 					// query choices from this entity
-					'class' => 'AppBundle:QuestionCat',
+					'class' => 'AppBundle:QuizCat',
 					'choice_label' => 'title',
 					'multiple' => true,
 					'expanded' => false,

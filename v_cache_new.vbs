@@ -1,3 +1,6 @@
+'*********************************************************
+'Full-Hoas, the code should be formatted for better look
+'*********************************************************
 Set objArgs = WScript.Arguments 
 Dim t 
 t = Now
@@ -24,6 +27,22 @@ Else
 	MsgBox "No Job-Folder and No Home-Folder"
 	Wscript.Quit
 End If 
+
+'*********************************************
+'START MESSAGE for USER
+Set objExplorer = CreateObject("InternetExplorer.Application")
+objExplorer.Navigate "about:blank"
+objExplorer.ToolBar = 0
+objExplorer.StatusBar = 0
+objExplorer.Left = 400
+objExplorer.Top = 200
+objExplorer.Width = 400
+objExplorer.Height = 200
+objExplorer.Visible = 1             
+objExplorer.Document.Body.Style.Cursor = "wait"
+objExplorer.Document.Title = "New Version"
+objExplorer.Document.Body.InnerHTML = "New version in process: " & InputFolder & " -> "
+'*********************************************
 
 
 Set wss = CreateObject("WScript.Shell")
@@ -91,6 +110,10 @@ For i = 200 to 10 Step -1
 	  Exit For
    End If
 Next
+'**************************************
+objExplorer.Document.Body.InnerHTML = "New version in process: " & InputFolder & " -> " & sfnNew
+Wscript.Sleep 500
+'**************************************
 
 'move folder to new folder (quizXXX)
 Set folder = fso.GetFolder(InputFolder & "quiz\")
@@ -98,7 +121,7 @@ Set colSubfolders = folder.Subfolders
 For Each sf in colSubfolders
 	If (fso.FolderExists(sf & "\")) Then
 		If sf.Name <> "vendor" And sf.Name <> "images" Then
-			wss.Popup sf  & " moved to " & sfnNew & "\", 1, "Progress" ' show message box for a second and close
+			'wss.Popup sf  & " moved to " & sfnNew & "\", 1, "Progress" ' show message box for a second and close
 			fso.MoveFolder sf, sfnNew & "\"
 			'wss.Popup sf.Name & " moved to " & sfnNew & "\", 1, "Progress" ' show message box for a second and close
 		End If
@@ -107,7 +130,7 @@ Next
 'move files to new folder (quizXXX)
 Set colFiles = folder.Files
 For Each f in colFiles
-	wss.Popup f  & " moved to " & sfnNew & "\", 1, "Progress" ' show message box for a second and close
+	'wss.Popup f  & " moved to " & sfnNew & "\", 1, "Progress" ' show message box for a second and close
     fso.MoveFile f, sfnNew & "\"
 Next
 
@@ -115,4 +138,9 @@ Next
 wss.Run sfnNew & "\v_zip.vbs" 
 ' Using Set is mandatory
 Set wss = Nothing
+'**************************************************************
+objExplorer.Document.Body.InnerHTML = "New version is complete. Close it"
+objExplorer.Document.Body.Style.Cursor = "default"
+Wscript.Sleep 5000
+objExplorer.Quit
 

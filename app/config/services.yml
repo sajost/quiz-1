@@ -4,6 +4,16 @@ parameters:
 #    parameter_name: value
 
 services:
+  activity_listener:
+        class: AppBundle\Listener\ActivityListener
+        arguments: 
+          securityContext: "@security.token_storage" 
+          entityManager: "@doctrine.orm.entity_manager"
+        tags: 
+          - { name: kernel.event_listener, event: kernel.controller, method: onCoreController }
+  app.notify.manager:
+    class: AppBundle\Notify\NotifyManager
+    arguments: ['@mailer', '@templating','%notify_use%']    #2-PHP,1-SWIFT
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]

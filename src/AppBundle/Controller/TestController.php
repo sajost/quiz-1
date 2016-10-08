@@ -2,8 +2,16 @@
 // src/AppBundle/Controller/PageController.php
 namespace AppBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
 
 class TestController extends QController {
+	
+	/**
+	 * @Route("test/email/php", name="test_email_php")
+	 * 
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
 	public function emailPHPAction() {
 		
 // 		$protocol = "ssl";	//tcp ssl tls
@@ -33,10 +41,10 @@ class TestController extends QController {
 		$this->get('app.notify.manager')->setP(2);//php
 		if (!$this->get('app.notify.manager')->send(array(
 				'to'=>$to,
-				'from'=>$this->getParameter('mailer_user'),
-				's'=>"Willkomen zu FAFA - TEST-PHP",
-				'bn'=>"reg",
-				'bo'=>array ('login' => 'jo','token' => '1234567890')
+				'from'=>'sascha.stayan@web.de',
+				's'=>"Willkomen zu QUIZ - TEST-PHP",
+				'bn'=>"activate",
+				'bo'=>array ('username' => 'jo','token' => '1234567890')
 		))){
 			$p = 'PHP-Mailer Error: ';// . $m->ErrorInfo;
 		} else {
@@ -58,11 +66,16 @@ class TestController extends QController {
 // 		mail($to,$subject,$message,$headers);
 		
 		// return new Response('Is sent! w.sent');
-		return $this->render ( 'AppBundle:Test:email.html.twig', array (
+		return $this->render ( 'test/email.html.twig', array (
 				'p' => $p 
 		) );
 	}
 	
+	/**
+	 * @Route("test/email/swift", name="test_email_swift")
+	 * 
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
 	public function emailSWIFTAction() {
 	
 		
@@ -70,10 +83,10 @@ class TestController extends QController {
 		$this->get('app.notify.manager')->setP(1);//swift
 		if (!$this->get('app.notify.manager')->send(array(
 				'to'=>$to,
-				'from'=>$this->getParameter('mailer_user'),
-				's'=>"Willkomen zu FAFA - TEST-SWIFT",
-				'bn'=>"reg",
-				'bo'=>array ('login' => 'jo','token' => '9876543210')
+				'from'=>'sascha.stayan@web.de', 
+				's'=>"Willkomen zu QUIZ - SWIFT-PHP",
+				'bn'=>"activate",
+				'bo'=>array ('username' => 'jo','token' => '1234567890')
 		))){
 			$p = 'Swift-Mailer Error: ' ;//. $m->ErrorInfo;
 		} else {
@@ -81,7 +94,7 @@ class TestController extends QController {
 		}
 	
 		// return new Response('Is sent! w.sent');
-		return $this->render ( 'AppBundle:Test:email.html.twig', array (
+		return $this->render ( 'test/email.html.twig', array (
 				'p' => $p
 		) );
 	}

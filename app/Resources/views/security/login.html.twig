@@ -21,8 +21,12 @@
                 	</div>
                 	<div class="col-xs-2">
                 		<div class="btn-group pull-right" role="group" aria-label="group-login">
-                			<a class="btn btn-success btn-sm btn-block" href="{{ path('security_reg') }}" id="btn-login">Registrieren</a>
-                		</div>
+    						<a
+    							class="btn btn-success btn-sm btn-block"
+    							href="{{ path('security_reg') }}"
+    							id="btn-login"
+    						>Registrieren</a>
+						</div>
                 	</div>
             	</div>
             </div>
@@ -30,9 +34,16 @@
                <form action="{{ path('login') }}" method="post" class="" id="f-security-logon" data-toggle="validator" role="form"> 
                
             		<div class="form-group">
-        				<label for="username">Benutzername/Email</label>
-        				<input type="text" id="username" name="_username" value="{{ not last_username is defined ? '' : last_username }}"  class="form-control" required/>
-        				<div class="help-block with-errors">
+        				<label for="username">Benutzername/Email</label> 
+            				<input
+    						type="text"
+    						id="username"
+    						name="_username"
+    						value="{{ not last_username is defined ? '' : last_username }}"
+    						class="form-control"
+    						required
+    					/>
+						<div class="help-block with-errors">
         					{% if error %}
         						<ul class="list-unstyled"><li>{{ error.messageKey|trans(error.messageData) }}</li></ul>
     						{% endif %}

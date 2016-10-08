@@ -3,31 +3,29 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\User;
-use Doctrine\ORM\EntityRepository;
-use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity\QuestionCat;
-use Symfony\Component\Form\CallbackTransformer;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use AppBundle\Entity\QuestionTag;
-use AppBundle\Form\UserType;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use AppBundle\Entity\Question;
-use AppBundle\Form\UserEType;
-use AppBundle\Utils\Ses;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use AppBundle\Form\QuestionType;
-use AppBundle\Entity\Quiz;
-use AppBundle\Form\QuizType;
 use AppBundle\Entity\Answer;
+use AppBundle\Entity\Question;
+use AppBundle\Entity\QuestionCat;
+use AppBundle\Entity\QuestionTag;
+use AppBundle\Entity\Quiz;
+use AppBundle\Entity\QuizCat;
 use AppBundle\Entity\QuizQuestion;
-use AppBundle\Form\QuizQuestionType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use AppBundle\Entity\User;
+use AppBundle\Form\QuestionType;
+use AppBundle\Form\QuizType;
+use AppBundle\Form\UserEType;
+use AppBundle\Form\UserType;
+use AppBundle\Utils\Ses;
+use Doctrine\ORM\EntityRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AdminController extends QController {
 	
@@ -384,7 +382,7 @@ class AdminController extends QController {
 	}
 	
 	/**
-	 * @Route("admin/qcat", name="admin_qcat")
+	 * @Route("admin/qcat", name="admin_question_cat")
 	 */
 	public function questioncatAction(Request $request) {
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
@@ -449,18 +447,18 @@ class AdminController extends QController {
 				}else {
 					$this->get('session')->set('admin_questioncat_ok', 'Nothing is created');
 				}
-				return $this->redirect ( $this->generateUrl ( 'admin_qcat') );
+				return $this->redirect ( $this->generateUrl ( 'admin_question_cat') );
 			}
 		}
 			
-		return $this->render ( 'admin/q.cat.html.twig', array (
+		return $this->render ( 'admin/question.cat.html.twig', array (
 				'questioncats' => $questioncats,
 				'form'=>$form->createView()
 		) );
 	}
 	
 	/**
-	 * @Route("admin/qcate/{eid}", name="admin_qcate")
+	 * @Route("admin/qcate/{eid}", name="admin_question_cate")
 	 */
 	public function questioncateAction(Request $request,$eid=null) {
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
@@ -493,12 +491,12 @@ class AdminController extends QController {
 				}else{
 					$this->get('session')->set('admin_questioncate_ok', 'Nothing is edited');
 				}
-				return $this->redirect ( $this->generateUrl ( 'admin_qcat') );
+				return $this->redirect ( $this->generateUrl ( 'admin_question_cat') );
 				//$questioncats = $this->em()->getRepository('AppBundle:QuestionCat')->getQuestionCatsByCountry($coid);
 			}
 		}
 	
-		return $this->render ( 'admin/q.cate.html.twig', array (
+		return $this->render ( 'admin/question.cate.html.twig', array (
 				'questioncat' => $questioncat,
 				'form'=>$form->createView(),
 		) );
@@ -507,7 +505,7 @@ class AdminController extends QController {
 
 
 	/**
-	 * @Route("admin/qtag", name="admin_qtag")
+	 * @Route("admin/qtag", name="admin_question_tag")
 	 */
 	public function questiontagAction(Request $request) {
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
@@ -572,18 +570,18 @@ class AdminController extends QController {
 						}else {
 							$this->get('session')->set('admin_questiontag_ok', 'Nothing is created');
 						}
-						return $this->redirect ( $this->generateUrl ( 'admin_qtag') );
+						return $this->redirect ( $this->generateUrl ( 'admin_question_tag') );
 					}
 				}
 					
-				return $this->render ( 'admin/q.tag.html.twig', array (
+				return $this->render ( 'admin/question.tag.html.twig', array (
 						'questiontags' => $questiontags,
 						'form'=>$form->createView()
 				) );
 	}
 	
 	/**
-	 * @Route("admin/qtage/{eid}", name="admin_qtage")
+	 * @Route("admin/qtage/{eid}", name="admin_question_tage")
 	 */
 	public function questiontageAction(Request $request,$eid=null) {
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
@@ -612,16 +610,16 @@ class AdminController extends QController {
 					$questiontag->setTitle($dedit);
 					$this->em()->persist ( $questiontag );
 					$this->em()->flush();
-					$this->get('session')->set('admin_questiontage_ok', 'QuestionTag is OK');
+					$this->get('session')->set('admin_question_tage_ok', 'QuestionTag is OK');
 				}else{
 					$this->get('session')->set('admin_questiontage_ok', 'Nothing is edited');
 				}
-				return $this->redirect ( $this->generateUrl ( 'admin_qtag') );
+				return $this->redirect ( $this->generateUrl ( 'admin_question_tag') );
 				//$questiontags = $this->em()->getRepository('AppBundle:QuestionTag')->getQuestionTagsByCountry($coid);
 			}
 		}
 	
-		return $this->render ( 'admin/q.tage.html.twig', array (
+		return $this->render ( 'admin/question.tage.html.twig', array (
 				'questiontag' => $questiontag,
 				'form'=>$form->createView()
 		) );
@@ -796,6 +794,129 @@ class AdminController extends QController {
 		$question->answercount=$answercount;
 		return $question;
 	}
+	
+	
+	
+	/**
+	 * @Route("admin/quizcat", name="admin_quiz_cat")
+	 */
+	public function quizcatAction(Request $request) {
+		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
+		//$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page, ADMINs only!');
+		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
+	
+		$quizcats = $this->em()->getRepository('AppBundle:QuizCat')->getQuizCatsAll();
+		//$quizcats = array();
+	
+		$defaultData = array('1' => 'What');
+		$form = $this->createFormBuilder($defaultData)
+		->add('quizcatnew', TextType::class, array(
+				'label' => false,
+				'required'=>false,
+		))
+		->add('quizcats', EntityType::class, array(
+				'label' => false,
+				'class' => 'AppBundle:QuizCat',
+				'choice_label' => 'title',
+				'expanded' => true,
+				'multiple' => true,
+				'required' => false,
+				'query_builder' => function (EntityRepository $er) {
+						return $er->createQueryBuilder ( 'e' )->select ( 'e' )->addOrderBy ( 'e.title', 'ASC' );
+					},
+				))
+				->add('submit',SubmitType::class)
+				->getForm();
+					
+					
+				if ($request->isMethod ( 'POST' )) {
+					$form->handleRequest ( $request );
+					if ($form->isValid ()) {
+						//------------------remove
+						$quizcats = $form->get('quizcats')->getData();
+						foreach($quizcats as $e_del) {
+							if (true !== is_null ($e_del)){
+								$this->em()->remove($e_del);
+								$this->em()->flush();
+							}
+						}
+						//------------------new
+						//$quizcatnew = preg_split ('/\n|\r\n?/', $form->get('quizcatnew')->getData());
+						$quizcatnew = $form->get('quizcatnew')->getData();
+						//var_dump($quizcatnew);
+						$e = null;$e_old=null;
+						//foreach($quizcatnew as $dnew) {
+						$dnew = $quizcatnew;
+						if (!is_null($dnew) & $dnew!==""){
+							$e_old = $this->em()->getRepository('AppBundle:QuizCat')->getQuizCatByCat(strtolower($dnew));
+							if (true === is_null ($e_old)){
+								$e = new QuizCat();
+								$e->setTitle($quizcatnew);
+								$this->em()->persist($e);
+								$this->em()->flush();
+							}
+						}
+						$e_old=null;
+						//}
+						if ($e!=null){
+							$this->get('session')->set('admin_quizcat_ok', 'QuizCat is OK');
+						}else {
+							$this->get('session')->set('admin_quizcat_ok', 'Nothing is created');
+						}
+						return $this->redirect ( $this->generateUrl ( 'admin_quiz_cat') );
+					}
+				}
+					
+				return $this->render ( 'admin/quiz.cat.html.twig', array (
+						'quizcats' => $quizcats,
+						'form'=>$form->createView()
+				) );
+	}
+	
+	/**
+	 * @Route("admin/quizcate/{eid}", name="admin_quiz_cate")
+	 */
+	public function quizcateAction(Request $request,$eid=null) {
+		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
+		//$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page, ADMINs only!');
+		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
+	
+	
+		$quizcat = $this->em()->getRepository('AppBundle:QuizCat')->find($eid);
+	
+		$defaultData = array('1' => 'What');
+		$form = $this->createFormBuilder($defaultData)
+		->add('eid', HiddenType::class, array(
+				'data' => $eid,
+		))
+		->add('title', TextType::class, array(
+				'data' => $quizcat->getTitle(),
+		))
+		->getForm();
+			
+		if ($request->isMethod ( 'POST' )) {
+			$form->handleRequest ( $request );
+			if ($form->isValid ()) {
+				//------------------edit quizcat
+				$dedit = $form->get('title')->getData();
+				if (!is_null($dedit) & $dedit!=""){
+					$quizcat->setTitle($dedit);
+					$this->em()->persist ( $quizcat );
+					$this->em()->flush();
+					$this->get('session')->set('admin_quizcate_ok', 'QuizCat is OK');
+				}else{
+					$this->get('session')->set('admin_quizcate_ok', 'Nothing is edited');
+				}
+				return $this->redirect ( $this->generateUrl ( 'admin_quiz_cat') );
+			}
+		}
+	
+		return $this->render ( 'admin/quiz.cate.html.twig', array (
+				'quizcat' => $quizcat,
+				'form'=>$form->createView(),
+		) );
+	}
+	
 	
 	/**
 	 * @Route("admin/quiz", name="admin_quiz")
