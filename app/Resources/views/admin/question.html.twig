@@ -21,10 +21,10 @@
                     {% for e in questions %}
                     	<tr>
                     		<td style="width:50px">
-                    			<a class="" href="{{ path('admin_qe',{'eid':e.id}) }}" style="">{{ e.id }}</a>
+                    			<a class="" href="{{ path('admin_questione',{'eid':e.id}) }}" style="">{{ e.id }}</a>
                     		</td>
                     		<td style="width:250px">
-                    			<a class="" href="{{ path('admin_qe',{'eid':e.id}) }}" style="">{{ e.title }}</a>
+                    			<a class="" href="{{ path('admin_questione',{'eid':e.id}) }}" style="">{{ e.title }}</a>
                     		</td>
                 		</tr>
                 	{% endfor %}
@@ -32,7 +32,7 @@
             	</div>
             	<br/> 
         	
-                <form action="{{ path('admin_q') }}" method="post" id="f-admin-question" data-toggle="validator" role="form">
+                <form action="{{ path('admin_question') }}" method="post" id="f-admin-question" data-toggle="validator" role="form">
                 	
             		<h3>Da kannst eine neue Frage erstellen und speichern</h3>
             		<br/>

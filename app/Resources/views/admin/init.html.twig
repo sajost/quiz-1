@@ -13,7 +13,7 @@
 
 {# put input + label of checkbox in the div#}
 {% if form is defined %}
-    {% form_theme form 'bootstrap_3_layout.html.twig' %}
+    {% form_theme form  'admin/form.fields.html.twig' %}
 {# 	{% form_theme form _self %}#}
 {# 	{% block choice_widget_expanded %}#}
 {# 	{% spaceless %}#}
@@ -44,9 +44,24 @@
 {% block head1 %}
 	<header class="navbar navbar-default navbar-fixed-top">
       <div class="container">
-      	<a href="{{ path('admin') }}">
-			<img border="0" alt="Quiz-Admin" src="{{ asset('images/quizadmin-logo.png') }}" width="auto" height="auto">
-		</a>
+      	<div class="row row-eq-height">
+			<div class="col-xs-2">
+        	</div>
+        	<div class="col-xs-8">
+        		<a href="{{ path('admin') }}">
+        			<img border="0" alt="Quiz-Admin" src="{{ asset('images/quizadmin-logo.png') }}" width="auto" height="auto">
+        		</a>
+        	</div>
+        	<div class="col-xs-2">
+        		<div style="padding-top:10px;" class="text-center">
+        		{% if app.user %}
+                	<span>Angemeldet als </span><a href="{{ path('admin_usere',{'eid':app.user.id}) }}" class="navbar-link">{{ app.user.username }}</a>
+                {% else %}
+                	<span>Anonymous </span>
+                {% endif %}
+                </div>
+        	</div>
+    	</div>
       </div>
     </header>
 {% endblock %}

@@ -1,0 +1,61 @@
+{# src/Resources/views/security/activate.html.twig #} 
+{% extends 'security/init.html.twig' %} 
+
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div id="" class="container">
+
+		<div id="panel" class="panel panel-default">
+            <div class="panel-body">
+            	<div class="row">
+            		<div class="col-xs-1">
+                	</div>
+                	<div class="col-xs-10" style="text-align:center;">
+                		<h2 class="panels-list-group">Vielen Dank!</h2>
+                		<h2 class="panels-list-group">Betätigen Sie ihre Benutzer unten mit dem Link</h2>
+                	</div>
+                	<div class="col-xs-1">
+                	</div>
+            	</div>
+           	 	<form action="{{ path('security_confirm') }}" method="post" class="" id="f-security-activate" data-toggle="validator" role="form" style=";"> 
+					<div style="display: none">
+						<div class="form-group">
+            				<label for="{{ form.username.vars.id }}">Benutzername/Email</label>
+            				{{ form_widget(form.username) }}
+            				<div class="help-block with-errors">{{ form_errors(form.username) }}</div>
+            			</div>
+    					<div class="form-group">
+            				<label for="{{ form.token.vars.id }}">Aktivierungscode</label>
+            				{{ form_widget(form.token) }}
+            				<div class="help-block with-errors">{{ form_errors(form.token) }}</div>
+            			</div>
+                	    {{ form_rest(form) }}
+                	 </div>
+            		
+            		<div class="form-field"  style="text-align:center;">
+            			<button class="btn btn-link btn-lg" type="submit">Bestätigungs-Link</button>
+            			{% if app.session.get('security_confirm_valid') %}
+							<div class="help-block with-errors">{{ app.session.get('security_confirm_valid') }}</div>
+						{% endif %}
+            		</div>
+            		
+            		<script type="text/javascript">
+            		//
+            		$( "#" ).each(function(index) {
+            			
+            		});
+            		</script>
+			    </form>
+			</div>
+		</div>
+		
+	</div>
+{% endblock %} 

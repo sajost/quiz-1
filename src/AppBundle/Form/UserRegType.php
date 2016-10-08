@@ -4,12 +4,14 @@ namespace AppBundle\Form;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class AnswerType extends AbstractType{
+class UserRegType extends AbstractType{
 	
 	protected $em;
 	protected $mod;
@@ -26,21 +28,16 @@ class AnswerType extends AbstractType{
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-    	$status = [
-    			"richtig" => "1",
-    			"falsch" => "0",
-    	];
     	
+
         $builder
-       		->add('title',TextareaType::class, array('required'=>false))
-       		->add('status', ChoiceType::class, array(
-       				'choices' => $status,
-       				'multiple' => false,
-       				'expanded' => true,
-       				'required' => true,
-       				'data' => '0'
-       		))
-            
+            ->add('username',TextType::class, array('attr' => array('maxlength'=>18,)))
+			->add('email',EmailType::class, array('attr' => array('maxlength'=>32,)))
+			->add('password', RepeatedType::class, array(
+			    'type' => PasswordType::class,
+			    'invalid_message' => 'The password fields must match.',
+			    'required' => true,
+			))  		
         ;
             
 //             $builder->get('hidename')->addModelTransformer(
@@ -53,12 +50,12 @@ class AnswerType extends AbstractType{
     public function configureOptions(OptionsResolver  $resolver) 
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Answer'
+            'data_class' => 'AppBundle\Entity\User'
         ));
     }
     
-    public function getName() {
-    	return 'answer';
+    public function getBlockPrefix() {
+    	return 'user';
     }
 
     /**

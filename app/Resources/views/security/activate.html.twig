@@ -1,0 +1,98 @@
+{# src/Resources/views/security/activate.html.twig #} 
+{% extends 'security/init.html.twig' %} 
+
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div id="" class="container">
+
+		<div id="panel" class="panel panel-default">
+            <div class="panel-body">
+            	<div class="row row-eq-height">
+                	<div class="col-xs-7">
+                		<h2 class="panels-list-group">Schaue jetzt in dein Postfach und klicke auf den Link in der E-Mail, um die Registrierung abzuschließen!</h2>
+                	</div>
+                	<div class="col-xs-5">
+                		<div style="padding-top:35px">
+                        	<div class="btn-group pull-right" role="group" aria-label="group-activate">
+                                <span class=" btn btn-success btn-sm " id="btn-activate">Manuell aktivieren</span>
+                                <button class="btn btn-default btn-sm" type="button" data-toggle="modal" data-target="#modal-resend" data-username="{{ ua.username }}">Resend Bestätigungs-Link</button>
+                            </div>
+                        </div>
+                	</div>
+            	</div>
+           	 	<form action="{{ path('security_activate') }}" method="post" class="" id="f-security-activate" data-toggle="validator" role="form" style="display:none;"> 
+					<div class="form-group">
+        				<label for="{{ form.username.vars.id }}">Benutzername/Email</label>
+        				{{ form_widget(form.username) }}
+        				<div class="help-block with-errors">{{ form_errors(form.username) }}</div>
+        			</div>
+					<div class="form-group">
+        				<label for="{{ form.token.vars.id }}">Aktivierungscode</label>
+        				{{ form_widget(form.token) }}
+        				<div class="help-block with-errors">{{ form_errors(form.token) }}</div>
+        			</div>
+					
+					<div style="display: none">
+                	    {{ form_rest(form) }}
+                	 </div>
+            		
+            		<div class="form-field">
+            			<button class="btn btn-primary btn-sm" type="submit">Aktivieren</button>
+            			{% if app.session.get('security_activate_valid') %}
+							<div class="help-block with-errors">{{ app.session.get('security_activate_valid') }}</div>
+						{% endif %}
+            		</div>
+            		
+            		<div class="form-field">
+            			<label>Keine Aktivierungsdaten?</label>
+            			<button class="btn btn-default btn-sm" type="button" data-toggle="modal" data-target="#modal-resend" data-username="{{ ua.username }}">Resend Bestätigungs-Link</button>
+            		</div>
+                
+            		<script type="text/javascript">
+            		//
+            		$( "#" ).each(function(index) {
+            			
+            		});
+            		</script>
+			    </form>
+			</div>
+		</div>
+		
+	</div>
+	<div class="modal fade" id="modal-resend" tabindex="-1" role="dialog" aria-labelledby="modal-resend-label">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Schliessen"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="modal-resend-label">Resend Aktivierungscode</h4>
+          </div>
+          <div class="modal-body">
+            <form class="" id="f-security-resend-modal" data-toggle="validator" role="form" >
+              <div class="form-group">
+                <label for="modal-username" class="control-label">Benutzername/Email:</label>
+                <input type="text" class="form-control" id="modal-username">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Schliessen</button>
+            <button type="button" class="btn btn-primary" id="modal-btn-resend" data-path="{{ path('security_resend_aj') }}">Resend</button>
+            <div id="modal-resend-alert" class="alert alert-warning collapse" style="display:none;">
+            	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            	<strong>Error!</strong> <span class="text"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %} 

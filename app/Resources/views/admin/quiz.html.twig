@@ -21,7 +21,7 @@
                     {% for e in quizs %}
                     	<tr>
                     		<td style="width:50px">
-                    			<a class="" href="{{ path('admin_quizquestione',{'eid':e.id}) }}" style="">{{ e.id }}</a>
+                    			<a class="" href="{{ path('admin_quizquestion_all',{'eid':e.id}) }}" style="">{{ e.id }}</a>
                     		</td>
                     		<td style="width:250px">
                     			<a class="" href="{{ path('admin_quize',{'eid':e.id}) }}" style="">{{ e.title }}</a>
@@ -139,6 +139,7 @@
         				<div class="help-block with-errors">{{ form_errors(form.trueanswer) }}</div>
         			</div>
             		
+            		{{ form_row(form.cats) }}
             		
                 	
                 	<div style="display: none">

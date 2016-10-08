@@ -1,0 +1,75 @@
+{# src/Resources/views/security/reg.html.twig #} 
+{% extends 'security/init.html.twig' %} 
+
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div id="" class="container">
+
+		<div id="panel" class="panel panel-default">
+			<div class="panel-heading">
+            	<div class="row">
+					<div class="col-xs-10">
+                		<h3 class="panel-title">Da können Sie sich Registrieren</h3>
+                	</div>
+                	<div class="col-xs-2">
+                		<div class="btn-group pull-right" role="group" aria-label="group-login">
+                			<a class="btn btn-success btn-sm btn-block" href="{{ path('login') }}" id="btn-login">Login</a>
+                		</div>
+                	</div>
+            	</div>
+            </div>
+			<div class="panel-body">
+               <form action="{{ path('security_reg') }}" method="post" class="" id="f-security-reg" data-toggle="validator" role="form">
+                	
+            		<div class="form-group">
+        				<label for="{{ form.username.vars.id }}">Benutzername</label>
+        				{{ form_widget(form.username, { 'attr': {'data-remote': path('admin_user_is'),'data-remote-error':"Solche Login ist schon vorhanden" } }) }}
+        				<div class="help-block with-errors">{{ form_errors(form.username) }}</div>
+        			</div>
+        			
+            		<div class="form-group">
+        				<label for="{{ form.email.vars.id }}">Email</label>
+        				{{ form_widget(form.email, { 'attr': {'data-remote': path('admin_user_is'),'data-remote-error':"Solche Login ist schon vorhanden" } }) }}
+        				<div class="help-block with-errors">{{ form_errors(form.email) }}</div>
+        			</div>
+        			
+        			<div class="form-group">
+        				<label for="{{ form.password.first.vars.id }}">Passwort</label>
+        				{{ form_widget(form.password.first) }}
+        				<div class="help-block with-errors">{{ form_errors(form.password.first) }}</div>
+        			</div>
+        			
+        			<div class="form-group">
+        				<label for="{{ form.password.second.vars.id }}">Passwort wiederholen</label>
+        				{{ form_widget(form.password.second, { 'attr': {'data-match': '#'~form.password.first.vars.id } }) }}
+        				<div class="help-block with-errors">{{ form_errors(form.password.second) }}</div>
+        			</div>
+                	
+                	<div style="display: none">
+                	    {{ form_rest(form) }}
+                	 </div>
+            		
+            		<div class="form-field">
+            			<button class="btn btn-primary btn-sm" type="submit">Registrieren</button>
+            		</div>
+                
+            		<script type="text/javascript">
+            		//
+            		$( "#" ).each(function(index) {
+            			
+            		});
+            		</script>
+            	</form>
+			</div>
+		</div>
+		
+	</div>
+{% endblock %} 

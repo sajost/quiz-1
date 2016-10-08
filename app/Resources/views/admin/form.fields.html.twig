@@ -1,0 +1,26 @@
+{% use "bootstrap_3_layout.html.twig" %}
+
+{# {% if form is defined %}#}
+{# 	{% form_theme form _self %}#}
+{# 	{% block choice_widget_expanded %}#}
+{#     	{% spaceless %}#}
+{#     	    <tr {{ block('widget_container_attributes') }}>#}
+{#         	    {% for child in form %}#}
+{#         	    	<td style="width:10px">#}
+{#         	        	{{ form_widget(child) }}#}
+{#         	        </td> #}
+{#         	        <td style="width:250px">#}
+{#         	        	{{ form_label(child) }}#}
+{#         	        </td> #}
+{#         	    {% endfor %}#}
+{#     	    </tr>#}
+{#     	{% endspaceless %}#}
+{# 	{% endblock choice_widget_expanded %} #}
+
+    {% block checkbox_widget %}
+    	<div {{ block('widget_container_attributes') }}>
+           <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+        </div>
+    {% endblock checkbox_widget %}
+
+{# {% endif %}#}

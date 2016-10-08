@@ -1,0 +1,40 @@
+{# app//Resources/views/Admin/init.html.twig #} 
+{% extends 'layout.html.twig' %} 
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/security.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+    <script src="{{ asset('js/security.js') }}"></script>
+{% endblock %}
+
+{# put input + label of checkbox in the div#}
+{% if form is defined %}
+    {% form_theme form  'bootstrap_3_layout.html.twig' %}
+{% endif %}
+
+
+
+{# head1 in layout#}
+{% block head1 %}
+	<header class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+      	<a href="{{ path('home') }}">
+			<img border="0" alt="Quiz-Com" src="{{ asset('images/quizcom-logo3.png') }}" width="auto" height="auto">
+		</a>
+      </div>
+    </header>
+{% endblock %}
+
+
+{# head2 in layout#}
+
+
+{% block body %}
+
+{% endblock %}
+
+{# foot in layout#}

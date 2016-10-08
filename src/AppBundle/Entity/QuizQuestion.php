@@ -37,7 +37,7 @@ class QuizQuestion
 	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	public $info;
-    
+	
     
     /**
      * @ORM\Column(type="datetime")

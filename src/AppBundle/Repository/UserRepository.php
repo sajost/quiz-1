@@ -48,6 +48,15 @@ class UserRepository extends EntityRepository implements UserLoaderInterface {
 	}
 	
 	/**
+	 * @param unknown $username
+	 * @return mixed|NULL|\Doctrine\DBAL\Driver\Statement
+	 */
+	public function getUserByUE($username) {
+		$qb = $this->createQueryBuilder ( 'u' )->select ( 'u' )->where ( 'u.username = :username' )->orWhere ( 'u.email = :email' )->setParameter ( 'username', $username )->setParameter ( 'email', $username );
+		return $qb->getQuery ()->getOneOrNullResult ();
+	}
+	
+	/**
 	 *
 	 * @param $uname -
 	 *        	username or Email

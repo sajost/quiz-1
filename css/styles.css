@@ -50,3 +50,44 @@ body .modal-body .crop-avatar {
     height:200px;
     margin: 0 auto;
 }
+
+
+header {
+	text-align: center;
+	background: #84dda5 none repeat scroll 0 0 !important; 
+}
+
+/*
+
+
+
+
+
+
+
+
+BOOTSTRAP-> PLUGINS
+
+
+
+
+
+
+
+
+*/
+/*
+ * Row with equal height columns
+ * --------------------------------------------------
+ */
+.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display:         flex;
+}
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+

@@ -81,3 +81,11 @@ function unid() {
   return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
     s4() + '-' + s4() + s4() + s4();
 }
+
+function htmlDecode(value) {
+  return $("<textarea/>").html(value).text();
+}
+
+function htmlEncode(value) {
+  return $('<textarea/>').text(value).html();
+}

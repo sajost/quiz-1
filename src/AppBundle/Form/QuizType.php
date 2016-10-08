@@ -3,7 +3,6 @@
 namespace AppBundle\Form;
 
 use Doctrine\ORM\EntityManager;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -11,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class QuizType extends AbstractType{
 	
@@ -147,6 +147,13 @@ class QuizType extends AbstractType{
 					'multiple' => false,
 					'expanded' => true,
 					'required' => true
+			))
+			->add('cats', EntityType::class, array(
+					// query choices from this entity
+					'class' => 'AppBundle:QuestionCat',
+					'choice_label' => 'title',
+					'multiple' => true,
+					'expanded' => false,
 			))
 //             ->add('questions', EntityType::class, array(
 // 			    // query choices from this entity

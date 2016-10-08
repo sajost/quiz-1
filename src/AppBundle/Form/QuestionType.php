@@ -89,7 +89,8 @@ class QuestionType extends AbstractType{
 				'expanded' => false,
 			))
 			->add('answers', CollectionType::class, array(
-					'entry_type' => AnswerType::class
+					'entry_type' => AnswerType::class,
+					'required'=>true
 			))
 			->add('answercount',IntegerType::class, array(
 					'required'=>false

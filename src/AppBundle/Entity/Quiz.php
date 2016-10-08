@@ -117,11 +117,17 @@ class Quiz
      */
     public $trueanswer = 0;
     
+    /**
+     * @ORM\ManyToMany(targetEntity="QuizCat", inversedBy="quizs")
+     * @ORM\JoinTable(name="quizs_cats")
+     */
+    public $cats;
+    
     
     /**
      * @ORM\OneToMany(targetEntity="QuizQuestion", mappedBy="quiz", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
-    public $questions;
+    public $quizquestions;
     
 
     /**
@@ -138,7 +144,8 @@ class Quiz
     
     public function __construct()
     {
-    	$this->questions = new ArrayCollection();
+    	$this->cats = new ArrayCollection();
+    	$this->quizquestions = new ArrayCollection();
     	$this->setCreated(new \DateTime());
     	$this->setUpdated(new \DateTime());
     }
@@ -152,32 +159,36 @@ class Quiz
     	$this->setUpdated(new \DateTime());
     }
     
+    public function addCat(QuizCat $cat)
+    {
+    	$cat->addQuiz($this); // synchronously updating inverse side
+    	$this->cats[] = $cat;
+    }
+    
     
     /**
-     * Add questions
+     * Add quizquestions
      *
-     * @param \AppBundle\Entity\CarBookmark $questions
+     * @param \AppBundle\Entity\QuizQuestion $quizquestion
      * @return Car
      */
-    public function addQuestion(QuizQuestion $question)
+    public function addQuizquestion(QuizQuestion $quizquestion)
     {
-    	if (!$this->questions->contains($question)) {
-    		$this->questions->add($question);
-    		$question->setQuiz($this);
+    	if (!$this->quizquestions->contains($quizquestion)) {
+    		$this->quizquestions->add($quizquestion);
     	}
     	return $this;
     }
     
     /**
-     * Remove questions
+     * Remove quizquestions
      *
-     * @param \AppBundle\Entity\CarBookmark $questions
+     * @param \AppBundle\Entity\QuizQuestion $quizquestion
      */
-    public function removeQuestion(QuizQuestion $question)
+    public function removeQuizquestion(QuizQuestion $quizquestion)
     {
-    	if ($this->questions->contains($question)) {
-    		$this->questions->removeElement($question);
-    		$question->setQuiz(null);
+    	if ($this->quizquestions->contains($quizquestion)) {
+    		$this->quizquestions->removeElement($quizquestion);
     	}
     	return $this;
     }
@@ -314,11 +325,11 @@ class Quiz
 		$this->trueanswer = $trueanswer;
 		return $this;
 	}
-	public function getQuestions() {
-		return $this->questions;
+	public function getQuizquestions() {
+		return $this->quizquestions;
 	}
-	public function setQuestions($questions) {
-		$this->questions = $questions;
+	public function setQuizquestions($quizquestions) {
+		$this->quizquestions = $quizquestions;
 		return $this;
 	}
 	public function getCreated() {
@@ -338,6 +349,14 @@ class Quiz
 	public function getTyp() {
 		return $this->typ;
 	}
+	public function getCats() {
+		return $this->cats;
+	}
+	public function setCats($cats) {
+		$this->cats = $cats;
+		return $this;
+	}
+	
 	
 
     

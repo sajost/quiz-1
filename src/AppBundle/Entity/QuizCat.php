@@ -1,16 +1,16 @@
 <?php
-// src/AppBundle/Entity/QuestionCat.php
+// src/AppBundle/Entity/QuizCat.php
 
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="AppBundle\Repository\QuestionCatRepository")
- * @ORM\Table(name="questioncat")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\QuizCatRepository")
+ * @ORM\Table(name="quizcat")
  * @ORM\HasLifecycleCallbacks
  */
-class QuestionCat
+class QuizCat
 {
     /**
      * @ORM\Id
@@ -31,9 +31,9 @@ class QuestionCat
     
     
     /**
-     * @ORM\ManyToMany(targetEntity="Question", mappedBy="cats")
+     * @ORM\ManyToMany(targetEntity="Quiz", mappedBy="cats")
      */
-    public $questions;
+    public $quizs;
     
     
     /**
@@ -46,12 +46,12 @@ class QuestionCat
      */
     public $updated;
     
-    public $typ = 'questioncat';
+    public $typ = 'quizcat';
     
     
     public function __construct()
     {
-    	$this->questions = new \Doctrine\Common\Collections\ArrayCollection();
+    	$this->quizs = new \Doctrine\Common\Collections\ArrayCollection();
     	
     	$this->setCreated(new \DateTime());
     	$this->setUpdated(new \DateTime());
@@ -66,9 +66,9 @@ class QuestionCat
     	$this->setUpdated(new \DateTime());
     }
     
-    public function addQuestion(Question $question)
+    public function addQuiz(Quiz $quiz)
     {
-    	$this->questions[] = $question;
+    	$this->quiz[] = $quiz;
     }
     
     
@@ -93,13 +93,6 @@ class QuestionCat
 		$this->status = $status;
 		return $this;
 	}
-	public function getQuestions() {
-		return $this->questions;
-	}
-	public function setQuestions($questions) {
-		$this->questions = $questions;
-		return $this;
-	}
 	public function getCreated() {
 		return $this->created;
 	}
@@ -117,6 +110,14 @@ class QuestionCat
 	public function getTyp() {
 		return $this->typ;
 	}
+	public function getQuizs() {
+		return $this->quizs;
+	}
+	public function setQuizs($quizs) {
+		$this->quizs = $quizs;
+		return $this;
+	}
+	
 	
 	
 

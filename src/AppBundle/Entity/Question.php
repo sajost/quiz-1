@@ -85,6 +85,11 @@ class Question
      */
     public $answers;
     
+    /**
+     * @ORM\OneToMany(targetEntity="QuizQuestion", mappedBy="question", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     */
+    public $quizquestions;
+    
 
     /**
      * @ORM\Column(type="datetime")
@@ -107,6 +112,8 @@ class Question
      */
     public $typ = 'question';
     
+    public $quizin = 0;
+    
     
     public function __construct()
     {
@@ -117,6 +124,8 @@ class Question
     	
     	$this->cats = new ArrayCollection();
     	$this->tags = new ArrayCollection();
+    	
+    	$this->quizs = new ArrayCollection();
     	
     }
     
@@ -270,6 +279,42 @@ class Question
 			$this->answers->removeElement($answer);
 			$answer->setParent(null);
 		}
+		return $this;
+	}
+	
+	
+	/**
+	 * Add $quizquestion
+	 *
+	 * @param \AppBundle\Entity\QuizQuestion $quizquestion
+	 * @return Question
+	 */
+	public function addQuizquestion(QuizQuestion $quizquestion)
+	{
+		if (!$this->quizs->contains($quizquestion)) {
+			$this->quizs->add($quizquestion);
+			//$quiz->setQuiz($this);
+		}
+		return $this;
+	}
+	
+	/**
+	 * Remove $quizquestion
+	 *
+	 * @param \AppBundle\Entity\QuizQuestion $quiz
+	 */
+	public function removeQuizquestion(QuizQuestion $quizquestion)
+	{
+		if ($this->quizs->contains($quizquestion)) {
+			$this->quizs->removeElement($quizquestion);
+		}
+		return $this;
+	}
+	public function getQuizquestions() {
+		return $this->quizquestions;
+	}
+	public function setQuizquestions($quizquestions) {
+		$this->quizquestions = $quizquestions;
 		return $this;
 	}
 	
