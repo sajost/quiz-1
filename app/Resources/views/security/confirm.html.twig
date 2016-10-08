@@ -41,8 +41,11 @@
                 	 </div>
             		
             		<div class="form-field"  style="text-align:center;">
-            			<button class="btn btn-link btn-lg" type="submit">Bestätigungs-Link</button>
-            			{% if app.session.get('security_confirm_valid') %}
+    					<button
+    						class="btn btn-link btn-lg"
+    						type="submit"
+    					>Bestätigungs-Link</button>
+					{% if app.session.get('security_confirm_valid') %}
 							<div class="help-block with-errors">{{ app.session.get('security_confirm_valid') }}</div>
 						{% endif %}
             		</div>
