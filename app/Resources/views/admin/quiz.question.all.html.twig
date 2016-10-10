@@ -14,16 +14,31 @@
                   		<button class="btn btn-default btn-sm" type="button" id="btn-qq-new">Neue Frage</button>
                   	</div>
                   	<div class="btn-group" role="group" aria-label="qq-group-2">
-                  		<button class="btn btn-default btn-sm" type="button" id="btn-qq-filter-1">Filter-1</button>
-                  		<button class="btn btn-default btn-sm" type="button" id="btn-qq-filter-2">Filter-2</button>
+                  		<button class="btn btn-default btn-sm" type="button" id="btn-qq-filter-assigned">Ungeordnet</button>
+                  		<button class="btn btn-default btn-sm" type="button" id="btn-qq-filter-unassigned">Zugeordnet</button>
+                  	</div>
+                  	<div class="btn-group" role="group" aria-label="qq-group-3">
+                  		<button class="btn btn-default btn-sm" type="button" id="btn-qq-assign">Alle zuordnen</button>
+                  		<button class="btn btn-default btn-sm" type="button" id="btn-qq-unassign">Alle aus</button>
                   	</div>
                 </div>
             </div>
             <div class="panel-heading">
-            	<h4 class="panel-title"><span>Quizname: </span><small>{{ quiz.title }}</small> </h4>
+            	<div class="row row-eq-height">
+                	<div class="col-xs-7">
+                		<h4 class="panel-title"><span>Quizname: </span><strong>{{ quiz.title }}</strong> </h4>
+                	</div>
+                	<div class="col-xs-5">
+                		{% set cats = [] %}
+                        {% for c in quiz.cats %}
+                            {% set cats = cats|merge([c.title]) %}
+                        {% endfor %}
+                		<h5>Kategorie: <strong>{{ cats|join(', ') }}</strong> </h5>
+                	</div>
+            	</div>
             </div>
 			<div class="panel-body">
-				<div class="panel-scroll" id="panel-qq-all">
+				<div class="panel-scroll" id="panel-qq-all" data-id1="{{ quiz.id }}" data-path="{{ path('admin_quizquestion_aj') }}">
     				<table class="table table-bordered" fixed-header>
     					<thead>
                             <tr>
@@ -37,6 +52,7 @@
                                 <th style="width:50px">Antwort-6</th>
                                 <th style="width:50px">Antwort-7</th>
                                 <th style="width:50px">Antwort-8</th>
+                                <th style="width:50px">Cats</th>
                             </tr>
                         </thead>
                         {% for e in questions %}
@@ -59,7 +75,7 @@
             							{{ qqtitle }}</span>
         						</td>
                         		<td style="width:250px">
-                        			{{ e.title }}
+                        			<a class="" href="{{ path('admin_questione',{'eid':e.id}) }}" style="">{{ e.title }}</a>
                         		</td>
                         		{% for a in e.answers %}
                             		<td style="width:50px">
@@ -81,11 +97,19 @@
                         		{% elseif e.answers|length < 8 %}
                         			<td style="width:50px">-</td>
                         	    {% endif %}
+                        	    <td style="width:50px">
+                        	    	{% set cats = [] %}
+                                    {% for c in e.cats %}{% set cats = cats|merge([c.title]) %}{% endfor %}
+                        	        {% for c in e.cats %}
+                                        {{ cats|join('; ') }}
+                        		    {% endfor %}
+                        		</td>
                     		</tr>
                     	{% endfor %}
     				</table>
             	</div>
             	
+{#             	Form for new Question        #}
             	<div class="" id="panel-qq-new" style="display:none;">
             		<form action="{{ path('admin_quizquestion_all',{'eid':quiz.id}) }}" method="post" id="f-admin-question" data-toggle="validator" role="form">
                 	

@@ -22,21 +22,8 @@ function init(){
 	
 	initQQ();
 	
-	//quiz-questions
-	$('#btn-qq-all').on("click", function() { 
-		$(this).addClass('active');
-	    $(this).siblings().removeClass('active');
-	    $('#panel-qq-new').fadeOut('slow').promise().done(function() {
-	    	$('#panel-qq-all').fadeIn('slow');
-	    });
-	});
-	$('#btn-qq-new').on("click", function() { 
-		$(this).addClass('active');
-	    $(this).siblings().removeClass('active');
-	    $('#panel-qq-all').fadeOut('slow').promise().done(function() {
-	    	$('#panel-qq-new').fadeIn('slow');
-	    });
-	});
+	
+		
 	
 	//hidden answers on form should not to be as required
 //	$('.answers-group').data('custom',{
@@ -56,7 +43,7 @@ function initQQ(){
 		var btn=$(this);
 		btn.removeClass('btn-danger');
 		if(btn.hasClass('btn-default')) act='rem'; else act='add';
-		toggle();
+		toggle(btn);
         $.ajax({
              type: "POST",
              url: btn.data("path")+"?act="+act+"&id1="+btn.data("id1")+"&id2=" + btn.data("id2"), 
@@ -69,19 +56,70 @@ function initQQ(){
             	 console.log(err); 
              }
          });
-         function toggle(){
-     		if(btn.hasClass('btn-default')) {
-         		btn.removeClass('btn-default');
-         		btn.addClass('btn-primary');
-         		btn.text('Zuordnen');//Lesen
-         	}else{
-         		btn.removeClass('btn-primary');
-         		btn.addClass('btn-default');
-         		btn.text('Aus');//Unlesen
-         	}
-     	}
         return false;
     });
+	
+	function toggle(btn){
+ 		if(btn.hasClass('btn-default')) {
+     		btn.removeClass('btn-default');
+     		btn.addClass('btn-primary');
+     		btn.text('Zuordnen');//Lesen
+     	}else{
+     		btn.removeClass('btn-primary');
+     		btn.addClass('btn-default');
+     		btn.text('Aus');//Unlesen
+     	}
+ 	}
+	
+	//quiz-questions
+	$('#btn-qq-all').on("click", function() { 
+		$(this).addClass('active');
+	    $(this).siblings().removeClass('active');
+	    $('#panel-qq-new').fadeOut('slow').promise().done(function() {
+	    	$('#panel-qq-all').fadeIn('slow');
+	    	$('.btn-qq.btn-primary').parents("tr").fadeIn();
+		    $('.btn-qq.btn-default').parents("tr").fadeIn();
+	    });
+	});
+	$('#btn-qq-new').on("click", function() { 
+		$(this).addClass('active');
+	    $(this).siblings().removeClass('active');
+	    $('#panel-qq-all').fadeOut('slow').promise().done(function() {
+	    	$('#panel-qq-new').fadeIn('slow');
+	    });
+	});
+	
+	$("#btn-qq-filter-assigned").on("click", function() { 
+		$('.btn-qq.btn-default').parents("tr").fadeOut();
+		$('.btn-qq.btn-primary').parents("tr").fadeIn();
+	})
+	$("#btn-qq-filter-unassigned").on("click", function() { 
+		$('.btn-qq.btn-default').parents("tr").fadeIn();
+		$('.btn-qq.btn-primary').parents("tr").fadeOut();
+	})
+	
+	//All assign
+	$("#btn-qq-assign").on("click", function() {
+		var ids=$('.btn-qq','#panel-qq-all tr:visible').map(function() {
+            return $(this).data('id2');
+        }).get();
+		$('.btn-qq','#panel-qq-all tr:visible').each(function() {
+			toggle($(this));
+        });
+		$.ajax({
+            type: "POST",
+            url: $('#panel-qq-all').data("path")+"?act=addall"+"&id1="+$('#panel-qq-all').data("id1")+"&id2=" + ids.toString(), 
+            success: function(data) {
+           	 //toggle(btn);
+            },
+            error: function (r, s, err) {
+            	$('.btn-qq','#panel-qq-all tr:visible').each(function() {
+        			toggle($(this));
+                });
+            	console.log(err); 
+            }
+        });
+	})
 }
 
 

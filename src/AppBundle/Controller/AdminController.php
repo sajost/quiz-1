@@ -1077,8 +1077,20 @@ class AdminController extends QController {
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
 	
 		$quiz = $this->em()->getRepository('AppBundle:Quiz')->find($eid);
-		//$quizs = array();
-		$questions = $this->em()->getRepository('AppBundle:Question')->getQuestionsAll();
+		$titles = array();
+		foreach ($quiz->getCats() as $c){
+			$titles[]=strtolower($c->getTitle());
+		}
+		
+		$questions = $this->em()->getRepository('AppBundle:Question')
+		->createQueryBuilder('q')
+		->select(array('q', 'c'))
+		->innerJoin('q.cats', 'c')
+		->andWhere('lower(c.title) IN (:titles)')
+		->setParameter('titles', $titles)
+		->getQuery()->getResult();
+		
+		//$questions = $this->em()->getRepository('AppBundle:Question')->getQuestionsAll();
 		foreach ($quiz->getQuizquestions() as $qq) {
 			foreach ($questions as $question) {
 				if($qq->getQuestion()->getId()==$question->getId()){
@@ -1143,10 +1155,10 @@ class AdminController extends QController {
 		//
 		$quiz=null;$question=null;
 		$quiz = $this->em()->getRepository ( 'AppBundle:Quiz' )->find ( $id1 );
-		$question = $this->em()->getRepository ( 'AppBundle:Question' )->find ( $id2 );
 		if (!$quiz) throw $this->createNotFoundException ( 'Quiz is not found, id='. $id1 );
-		if (!$question) throw $this->createNotFoundException ( 'Question is not found, id='. $id2 );
 		if ($act=="add"){
+			$question = $this->em()->getRepository ( 'AppBundle:Question' )->find ( $id2 );
+			if (!$question) throw $this->createNotFoundException ( 'Question is not found, id='. $id2 );
 			$qq = new QuizQuestion($quiz,$question);
 			$this->em()->persist($qq);
 			$this->em()->flush();
@@ -1160,7 +1172,17 @@ class AdminController extends QController {
 			}
 			//$this->em()->persist($qq);
 			$this->em()->flush();
+		}elseif ($act=="addall"){
+			$ids = explode(',', $id2);
+			foreach ($ids as $id) {
+				$question = $this->em()->getRepository ( 'AppBundle:Question' )->find ( $id );
+				if (!$question) throw $this->createNotFoundException ( 'Question is not found, id='. $id );
+				$qq = new QuizQuestion($quiz,$question);
+				$this->em()->persist($qq);
+			}
+			$this->em()->flush();
 		}
+			
 	
 		return new JsonResponse([]);
 	}
