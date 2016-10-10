@@ -3,6 +3,7 @@
 namespace AppBundle\Form;
 
 use Doctrine\ORM\EntityManager;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -76,6 +77,13 @@ class UserEType extends AbstractType{
             ->add('avatar_y', TextType::class, array('required'=>false,'mapped' => false))
             ->add('avatar_h', TextType::class, array('required'=>false,'mapped' => false))
             ->add('avatar_w', TextType::class, array('required'=>false,'mapped' => false))
+            ->add('userroles', EntityType::class, array(
+            		// query choices from this entity
+            		'class' => 'AppBundle:UserRole',
+            		'choice_label' => 'role',
+            		'multiple' => true,
+            		'expanded' => false,
+            ))
         ;
             
 //             $builder->get('hidename')->addModelTransformer(

@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class UserType extends AbstractType{
 	
@@ -85,6 +86,13 @@ class UserType extends AbstractType{
             ->add('avatar_y', TextType::class, array('required'=>false,'mapped' => false))
             ->add('avatar_h', TextType::class, array('required'=>false,'mapped' => false))
             ->add('avatar_w', TextType::class, array('required'=>false,'mapped' => false))
+            ->add('userroles', EntityType::class, array(
+            		// query choices from this entity
+            		'class' => 'AppBundle:UserRole',
+            		'choice_label' => 'role',
+            		'multiple' => true,
+            		'expanded' => false,
+            ))
         ;
             
 //             $builder->get('hidename')->addModelTransformer(

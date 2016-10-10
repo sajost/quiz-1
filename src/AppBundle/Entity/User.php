@@ -58,7 +58,7 @@ class User implements AdvancedUserInterface, \Serializable {
 	/**
 	 * @ORM\Column(type="string", length=64, unique=true)
 	 * 
-	 * @Assert\NotBlank(message = "Passwort darf nicht leer sein")
+	 * @Assert\NotBlank(message = "Email darf nicht leer sein")
 	 * @Assert\Length(
 	 * 			max = 50,
 	 *			min = 5,
@@ -136,7 +136,9 @@ class User implements AdvancedUserInterface, \Serializable {
 	/**
 	 * Date/Time of the last activity
 	 *
-	 * @var \Datetime @ORM\Column(type="datetime", nullable=true)
+	 * @var \Datetime
+	 * 
+	 * @ORM\Column(type="datetime", nullable=true)
 	 */
 	protected $lastact;
 	

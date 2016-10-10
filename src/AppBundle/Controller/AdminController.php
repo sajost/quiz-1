@@ -125,7 +125,7 @@ class AdminController extends QController {
 		if ($request->isMethod ( 'POST' )) {
 			$form->handleRequest ( $request );
 			if ($form->isValid ()) {
-				$p = $request->get ( 'userrole' );
+				//$p = $request->get ( 'userrole' );
 				//var_dump($p);
 				$this->em()->persist ( $userrole );
 				$this->em()->flush ();
@@ -313,7 +313,7 @@ class AdminController extends QController {
 							)
 					);
 					$avatar=Ses::after('tmp_', $p ['avatar']);
-					dump($avatar);
+					//dump($avatar);
 					Ses::imgResize ( Ses::getUpDirTmp ($user->getUsername()) . "/" . $p ['avatar'], Ses::getUpDirTmp ($user->getUsername()) . "/" . $avatar, $img_constraint );
 					$user->setAvatar($avatar); 
 				}
