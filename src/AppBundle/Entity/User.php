@@ -7,8 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Mapping\ClassMetadata;
-
+use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  * @ORM\Table(name="user")
@@ -32,16 +31,40 @@ class User implements AdvancedUserInterface, \Serializable {
 	
 	/**
 	 * @ORM\Column(type="string", length=20, unique=true)
+	 * @Assert\Length(
+	 * 			max = 16,
+	 *			min = 2,
+	 *			minMessage = "Passwort muss mindestens {{ limit }} Symbolen sein",
+	 *			maxMessage = "Passwort muss maximal {{ limit }} Symbolen sein" 
+	 * 		)
+	 * 
+	 * @Assert\NotBlank(message = "Benutzername darf nicht leer sein")
 	 */
 	protected $username;
 	
 	/**
 	 * @ORM\Column(type="string", length=20)
+	 * 
+	 * @Assert\NotBlank(message = "Passwort darf nicht leer sein")
+	 * @Assert\Length(
+	 * 			max = 16,
+	 *			min = 3,
+	 *			minMessage = "Passwort muss mindestens {{ limit }} Symbolen sein",
+	 *			maxMessage = "Passwort muss maximal {{ limit }} Symbolen sein" 
+	 * 		)
 	 */
 	protected $password;
 	
 	/**
 	 * @ORM\Column(type="string", length=64, unique=true)
+	 * 
+	 * @Assert\NotBlank(message = "Passwort darf nicht leer sein")
+	 * @Assert\Length(
+	 * 			max = 50,
+	 *			min = 5,
+	 *			minMessage = "Email muss mindestens {{ limit }} Symbolen sein",
+	 *			maxMessage = "Email muss maximal {{ limit }} Symbolen sein" 
+	 * 		)
 	 */
 	protected $email;
 	
@@ -118,14 +141,21 @@ class User implements AdvancedUserInterface, \Serializable {
 	protected $lastact;
 	
 	/**
+	 * @ORM\ManyToMany(targetEntity="UserRole", inversedBy="users")
+	 * @ORM\JoinTable(name="users_roles")
+	 */
+	protected $userroles;
+	
+	/**
 	 *
 	 * @var string
 	 */
 	public $typ = 'user';
 	public function __construct() {
+		$this->userroles = new ArrayCollection();
 		// $g = new RandomStringGenerator();
 		// $this->setUnid($g->generate(32));//md5(uniqid('')));
-		$this->setUnid ( Ses::uid ( 10 ) );
+		$this->setUnid ( Ses::uid ( 32 ) );
 		$this->setCreated ( new \DateTime () );
 		$this->setUpdated ( new \DateTime () );
 	}
@@ -167,43 +197,6 @@ class User implements AdvancedUserInterface, \Serializable {
 		$delay = new \DateTime ( '2 minutes ago' );
 		return ($this->getLastact () > $delay);
 	}
-	public static function loadValidatorMetadata(ClassMetadata $metadata) {
-		// $metadata->addPropertyConstraint('username', new Assert\NotBlank(array(
-		// 'message' => 'Das Feld ID darf nicht leer sein'
-		// )));
-		$metadata->addPropertyConstraint ( 'email', new Assert\NotBlank ( array (
-				'message' => 'Das Feld E-Mail darf nicht leer sein' 
-		) ) );
-		$metadata->addPropertyConstraint ( 'password', new Assert\NotBlank ( array (
-				'message' => 'Das Feld Passwort darf nicht leer sein' 
-		) ) );
-		// $metadata->addPropertyConstraint('username', new Assert\Length(array(
-		// 'max' => 16,
-		// 'min'=>2,
-		// 'minMessage' => 'username muss mindestens {{ limit }} Symbolen sein',
-		// 'maxMessage' => 'username muss maximal {{ limit }} Symbolen sein'
-		// )));
-		$metadata->addPropertyConstraint ( 'email', new Assert\Length ( array (
-				'max' => 50,
-				'min' => 5,
-				'minMessage' => 'Email muss mindestens {{ limit }} Symbolen sein',
-				'maxMessage' => 'Email muss maximal {{ limit }} Symbolen sein' 
-		) ) );
-		$metadata->addPropertyConstraint ( 'password', new Assert\Length ( array (
-				'max' => 16,
-				'min' => 3,
-				'minMessage' => 'Passwort muss mindestens {{ limit }} Symbolen sein',
-				'maxMessage' => 'Passwort muss maximal {{ limit }} Symbolen sein' 
-		) ) );
-		// $metadata->addPropertyConstraint('email', new UniqueEntity(array(
-		// 'fields' => 'email',
-		// 'message' => 'Email existiert schon'
-		// )));
-		// $metadata->addPropertyConstraint('username', new UniqueEntity(array(
-		// 'fields' => 'username',
-		// 'message' => 'Benutzer-ID existiert schon'
-		// )));
-	}
 	
 	/**
 	 * @inheritDoc
@@ -233,12 +226,11 @@ class User implements AdvancedUserInterface, \Serializable {
 	 */
 	public function getRoles()
 	{
-		return array('ROLE_USER');
-// 	$r = array();
-// 	foreach ($this->getUserroles() as $ur) {
-// 	$r[]=$ur->getRole();
-// 	}
-// 	return $r;
+		$r = array();
+		foreach ($this->getUserroles() as $ur) {
+		$r[]=$ur->getRole();
+		}
+		return $r;
 	}
 	
 	/**
@@ -390,7 +382,38 @@ class User implements AdvancedUserInterface, \Serializable {
 		return $this->typ;
 	}
 	
+	public function getUserroles() {
+		return $this->userroles;
+	}
+	public function setUserroles($userroles) {
+		$this->userroles = $userroles;
+		return $this;
+	}
 	
+	/**
+	 * Add userroles
+	 *
+	 * @param \AppBundle\Entity\UserRole $userroles
+	 * @return User
+	 */
+	public function addUserRole(\AppBundle\Entity\UserRole $userrole)
+	{
+		$userrole->addUser($this); // synchronously updating inverse side
+		$this->userroles[] = $userrole;
+		return $this;
+	}
+	
+	/**
+	 * Remove userroles
+	 *
+	 * @param \AppBundle\Entity\UserRole $userroles
+	 */
+	public function removeUserRole(\AppBundle\Entity\UserRole $userrole)
+	{
+		$userrole->removeUser($this);
+		$this->userroles->removeElement($userrole);
+		return $this;
+	}	
 	
 	
 	// public function __sleep()

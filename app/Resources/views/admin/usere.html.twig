@@ -131,6 +131,12 @@
         				</div>
     				</div>
             		
+            		{#     				-            #}
+    				<div class="form-group">
+        				<label for="{{ form.userroles.vars.id }}">Rollen</label>
+        				{{ form_widget(form.userroles) }}
+        				{{ form_errors(form.userroles) }}
+        			</div>
                 	
                 	<div style="display:none ">
                 		<input id="user_username" type="hidden" value="{{ user.username }}"></input>

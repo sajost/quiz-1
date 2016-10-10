@@ -26,6 +26,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use AppBundle\Form\UserRoleType;
+use AppBundle\Entity\UserRole;
 
 class AdminController extends QController {
 	
@@ -101,6 +103,85 @@ class AdminController extends QController {
 				'form'=>$form->createView()
 		) );
 	}
+	
+	
+	
+	
+	/**
+	 * @Route("admin/userrole", name="admin_userrole")
+	 */
+	public function userroleAction(Request $request) {
+		//*************RIGHTS************************************
+		if( !$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ){
+			//????
+		}
+		//*************RIGHTS************************************
+	
+		$userrole = new UserRole();
+	
+		$form = $this->createForm ( UserRoleType::class, $userrole );
+		$form2 = clone $form;
+			
+		if ($request->isMethod ( 'POST' )) {
+			$form->handleRequest ( $request );
+			if ($form->isValid ()) {
+				$p = $request->get ( 'userrole' );
+				//var_dump($p);
+				$this->em()->persist ( $userrole );
+				$this->em()->flush ();
+				$this->get('session')->set('admin_userrole_ok', 'UserRole is OK');
+				$form = $form2;//disable a message for resend data by page-refresh
+			}else{
+				$this->get('session')->set('admin_userrole_ok', 'Nothing is created');
+			}
+		}
+		$userroles = $this->em()->getRepository('AppBundle:UserRole')->findBy(array(), array('role' => 'ASC'));
+			
+		return $this->render ( 'admin/user.role.html.twig', array (
+				'userroles' => $userroles,
+				'userrole' => $userrole,
+				'form'=>$form->createView()
+		) );
+	}
+	
+	
+	/**
+	 * @Route("admin/userrolee/{eid}", name="admin_userrolee")
+	 */
+	public function userroleeAction(Request $request,$eid=null) {
+		//*************RIGHTS************************************
+		if( !$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ){
+			//????
+		}
+		//*************RIGHTS************************************
+	
+		$userrole = $this->em()->getRepository('AppBundle:UserRole')->find($eid);
+	
+		$form = $this->createForm ( UserRoleType::class, $userrole );
+		$form2 = clone $form;
+			
+		if ($request->isMethod ( 'POST' )) {
+			$form->handleRequest ( $request );
+			if ($form->isValid ()) {
+				//var_dump($p);
+				$this->em()->persist ( $userrole );
+				$this->em()->flush ();
+				$this->get('session')->set('admin_userrole_ok', 'UserRole is OK');
+				$userrole = $this->em()->getRepository('AppBundle:UserRole')->find($eid);
+				$form = $form2;//disable a message for resend data by page-refresh
+			}else{
+				$this->get('session')->set('admin_userrole_ok', 'Nothing is created');
+			}
+		}
+	
+		return $this->render ( 'admin/user.rolee.html.twig', array (
+				'userrole' => $userrole,
+				'form'=>$form->createView()
+		) );
+	}
+	
+	
+	
 	
 	/**
 	 * @Route("admin/user", name="admin_user")

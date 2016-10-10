@@ -1,0 +1,77 @@
+{# src/Resources/views/admin/q.tag.html.twig #} 
+{% extends 'admin/init.html.twig' %} 
+
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div id="" class="container">
+
+		<div id="panel" class="panel panel-default">
+			<div class="panel-heading">
+            	<h3 class="panel-title">Da ist die ganze Liste von allen Rollen, KLicken zum Bearbeiten</h3>
+            </div>
+			<div class="panel-body">
+				<div class="panel-scroll">
+    				<table class="table table-bordered" fixed-header>
+    					<thead>
+                            <tr>
+                              <th style="width:50px">#</th>
+                              <th style="width:250px">Role</th>
+                            </tr>
+                        </thead>
+                        {% for e in userroles %}
+                        	<tr>
+                        		<td style="width:50px">
+                        			<a class="" href="{{ path('admin_userrolee',{'eid':e.id}) }}" style="">{{ e.id }}</a>
+                        		</td>
+                        		<td style="width:250px">
+                        			<a class="" href="{{ path('admin_userrolee',{'eid':e.id}) }}" style="">{{ e.role }}</a>
+                        		</td>
+                    		</tr>
+                    	{% endfor %}
+    				</table>
+            	</div>
+            	<br/>
+            	<br/>
+               <form action="{{ path('admin_userrole') }}" method="post" class="" id="f-admin-userrole" data-toggle="validator" role="form">
+                	
+            		<h3>Da kannst eine neuen Benutzer erstellen und speichern</h3>
+            		<br/>
+            		
+            		<div class="form-group">
+        				<label for="{{ form.role.vars.id }}">Role</label>
+        				{{ form_widget(form.role) }}
+        				{{ form_errors(form.role) }}
+        			</div>
+        			
+        			<div class="form-group">
+            		
+            		
+                	
+                	<div style="display: none">
+                	    {{ form_rest(form) }}
+                	 </div>
+            		
+            		<div class="form-field">
+            			<button class="btn btn-primary btn-sm" type="submit">Speichern</button>
+            		</div>
+                
+            		<script type="text/javascript">
+            		//
+            		$( "#" ).each(function(index) {
+            			
+            		});
+            		</script>
+            	</form>
+			</div>
+		</div>
+		
+	</div>
+{% endblock %} 
