@@ -119,6 +119,10 @@ class QuestionCat
 	}
 	
 	
+	
+	public function __toString(){
+		return $this->title;
+	}
 
     
 }

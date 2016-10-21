@@ -1,0 +1,54 @@
+{# src/Resources/views/security/activate.html.twig #} 
+{% extends 'security/init.html.twig' %} 
+
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div id="" class="container">
+
+		<div id="panel" class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-xs-12">
+                		<h1 class="panel-title">Fehler! Oops!</h1>
+                	</div>
+            	</div>
+            </div>
+            <div class="panel-body">
+            	<div class="row">
+            		<div class="col-xs-1">
+                	</div>
+                	<div class="col-xs-10" style="text-align:center;">
+                		<h3 class="panels-list-group">Fehler</h3>
+                		<div class="alert alert-danger" role="alert">
+                			{{ app.session.get('m') }}
+                		</div>
+                	</div>
+                	<div class="col-xs-1">
+                	</div>
+            	</div>
+            	<div class="row">
+            		<div class="col-xs-5">
+                	</div>
+                	<div class="col-xs-2" style="text-align:center;">
+                		<div style="padding-top:0px">
+                        	<div class="btn-group" role="group" aria-label="group-play">
+                                <a class=" btn btn-warning btn-sm " id="btn-play" href="{{ path('home') }}">Home</a>
+                            </div>
+                        </div>
+                	</div>
+                	<div class="col-xs-5">
+                	</div>
+            	</div>
+			</div>
+		</div>
+		
+	</div>
+{% endblock %} 

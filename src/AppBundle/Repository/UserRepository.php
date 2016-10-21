@@ -116,4 +116,15 @@ class UserRepository extends EntityRepository implements UserLoaderInterface {
 		
 		return $qb->getQuery ()->getOneOrNullResult ();
 	}
+	
+	/**
+	 *
+	 * @param unknown $unid - reset
+	 * @return \Doctrine\ORM\mixed
+	 */
+	public function getUserByReset($reset) {
+		$qb = $this->createQueryBuilder ( 'u' )->select ( 'u' )->where ( 'u.reset = :reset' )->setParameter ( 'reset', $reset );
+	
+		return $qb->getQuery ()->getOneOrNullResult ();
+	}
 }

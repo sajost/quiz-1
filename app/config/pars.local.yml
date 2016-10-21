@@ -9,10 +9,10 @@ parameters:
     notify_off: 0
     notify_use: 1
     mailer_transport: smtp
-    mailer_host: smtp.web.de
+    mailer_host: w010ca9a.kasserver.com
     mailer_port: 587
-    mailer_user: sascha.stayan@web.de
-    mailer_password: niggazz3200
+    mailer_user: support@quizz.de
+    mailer_password: enter1234
     mailer_encryption: tls
     #mailer_encryption: ssl
     #mailer_transport: gmail

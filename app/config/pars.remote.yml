@@ -3,14 +3,14 @@ parameters:
     database_driver: pdo_mysql
     database_host: localhost
     database_port: null
-    database_name: d01f2e47
-    database_user: d01f2e47
-    database_password: 4Y4E5p3aErY4JrMN
-    mailer_transport: sendmail
-    mailer_host: smtp.1und1.de
+    database_name: d023c41d
+    database_user: d023c41d
+    database_password: enter1234
+    mailer_transport: smtp
+    mailer_host: w010ca9a.kasserver.com
     mailer_port: 587
-    mailer_user: support@fafa24.de
-    mailer_password: enter3200
+    mailer_user: support@quizz.de
+    mailer_password: enter1234
     mailer_encryption: tls
     notify_off: 0
     notify_use: 2 #2-PHP,1-SWIFT

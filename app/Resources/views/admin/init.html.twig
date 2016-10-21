@@ -55,7 +55,7 @@
         	<div class="col-xs-2">
         		<div style="padding-top:10px;" class="text-center">
         		{% if app.user %}
-                	<span>Angemeldet als </span><a href="{{ path('admin_usere',{'eid':app.user.id}) }}" class="navbar-link">{{ app.user.username }}</a>
+                	<span>Angemeldet als </span><a href="{{ path('my_user') }}" class="navbar-link">{{ app.user.username }}</a>
                 {% else %}
                 	<span>Anonymous </span>
                 {% endif %}

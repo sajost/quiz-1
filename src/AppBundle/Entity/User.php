@@ -3,11 +3,11 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Utils\Ses;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  * @ORM\Table(name="user")
@@ -54,6 +54,14 @@ class User implements AdvancedUserInterface, \Serializable {
 	 * 		)
 	 */
 	protected $password;
+	
+	/**
+	 * by fogotten pwd, it generates code for new password
+	 * 
+	 * @ORM\Column(type="string", length=128, nullable=true)
+	 */
+	protected $reset;
+	
 	
 	/**
 	 * @ORM\Column(type="string", length=64, unique=true)
@@ -415,7 +423,15 @@ class User implements AdvancedUserInterface, \Serializable {
 		$userrole->removeUser($this);
 		$this->userroles->removeElement($userrole);
 		return $this;
-	}	
+	}
+	public function getReset() {
+		return $this->reset;
+	}
+	public function setReset($reset) {
+		$this->reset = $reset;
+		return $this;
+	}
+		
 	
 	
 	// public function __sleep()

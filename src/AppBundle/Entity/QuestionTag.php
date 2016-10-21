@@ -101,6 +101,8 @@ class QuestionTag
 		return $this->typ;
 	}
 	
-	
+	public function __toString(){
+		return $this->title;
+	}
 
 }

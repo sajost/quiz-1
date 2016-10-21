@@ -6,7 +6,7 @@ parameters:
     #app.emails.contact_email: alexandr.stoian@gmail.de
     mail_from_adr: sascha.stayan@web.de
     mail_reg_subj: Quiz - Willkommen
-    mail_reg_from_adr: sascha.stayan@web.de
+    mail_reg_from_adr: support@quizz.de
     mail_reg_from_nam: Support 
     #navigation titles
     navi_user_home: Home

@@ -41,7 +41,7 @@ class TestController extends QController {
 		$this->get('app.notify.manager')->setP(2);//php
 		if (!$this->get('app.notify.manager')->send(array(
 				'to'=>$to,
-				'from'=>'sascha.stayan@web.de',
+				'from'=>'support@quizz.de',
 				's'=>"Willkomen zu QUIZ - TEST-PHP",
 				'bn'=>"activate",
 				'bo'=>array ('username' => 'jo','token' => '1234567890')
@@ -83,7 +83,7 @@ class TestController extends QController {
 		$this->get('app.notify.manager')->setP(1);//swift
 		if (!$this->get('app.notify.manager')->send(array(
 				'to'=>$to,
-				'from'=>'sascha.stayan@web.de', 
+				'from'=>'support@quizz.de', 
 				's'=>"Willkomen zu QUIZ - SWIFT-PHP",
 				'bn'=>"activate",
 				'bo'=>array ('username' => 'jo','token' => '1234567890')

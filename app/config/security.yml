@@ -33,7 +33,8 @@ security:
                 path: /.*
 
     access_control:
-          #- { path: ^/admin, roles: ROLE_ADMIN }
+          - { path: ^/admin/user.*, roles: ROLE_SUPER }
+          - { path: ^/admin, roles: ROLE_ADMIN }
           #- { path: /me/activate, roles: IS_AUTHENTICATED_ANONYMOUSLY }
           #- { path: /login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
           #- { path: /me/profile/real, roles: IS_AUTHENTICATED_ANONYMOUSLY }

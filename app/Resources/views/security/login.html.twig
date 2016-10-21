@@ -67,15 +67,48 @@
         			
                 	
                 	<div style="display: none">
-                	    <input type="hidden" name="_target_path" value="/admin" />
+                	    <input type="hidden" name="_target_path" value="/" />
                 	 </div>
             		
             		<div class="form-field">
             			<button class="btn btn-primary btn-sm" type="submit">Login</button>
+    					<button
+    						type="button"
+    						class="btn btn-link btn-sm"
+    						data-toggle="modal"
+    						data-target="#modal-password"
+    					>Passwort vergessen?</button>
+{# 						<a class="btn btn-link btn-sm" href="">Passwort vergessen?</a>#}
+{#             			<a class="btn btn-link btn-sm" href="">Name/Email vergessen?</a>#}
             		</div>
             	</form>
 			</div>
 		</div>
+		
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" id="modal-password">
+  <div class="modal-dialog modal-password" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Passwort wiederherstellen</h4>
+      </div>
+      <div class="modal-body">
+      	 <form action="{{ path('password_send_request') }}" method="get" class="" id="f-password" data-toggle="validator" role="form">
+          <div class="form-group">
+            <label for="u" class="control-label">Benutzername/Email:</label>
+            <input type="text" class="form-control" id="u">
+            <div class="help-block with-errors"></div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="modal-cancel-password">Abbrechnen</button>
+        <button type="button" class="btn btn-primary" id="modal-ok-password">OK</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+		
 		
 	</div>
 {% endblock %} 

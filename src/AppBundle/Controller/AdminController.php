@@ -18,6 +18,9 @@ use AppBundle\Form\UserType;
 use AppBundle\Utils\Ses;
 use Doctrine\ORM\EntityRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -33,16 +36,26 @@ class AdminController extends QController {
 	
 	/**
 	 * @Route("admin/", name="admin")
+	 * @Security("has_role('ROLE_ADMIN')")
 	 * yes
 	 */
 	public function indexAction(Request $request) {
-		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-		//$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page, ADMINs only!');
-		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-	
+		//+++++++++++++++++++++++ @Security ADMINS ONLY++++++++++++++++++++++++++++++++++
 		return $this->render ( 'admin/index.html.twig', array (
-				'base_dir' => realpath ( $this->getParameter ( 'kernel.root_dir' ) . '/..' )
+				'y' => 'y'
 		) );
+	}
+	
+	/**
+	 * @Route("uuu", name="admin_uuu")
+	 * @Method({"GET"})
+	 * @Template("admin/uuu.html.twig")	
+	 * TODO -block it by production server
+	 */
+	public function uuuAction(Request $request) {
+		//+++++++++++++++++++++++ @Security ADMINS ONLY++++++++++++++++++++++++++++++++++
+		$uuu=$this->r()->findAll();
+		return array('uuu' => $uuu);
 	}
 
 	
@@ -50,12 +63,12 @@ class AdminController extends QController {
 	
 	
 	/**
+	 * @Security("has_role('ROLE_ADMIN')")
+	 * 
 	 * @param Request $request
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
 	public function globalAction(Request $request) {
-		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-		$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page, ADMINs only!');
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
 		
 	
@@ -109,12 +122,9 @@ class AdminController extends QController {
 	
 	/**
 	 * @Route("admin/userrole", name="admin_userrole")
+	 * @Security("has_role('ROLE_SUPER')")
 	 */
 	public function userroleAction(Request $request) {
-		//*************RIGHTS************************************
-		if( !$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ){
-			//????
-		}
 		//*************RIGHTS************************************
 	
 		$userrole = new UserRole();
@@ -147,12 +157,9 @@ class AdminController extends QController {
 	
 	/**
 	 * @Route("admin/userrolee/{eid}", name="admin_userrolee")
+	 * @Security("has_role('ROLE_SUPER')")
 	 */
 	public function userroleeAction(Request $request,$eid=null) {
-		//*************RIGHTS************************************
-		if( !$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ){
-			//????
-		}
 		//*************RIGHTS************************************
 	
 		$userrole = $this->em()->getRepository('AppBundle:UserRole')->find($eid);
@@ -185,12 +192,9 @@ class AdminController extends QController {
 	
 	/**
 	 * @Route("admin/user", name="admin_user")
+	 * @Security("has_role('ROLE_SUPER')")
 	 */
 	public function userAction(Request $request) {
-		//*************RIGHTS************************************
-		if( !$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ){
-			//????
-		}
 		//*************RIGHTS************************************
 	
 		$user = new User();
@@ -276,12 +280,9 @@ class AdminController extends QController {
 	
 	/**
 	 * @Route("admin/usere/{eid}", name="admin_usere")
+	 * @Security("has_role('ROLE_SUPER')")
 	 */
 	public function usereAction(Request $request,$eid=null) {
-		//*************RIGHTS************************************
-		if( !$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ){
-			//????
-		}
 		//*************RIGHTS************************************
 	
 		$user = $this->em()->getRepository('AppBundle:User')->find($eid);
@@ -334,140 +335,13 @@ class AdminController extends QController {
 		) );
 	}
 	
-	/**
-	 * @Route("admin/user/is", name="admin_user_is")
-	 * 
-	 * @param Request $request
-	 * @throws NotFoundHttpException
-	 * @return \Symfony\Component\HttpFoundation\JsonResponse
-	 */
-	public function userIsAction(Request $request){
-		//*************RIGHTS************************************
-		// 		if( !$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ){
-		// 			return $this->redirect ( $this->generateUrl ( 'login_route') );
-		// 		}
-		//*************RIGHTS************************************
-		if (! $request->isXmlHttpRequest()) {
-			throw new NotFoundHttpException();
-		}
-		$enty=null;
-		$ret = '';//[];
-		$err = "";
-		$up = $request->query->get('user');//Structure is: array(1) { ["user"]=> array(1) { ["username"]=> string(1) "b" } } 
-		$new = $up[key( $up )];
-		//var_dump(key( $up ) . '---' . $new);
-		//init current user
-		//
-		switch (key( $up )){
-			case "username":
-				$enty = $this->em()->getRepository ( 'AppBundle:User' )->getUserByUsername( $new );
-				$err = "Solche Login ist schon vorhanden";
-				break;
-			case "email":
-				$enty = $this->em()->getRepository ( 'AppBundle:User' )->getUserByEmail( $new );
-				$err = "Solche Email ist schon vorhanden";
-				break;
-			default:
-				$enty = $this->em()->getRepository ( 'AppBundle:User' )->getUserByActivation ( $new );
-				$err = "Solche Benutzer ist schon vorhanden";
-				break;
-		}
 	
-		if ($enty) {
-			$ret = $err;//array('jerr'=>$err);
-			return new JsonResponse($ret,419);
-		}else{
-			$ret = 'OK';//array('jerr'=>"OK");
-			return new JsonResponse($ret,200);
-		}
-	
-	}
-	
-	
-	/**
-	 * @param Request $request
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-	 */
-	public function uroleAction(Request $request) {
-	
-		$users = $this->em()->getRepository('AppBundle:User')->findAll();
-	
-		return $this->render ( 'AppBundle:Admin:user.html.twig', array (
-				'users' => $users,
-		) );
-	}
-	
-	public function uroleeAction(Request $request,$uid=null) {
-		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-		$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page, ADMINs only!');
-		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-		
-	
-		$user = $this->em()->getRepository('AppBundle:User')->find($uid);
-	
-		$defaultData = array('1' => 'What');
-		$builder = $this->createFormBuilder($defaultData)
-		->add('role', 'entity', array(
-        		'class'       => 'AppBundle:UserRole',
-        		'property' => 'role',
-				'expanded' => true,
-				'multiple' => true,
-				'required'=>false,
-				'label'=>'Rollen',
-        		'query_builder' => function (EntityRepository $er) use($uid) {
-					return $er->createQueryBuilder ( 'c' )->select ( 'c' );
-				},
-				'data'=> $user->getUserroles()
-        ))
-        ->add('status','checkbox', array(
-        		'required' => false,
-        		'label'=>'Aktiviert: ',
-        		'data'=> $user->getStatus(),
-        ))
-        
-        ;
-        $builder->get('status')->addModelTransformer(new CallbackTransformer( function ($v) { return $v==1?true:false; },function ($v) { return $v==true?1:0; }));
-		
-        $form = $builder->getForm();
-		
-			
-		if ($request->isMethod ( 'POST' )) {
-			$form->handleRequest ( $request );
-			if ($form->isValid ()) {
-				//------------------edit user
-				$role = $form->get('role')->getData();
-				$status = $form->get('status')->getData();
-				if (!is_null($role) | !is_null($status)){
-					$user->setStatus($status);
-					//foreach ($role as $r){ 
-						//dump($r);
-						//$user->addUserRole($r);
-					//}
-					//$this->em()->persist ( $user );
-					$this->em()->flush();
-					$this->get('session')->set('admin_usere_ok', 'user is OK');
-				}else{
-					$this->get('session')->set('admin_usere_ok', 'Nothing is edited');
-				}
-				return $this->redirect ( $this->generateUrl ( 'admin_usere',array(
-						'uid' => $user->getId(),
-						'_'=>'y'
-				)) );
-			}
-		}
-	
-		return $this->render ( 'AppBundle:Admin:usere.html.twig', array (
-				'user' => $user,
-				'form'=>$form->createView()
-		) );
-	}
 	
 	/**
 	 * @Route("admin/qcat", name="admin_question_cat")
+	 * @Security("has_role('ROLE_ADMIN')")
 	 */
 	public function questioncatAction(Request $request) {
-		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-		//$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page, ADMINs only!');
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
 	
 		$questioncats = $this->em()->getRepository('AppBundle:QuestionCat')->getQuestionCatsAll();
@@ -540,10 +414,9 @@ class AdminController extends QController {
 	
 	/**
 	 * @Route("admin/qcate/{eid}", name="admin_question_cate")
+	 * @Security("has_role('ROLE_ADMIN')")
 	 */
 	public function questioncateAction(Request $request,$eid=null) {
-		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-		//$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page, ADMINs only!');
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
 	
 	
@@ -587,10 +460,9 @@ class AdminController extends QController {
 
 	/**
 	 * @Route("admin/qtag", name="admin_question_tag")
+	 * @Security("has_role('ROLE_ADMIN')")
 	 */
 	public function questiontagAction(Request $request) {
-		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-		//$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page, ADMINs only!');
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
 	
 		$questiontags = $this->em()->getRepository('AppBundle:QuestionTag')->getQuestionTagsAll();
@@ -663,10 +535,9 @@ class AdminController extends QController {
 	
 	/**
 	 * @Route("admin/qtage/{eid}", name="admin_question_tage")
+	 * @Security("has_role('ROLE_ADMIN')")
 	 */
 	public function questiontageAction(Request $request,$eid=null) {
-		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-		//$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page, ADMINs only!');
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
 	
 	
@@ -710,10 +581,9 @@ class AdminController extends QController {
 	
 	/**
 	 * @Route("admin/question", name="admin_question")
+	 * @Security("has_role('ROLE_ADMIN')")
 	 */
 	public function questionAction(Request $request) {
-		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-		//$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page, ADMINs only!');
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
 	
 		$questions = $this->em()->getRepository('AppBundle:Question')->getQuestionsAll();
@@ -751,10 +621,9 @@ class AdminController extends QController {
 	
 	/**
 	 * @Route("admin/questione/{eid}", name="admin_questione")
+	 * @Security("has_role('ROLE_ADMIN')")
 	 */
 	public function questioneAction(Request $request,$eid=null) {
-		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-		//$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page, ADMINs only!');
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
 	
 		$question = $this->getQuestionForm($eid);
@@ -880,10 +749,9 @@ class AdminController extends QController {
 	
 	/**
 	 * @Route("admin/quizcat", name="admin_quiz_cat")
+	 * @Security("has_role('ROLE_ADMIN')")
 	 */
 	public function quizcatAction(Request $request) {
-		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-		//$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page, ADMINs only!');
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
 	
 		$quizcats = $this->em()->getRepository('AppBundle:QuizCat')->getQuizCatsAll();
@@ -956,10 +824,9 @@ class AdminController extends QController {
 	
 	/**
 	 * @Route("admin/quizcate/{eid}", name="admin_quiz_cate")
+	 * @Security("has_role('ROLE_ADMIN')")
 	 */
 	public function quizcateAction(Request $request,$eid=null) {
-		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-		//$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page, ADMINs only!');
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
 	
 	
@@ -1001,10 +868,9 @@ class AdminController extends QController {
 	
 	/**
 	 * @Route("admin/quiz", name="admin_quiz")
+	 * @Security("has_role('ROLE_ADMIN')")
 	 */
 	public function quizAction(Request $request) {
-		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-		//$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page, ADMINs only!');
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
 	
 		$quizs = $this->em()->getRepository('AppBundle:Quiz')->getQuizsAll();
@@ -1035,10 +901,9 @@ class AdminController extends QController {
 	
 	/**
 	 * @Route("admin/quize/{eid}", name="admin_quize")
+	 * @Security("has_role('ROLE_ADMIN')")
 	 */
 	public function quizeAction(Request $request,$eid=null) {
-		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-		//$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page, ADMINs only!');
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
 	
 		$quiz = $this->em()->getRepository('AppBundle:Quiz')->find($eid);
@@ -1070,10 +935,9 @@ class AdminController extends QController {
 	
 	/**
 	 * @Route("admin/quizquestion/all/{eid}", name="admin_quizquestion_all")
+	 * @Security("has_role('ROLE_ADMIN')")
 	 */
 	public function quizquestionallAction(Request $request,$eid=null) {
-		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-		//$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page, ADMINs only!');
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
 	
 		$quiz = $this->em()->getRepository('AppBundle:Quiz')->find($eid);
@@ -1141,7 +1005,9 @@ class AdminController extends QController {
 	public function quizquestionAjAction(Request $request)
 	{
 		//*************RIGHTS************************************
-		//???
+		if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+	        throw $this->createAccessDeniedException();
+	    }
 		//*************RIGHTS************************************
 	
 		if (! $request->isXmlHttpRequest()) {
@@ -1152,7 +1018,7 @@ class AdminController extends QController {
 		$id2 = $request->query->get('id2');
 		$act = $request->query->get('act');
 		//init current user
-		//
+		//TODO check if Quiz-Cat is equal to Question-Cat, if not then Exception 
 		$quiz=null;$question=null;
 		$quiz = $this->em()->getRepository ( 'AppBundle:Quiz' )->find ( $id1 );
 		if (!$quiz) throw $this->createNotFoundException ( 'Quiz is not found, id='. $id1 );
@@ -1181,51 +1047,23 @@ class AdminController extends QController {
 				$this->em()->persist($qq);
 			}
 			$this->em()->flush();
+		}elseif ($act=="remall"){
+			$ids = explode(',', $id2);
+			foreach ($ids as $id) {
+				$qqs = $quiz->getQuizquestions();
+				foreach ($qqs as $qq) {
+					if ($qq->getQuestion()->getId()==$id) {
+						//$quiz->removeQuizquestion($qq);
+						$this->em()->remove($qq);
+					}
+				}
+			}
+			//$this->em()->persist($qq);
+			$this->em()->flush();
 		}
 			
 	
 		return new JsonResponse([]);
 	}
+}	
 	
-	
-	/**
-	 * @Route("admin/quizquestion/new", name="admin_quizquestion_new")
-	 */
-	public function quizquestionnewAction(Request $request) {
-		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-		//$this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page, ADMINs only!');
-		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-	
-		$questions = $this->em()->getRepository('AppBundle:Question')->getQuestionsAll();
-		//$questions = array();
-	
-		$question = $this->getQuestionForm();
-	
-	
-		$form = $this->createForm ( QuestionType::class, $question );
-		$form2 = clone $form;
-			
-		if ($request->isMethod ( 'POST' )) {
-			$form->handleRequest ( $request );
-			if ($form->isValid ()) {
-				$index = 1;
-				foreach ($question->getAnswers() as $answer){
-					if ($index > $question->answercount || $answer->getTitle()=="") $question->removeAnswer($answer);
-					$index++;
-				}
-	
-				$this->em()->persist ( $question );
-				$this->em()->flush ();
-				$this->get('session')->set('admin_question_ok', 'Question is OK');
-				$form = $form2;
-			}else{
-				$this->get('session')->set('admin_question_ok', 'Nothing is created');
-			}
-		}
-		$questions = $this->em()->getRepository('AppBundle:Question')->findBy(array(), array('title' => 'ASC'));
-		return $this->render ( 'admin/quiz.question.new.html.twig', array (
-				'questions' => $questions,
-				'form'=>$form->createView()
-		) );
-	}
-}

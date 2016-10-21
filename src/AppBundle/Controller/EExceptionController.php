@@ -35,10 +35,10 @@ class EExceptionController extends ExceptionController{
 		if ($showException && 'html' == $format) {
 			$name = 'exception_full';
 		}
-	
+		//dump($name);
 		// For error pages, try to find a template for the specific HTTP status code and format
 		if (!$showException) {
-			$template = sprintf('AppBundle:Exception:%s%s.%s.twig', $name, $code, $format);
+			$template = sprintf('exception/%s%s.%s.twig', $name, $code, $format);
 			if ($this->templateExists($template)) {
 				return $template;
 			}
@@ -47,6 +47,6 @@ class EExceptionController extends ExceptionController{
 		// default to a generic HTML exception
 		$request->setRequestFormat('html');
 	
-		return sprintf('AppBundle:Exception:%s.html.twig', $showException ? 'exception_full' : $name);
+		return sprintf('exception/%s.html.twig', $showException ? 'exception_full' : $name);
 	}
 }

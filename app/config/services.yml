@@ -4,6 +4,9 @@ parameters:
 #    parameter_name: value
 
 services:
+  app.twig.exception_controller:
+        class: AppBundle\Controller\EExceptionController
+        arguments: [ "@twig", "%kernel.debug%" ]
   activity_listener:
         class: AppBundle\Listener\ActivityListener
         arguments: 

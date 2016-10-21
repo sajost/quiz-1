@@ -42,5 +42,19 @@ function init(){
          });
         return false;
     });
+	
+	
+	//modal clicks - password
+	$("#modal-ok-password").click(function(){
+		//$( "#f-password" ).submit();
+		//$( "#f-password" ).trigger('submit', [ 'u', $('#u').val() ]);
+		//$('#modal-password').modal('hide');
+		window.location.href = $( "#f-password" ).attr('action')+"?u="+$('#u').val();
+	})
+	$("#u").keyup(function(e) {
+	     if (e.keyCode == 13) { // enter
+	    	 $("#modal-ok-password").click();
+	    }
+	});
 }
 

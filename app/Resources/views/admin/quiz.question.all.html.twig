@@ -98,11 +98,7 @@
                         			<td style="width:50px">-</td>
                         	    {% endif %}
                         	    <td style="width:50px">
-                        	    	{% set cats = [] %}
-                                    {% for c in e.cats %}{% set cats = cats|merge([c.title]) %}{% endfor %}
-                        	        {% for c in e.cats %}
-                                        {{ cats|join('; ') }}
-                        		    {% endfor %}
+                        		    {{ e.cats|join('; ') }}
                         		</td>
                     		</tr>
                     	{% endfor %}

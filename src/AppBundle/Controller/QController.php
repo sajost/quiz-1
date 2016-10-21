@@ -3,6 +3,7 @@
 
 namespace AppBundle\Controller;
  
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\User;
 use AppBundle\Utils\Ses;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -12,6 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use AppBundle\Form\UserRegType;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * CarLog controller.
@@ -81,7 +84,7 @@ class QController extends Controller{
     
             if( $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')){  
                     //|| $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED') ){
-                $this->u = $this->get('security.token_storage')->getToken()->getUser();
+                $this->u = $this->getUser();//$this->get('security.token_storage')->getToken()->getUser();
             }
     	   
     		/*if( !$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED') ){
@@ -252,7 +255,54 @@ class QController extends Controller{
 	
 	
 	
+	/**
+	 * @Route("user/is", name="admin_user_is")
+	 *
+	 * @param Request $request
+	 * @throws NotFoundHttpException
+	 * @return \Symfony\Component\HttpFoundation\JsonResponse
+	 */
+	public function userIsAction(Request $request){
+		//*************RIGHTS************************************
+		// 		if( !$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ){
+		// 			return $this->redirect ( $this->generateUrl ( 'login_route') );
+		// 		}
+		//*************RIGHTS************************************
+		if (! $request->isXmlHttpRequest()) {
+			throw new NotFoundHttpException();
+		}
+		$enty=null;
+		$ret = '';//[];
+		$err = "";
+		$up = $request->query->get('user');//Structure is: array(1) { ["user"]=> array(1) { ["username"]=> string(1) "b" } }
+		$new = $up[key( $up )];
+		//var_dump(key( $up ) . '---' . $new);
+		//init current user
+		//
+		switch (key( $up )){
+			case "username":
+				$enty = $this->em()->getRepository ( 'AppBundle:User' )->getUserByUsername( $new );
+				$err = "Solche Login ist schon vorhanden";
+				break;
+			case "email":
+				$enty = $this->em()->getRepository ( 'AppBundle:User' )->getUserByEmail( $new );
+				$err = "Solche Email ist schon vorhanden";
+				break;
+			default:
+				$enty = $this->em()->getRepository ( 'AppBundle:User' )->getUserByActivation ( $new );
+				$err = "Solche Benutzer ist schon vorhanden";
+				break;
+		}
 	
+		if ($enty) {
+			$ret = $err;//array('jerr'=>$err);
+			return new JsonResponse($ret,419);
+		}else{
+			$ret = 'OK';//array('jerr'=>"OK");
+			return new JsonResponse($ret,200);
+		}
+	
+	}
 	
 	
 	

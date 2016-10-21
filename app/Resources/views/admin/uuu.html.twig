@@ -1,0 +1,61 @@
+{% extends 'admin/init.html.twig' %}
+
+{% block body %}
+<div id="wrapper" class="container">
+	<div id="panel" class="panel panel-default">
+		<div class="panel-heading">
+        	<h1>
+				<span>Welcome to Admin</span> 
+			</h1>
+        </div>
+
+		<div class="panel-body">
+			<table class="table table-bordered" fixed-header>
+				<thead>
+                    <tr>
+                    	<th style="width:10px">#</th>
+                    	<th style="width:150px">Unid</th>
+                        <th style="width:100px">Konto</th>
+                        <th style="width:100px">Email</th>
+                        <th style="width:100px">***</th>
+                        <th style="width:50px">Vorname</th>
+                        <th style="width:50px">Nachname</th>
+                        <th style="width:50px">Rollen</th>
+                    </tr>
+                </thead>
+                {% for e in uuu %}
+                	<tr>
+                		<td style="width:10px">
+                            {{ e.id }}
+						</td>
+						<td style="width:150px">
+                            {{ e.unid }}
+						</td>
+                		<td style="width:100px">
+                			{{ e.username }}
+                		</td>
+                		<td style="width:100px">
+                			{{ e.email }}
+                		</td>
+                		<td style="width:100px">
+                			<span style="display:none;">{{ e.password }}</span>
+                			***
+                		</td>
+                		<td style="width:50px">
+                			{{ e.fname }}
+                		</td>
+                		<td style="width:50px">
+                			{{ e.lname }}
+                		</td>
+                		<td style="width:50px">
+                            {{ e.roles|join('; ') }}
+                		</td>
+            		</tr>
+            	{% endfor %}
+			</table>
+		</div>
+
+	</div>
+</div>
+{% endblock %}
+

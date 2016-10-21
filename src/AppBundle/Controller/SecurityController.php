@@ -5,9 +5,12 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\User;
 use AppBundle\Form\UserActivate;
 use AppBundle\Form\UserActivateType;
+use AppBundle\Form\UserPasswordResetType;
 use AppBundle\Form\UserRegType;
 use AppBundle\Utils\Ses;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -64,10 +67,9 @@ class SecurityController extends QController {
 					//$user->setUsername(Ses::before('@', $user->getEmail()));
 					//$this->em()->persist($user);
 					$user->setAvatar('avatar.jpg');
-					//$this->em()->persist($ui);
 					//create role
-					//$ur = $this->em()->getRepository('AppBundle:UserRole')->findOneBy(array('role'=>'ROLE_USER'));//new UserRole();
-					//$user->addUserRole($ur);
+					$ur = $this->em()->getRepository('AppBundle:UserRole')->findOneBy(array('role'=>'ROLE_USER'));//new UserRole();
+					$user->addUserRole($ur);
 					//copy avatar.jpg to user folder
 					if (!file_exists(Ses::getUpDirTmp($user->getUsername()).'/')) {
 						mkdir(Ses::getUpDirTmp($user->getUsername()).'/', 0777, true);
@@ -320,6 +322,164 @@ class SecurityController extends QController {
 			return $this->render ('security/wellcome.html.twig', array (
 			) );
 		}
+	}
+	
+	
+	/**
+	 * @Route("pr", name="password_send_request")
+	 *
+	 * @param Request $request
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 */
+	public function passwordSendRequestAction(Request $request) {
+		$s = $request->getSession ();
+		
+		if ($s->get('v')=='1'){
+			$s->set ( "v", '1');
+			$s->set ( "m", 'E-Mail ist eimalig schon gesendet, wenn kein Email ist gekommen, dann starten Sie den Prozess wieder');
+			return $this->render ('security/password.send.ok.html.twig');
+		}
+		if( $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ){
+			//  authenticated (NON anonymous)
+			$s->set ( "m", 'authenticated (NON anonymous)' );
+			return $this->redirect($this->generateUrl('security_error'));
+		}else{	
+			//further
+		}
+		dump($request);
+		$u = $request->query->get('u');
+		if($u==null || $u==''){
+			//  no username/email is given
+			$s->set ( "m", 'Benutzername/Email ist nicht angegeben' );
+			return $this->render ('security/error.html.twig');
+		}
+		$user = $this->em()->getRepository('AppBundle:User')->getUserByUE($u);
+		if ($user !== null){
+			// everything is OK
+			$user->setReset(Ses::uid ( 128 ));
+			if ($this->p("notify_off")=="1"){
+				$s->set ( "m", 'Mail-Funktion ist deaktiviert. Melden Sie sich an Admin' );
+				return $this->redirect($this->generateUrl('security_error'));
+			}else{
+				$nm = $this->get('app.notify.manager');
+				if (!$nm->send(array(
+						'to'=>$user->getEmail(),
+						'from'=>$this->p('mail_reg_from_adr'),
+						's'=>'Passwort reset',
+						'bn'=>'password.request',
+						'bo'=>array('user' => $user)
+				))){
+					//mail is not sent
+					$s->set ( "m", 'Internal Fehler beim Mail-Senden. Melden Sie sich an Admin' );
+					return $this->render ('security/error.html.twig');
+				}else {
+					$this->em()->persist($user);
+					$this->em()->flush();
+					$s->set ( "v", '1');
+					$s->set ( "m", 'E-Mail ist an angegebene Adresse '.$u.' gesendet');
+					return $this->render ('security/password.ok.html.twig', array (
+					) );
+				}
+			}
+		}else{
+			//user is not found
+			$s->set ( "m", 'Benutzer ist nicht gefunden: '.$u );
+			return $this->render ('security/error.html.twig');
+		}
+	}
+	
+	/**
+	 * @Route("pn", name="password_new")
+	 *
+	 * @param Request $request
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 */
+	public function passwordNewAction(Request $request) {
+		$s = $request->getSession ();
+		if( $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ){
+			//  authenticated (NON anonymous)
+			$s->set ( "m", 'authenticated (NON anonymous)' );
+			return $this->render ('security/error.html.twig');
+		}else{
+			if ($request->isMethod('GET')) {
+				//$ua->username=$session->get ( "me_acktivate_user");
+				if ($request->query->get('_')!==""){
+					$reset=$request->query->get('_');
+				}else{
+					//  no unid for password change
+					$s->set ( "m", 'no unid is given for password change' );
+					return $this->render ('security/error.html.twig');
+				}
+				
+				$user = $this->r()->getUserByReset($reset);
+				if ($user==null){
+					//no such user by reset ID
+					$s->set ( "m", 'Passwort-Reset-Code ist nicht gefunden oder abgelaufen. Wenden Sie sich an Administrator. '.$reset );
+					return $this->render ('security/error.html.twig');
+				}
+				$form = $this->createForm(UserPasswordResetType::class, $user);
+				$s->set('_',$reset);
+			}else{
+				$reset=$s->get ('_');
+				//dump($reset);
+				$user = $this->r()->getUserByReset($reset);
+				//dump($user);
+				//dump($this->em()->getClassMetadata(get_class($user))->getName()); 
+				$form = $this->createForm(UserPasswordResetType::class, $user);
+			}
+	
+			if ($request->isMethod('POST')) {
+				$form->handleRequest ( $request );
+				if ($form->isValid()) {
+					// everything is OK
+					$user->setReset('');
+					$this->em()->persist($user);
+					$this->em()->flush();
+					$s->set ( "v", '1');
+					$s->set ( "m", 'Ihre Passwort wurde erfolgreich abgespeichert. Jetzt können Sie sich anmelden.');
+					return $this->render ('security/password.ok.html.twig');
+				} else{
+					//TODO Error hanlder write to log and show to user
+					$s->set ( "m",$form->getErrors() );
+					return $this->render ('security/error.html.twig');
+				}
+			}
+			return $this->render ('security/password.new.html.twig', array (
+					'form' => $form->createView(),
+			) );
+		}
+	}
+	
+	/**
+	 * @Route("pok", name="password_ok")
+	 *
+	 * @param Request $request
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 */
+	public function passwordOkAction(Request $request) {
+		$s = $request->getSession ();
+		if( $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ){
+			//  authenticated (NON anonymous)
+			$s->set ( "m", 'authenticated (NON anonymous)' );
+			return $this->redirect($this->generateUrl('security_error'));
+		}else{
+			$s->set ( "m","Ihre Passwort wurde erfolgreich abgespeichert. Jetzt können Sie sich anmelden." );
+			return $this->render ('security/password.ok.html.twig', array (
+					
+			) );
+		}
+	}
+	
+	/**
+	 * @Route("e", name="security_error")
+	 * @Method({"GET"})
+	 * @Template("security/error.html.twig")	
+	 *
+	 * @param Request $request
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 */
+	public function securityErrorAction(Request $request) {
+		//return array('m' => 'ok?');
 	}
 	
 }
