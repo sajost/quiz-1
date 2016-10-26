@@ -28,7 +28,7 @@ class SecurityController extends QController {
 	public function loginAction(Request $request) {
 		$session = $request->getSession ();
 		
-		 $authenticationUtils = $this->get('security.authentication_utils');
+		$authenticationUtils = $this->get('security.authentication_utils');
 
 	    // get the login error if there is one
 	    $error = $authenticationUtils->getLastAuthenticationError();
@@ -339,14 +339,17 @@ class SecurityController extends QController {
 			$s->set ( "m", 'E-Mail ist eimalig schon gesendet, wenn kein Email ist gekommen, dann starten Sie den Prozess wieder');
 			return $this->render ('security/password.send.ok.html.twig');
 		}
-		if( $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ){
-			//  authenticated (NON anonymous)
-			$s->set ( "m", 'authenticated (NON anonymous)' );
-			return $this->redirect($this->generateUrl('security_error'));
-		}else{	
-			//further
+		if (!$this->isGranted('ROLE_SUPER')) {//if super-admin does this, then goes further
+			if( $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')){
+				//  authenticated (NON anonymous)
+				$s->set ( "m", 'authenticated (NON anonymous)' );
+				return $this->render ('security/error.html.twig');
+			}else{
+				//further
+			}
 		}
-		dump($request);
+		
+		//dump($request);
 		$u = $request->query->get('u');
 		if($u==null || $u==''){
 			//  no username/email is given
@@ -359,7 +362,7 @@ class SecurityController extends QController {
 			$user->setReset(Ses::uid ( 128 ));
 			if ($this->p("notify_off")=="1"){
 				$s->set ( "m", 'Mail-Funktion ist deaktiviert. Melden Sie sich an Admin' );
-				return $this->redirect($this->generateUrl('security_error'));
+				return $this->render ('security/error.html.twig');
 			}else{
 				$nm = $this->get('app.notify.manager');
 				if (!$nm->send(array(
@@ -473,7 +476,7 @@ class SecurityController extends QController {
 	/**
 	 * @Route("e", name="security_error")
 	 * @Method({"GET"})
-	 * @Template("security/error.html.twig")	
+	 * @Template("exception/exception_full.html.twig")	
 	 *
 	 * @param Request $request
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response

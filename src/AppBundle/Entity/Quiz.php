@@ -19,138 +19,175 @@ class Quiz
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     public $id;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="user", referencedColumnName="id")
      */
     public $user;
-    
+
     /**
      * @ORM\Column(type="string", length=20)
      */
     public $title;
-    
-    
+
+
     /**
      * @ORM\Column(type="smallint", nullable=true, options={"default":0})
      */
     public $loginrequired = 0;
-    
+
     /**
      * legt fest, wie viele Runden pro Tag gespielt werden können: 0 = unbegrenzt; 1 = 1 Runde etc.
-     * 
+     *
      * @ORM\Column(type="smallint", nullable=true, options={"default":0})
      */
     public $roundperday = 0;
-    
-    /** wie viele Platzierungen auf der Highscore-Liste zu sehen sind.
-     * @ORM\Column(type="smallint", nullable=true, options={"default":0})
+
+    /**
+     * wie viele Platzierungen auf der Highscore-Liste zu sehen sind.
+     *
+     * @ORM\Column(type="smallint", nullable=true, options={"default":30})
      */
-    public $hsnumber = 0;
-    
-    /**legt fest, ob nach dem "Game over" eine Auswertung des Ergebnisses erfolgt: 0 = nein; 1 = ja
+    public $hsnumber = 30;
+
+    /**
+     * legt fest, ob nach dem "Game over" eine Auswertung des Ergebnisses erfolgt: 0 = nein; 1 = ja
+     *
      * @ORM\Column(type="smallint", nullable=true, options={"default":1})
      */
     public $analysis = 1;
-    
-    /**legt fest, ob der Spieler für sein Ergebnis eine Belohnung (Medaille, Trophäe etc.) erhält
-     * @ORM\Column(type="smallint", nullable=true, options={"default":1})
+
+    /**
+     * legt fest, ob der Spieler für sein Ergebnis eine Belohnung (Medaille, Trophäe etc.) erhält
+     *
+     * @ORM\Column(type="smallint", nullable=true, options={"default":0})
      */
-    public $reward = 1;
-    
-    
-    /**legt fest, ob ein Highscore geteilt werden kann: 0 = nein; 1 = ja
-     * @ORM\Column(type="smallint", nullable=true, options={"default":1})
+    public $reward = 0;
+
+    /**
+     * legt fest, ob ein Daten geteilt werden kann: 0 = nein; 1 = ja
      */
-    public $sharehs = 1;
-    
-    /**legt fest, ob die Auswertung geteilt werden kann: 0 = nein; 1 = ja
-     * @ORM\Column(type="smallint", nullable=true, options={"default":1})
+    public $share = 0;
+
+    /**
+     * legt fest, ob ein Highscore geteilt werden kann: 0 = nein; 1 = ja
+     *
+     * @ORM\Column(type="smallint", nullable=true, options={"default":0})
      */
-    public $shareanalysis = 1;
-    
-    /**legt fest, ob eine Belohnung geteilt werden kann: 0 = nein; 1 = ja
-     * @ORM\Column(type="smallint", nullable=true, options={"default":1})
+    public $sharehs = 0;
+
+    /**
+     * legt fest, ob die Auswertung geteilt werden kann: 0 = nein; 0 = ja
+     *
+     * @ORM\Column(type="smallint", nullable=true, options={"default":0})
      */
-    public $sharereward = 1;
-    
-    
-    /**legt fest, ob Joker-Typ "50:50" für das Quiz aktiviert ist
+    public $shareanalysis = 0;
+
+    /**
+     * legt fest, ob eine Belohnung geteilt werden kann: 0 = nein; 1 = ja
+     *
+     * @ORM\Column(type="smallint", nullable=true, options={"default":0})
+     */
+    public $sharereward = 0;
+
+    /**
+     * legt fest, ob Joker für das Quiz aktiviert ist
+     */
+    public $joker = 1;
+
+    /**
+     * legt fest, ob Joker-Typ "50:50" für das Quiz aktiviert ist
+     *
      * @ORM\Column(type="smallint", nullable=true, options={"default":1})
      */
     public $joker5050 = 1;
-    
-    /**legt fest, ob Joker-Typ "Zeit stoppen" für das Quiz aktiviert ist
+
+    /**
+     * legt fest, ob Joker-Typ "Zeit stoppen" für das Quiz aktiviert ist
+     *
      * @ORM\Column(type="smallint", nullable=true, options={"default":1})
      */
     public $jokerpause = 1;
-    
-    
-    /**legt fest, ob Joker-Typ "Frage überspringen" für das Quiz aktiviert ist
+
+    /**
+     * legt fest, ob Joker-Typ "Frage überspringen" für das Quiz aktiviert ist
+     *
      * @ORM\Column(type="smallint", nullable=true, options={"default":1})
      */
     public $jokerskip = 1;
-    
-    /**legt fest, ob Fragen der Schwierigkeitsstufe 0 - 9
+
+    /**
+     * legt fest, ob Fragen der Schwierigkeitsstufe 0 - 9
+     *
+     * @ORM\Column(type="smallint", nullable=true, options={"default":0})
+     */
+    public $difficulty = 0;
+
+    /**
+     * legt fest, wie viele Sekunden das Zeitlimit andauert 0-kein, 1-n Sekunden
+     *
+     * @ORM\Column(type="smallint", nullable=true, options={"default":15})
+     */
+    public $timelimit = 15;
+
+    /**
+     * legt fest, ob die Reihenfolge der gestellten Fragen zufällig ist: 0 = nach Erstelldatum; 1 = Random
+     *
      * @ORM\Column(type="smallint", nullable=true, options={"default":1})
      */
-    public $difficulty = 1;
-    
-    /**legt fest, wie viele Sekunden das Zeitlimit andauert 0-kein, 1-n Sekunden
+    public $qrandom = 1;
+
+    /**
+     * legt fest, ob bereits gestellte Fragen in einer Spielrunde wiederholt werden können
+     *
      * @ORM\Column(type="smallint", nullable=true, options={"default":0})
      */
-    public $timelimit = 0;
-    
-    /**legt fest, ob die Reihenfolge der gestellten Fragen zufällig ist: 0 = nach Erstelldatum; 1 = Random
-     * @ORM\Column(type="smallint", nullable=true, options={"default":0})
-     */
-    public $random = 0;
-    
-    /**legt fest, ob bereits gestellte Fragen in einer Spielrunde wiederholt werden können
-     * @ORM\Column(type="smallint", nullable=true, options={"default":0})
-     */
-    public $repeat = 0;
-    
-    /**legt fest, ob Fragen des Frage-Typs "0-Alle", "1-Entscheidungsfragen", "2-Multiple-Choice mit mehreren richtigen Antworten" im Quiz genutzt werden.
+    public $qrepeat = 0;
+
+    /**
+     * legt fest, ob Fragen des Frage-Typs "0-Alle", "1-Entscheidungsfragen", "2-Multiple-Choice mit mehreren richtigen Antworten" im Quiz genutzt werden.
+     *
      * @ORM\Column(type="smallint", nullable=true, options={"default":0})
      */
     public $trueanswer = 0;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="QuizCat", inversedBy="quizs")
      * @ORM\JoinTable(name="quizs_cats")
      */
     public $cats;
-    
-    
+
+
     /**
      * @ORM\OneToMany(targetEntity="QuizQuestion", mappedBy="quiz", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      */
     public $quizquestions;
-    
+
 
     /**
      * @ORM\Column(type="datetime")
      */
     public $created;
-    
+
     /**
      * @ORM\Column(type="datetime")
      */
     public $updated;
-    
+
     public $typ = 'quiz';
-    
+
     public function __construct()
     {
+    	$this->id=0;
+
     	$this->cats = new ArrayCollection();
     	$this->quizquestions = new ArrayCollection();
     	$this->setCreated(new \DateTime());
     	$this->setUpdated(new \DateTime());
     }
-    
-    
+
+
     /**
      * @ORM\PreUpdate
      */
@@ -158,14 +195,14 @@ class Quiz
     {
     	$this->setUpdated(new \DateTime());
     }
-    
+
     public function addCat(QuizCat $cat)
     {
     	$cat->addQuiz($this); // synchronously updating inverse side
     	$this->cats[] = $cat;
     }
-    
-    
+
+
     /**
      * Add quizquestions
      *
@@ -179,7 +216,7 @@ class Quiz
     	}
     	return $this;
     }
-    
+
     /**
      * Remove quizquestions
      *
@@ -304,20 +341,6 @@ class Quiz
 		$this->timelimit = $timelimit;
 		return $this;
 	}
-	public function getRandom() {
-		return $this->random;
-	}
-	public function setRandom($random) {
-		$this->random = $random;
-		return $this;
-	}
-	public function getRepeat() {
-		return $this->repeat;
-	}
-	public function setRepeat($repeat) {
-		$this->repeat = $repeat;
-		return $this;
-	}
 	public function getTrueanswer() {
 		return $this->trueanswer;
 	}
@@ -356,9 +379,40 @@ class Quiz
 		$this->cats = $cats;
 		return $this;
 	}
-	
-	
+	public function getShare() {
+		return $this->share;
+	}
+	public function setShare($share) {
+		$this->share = $share;
+		return $this;
+	}
+	public function getJoker() {
+		return $this->joker;
+	}
+	public function setJoker($joker) {
+		$this->joker = $joker;
+		return $this;
+	}
+	public function getQrandom() {
+		return $this->qrandom;
+	}
+	public function setQrandom($qrandom) {
+		$this->qrandom = $qrandom;
+		return $this;
+	}
+	public function getQrepeat() {
+		return $this->qrepeat;
+	}
+	public function setQrepeat($qrepeat) {
+		$this->qrepeat = $qrepeat;
+		return $this;
+	}
 
-    
+
+
+
+
+
+
 
 }

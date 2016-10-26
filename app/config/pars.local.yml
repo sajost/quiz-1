@@ -6,7 +6,7 @@ parameters:
     database_name: quiz
     database_user: root
     database_password: null
-    notify_off: 0
+    notify_off: 1
     notify_use: 1
     mailer_transport: smtp
     mailer_host: w010ca9a.kasserver.com

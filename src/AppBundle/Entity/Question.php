@@ -34,11 +34,23 @@ class Question
     public $title;
     
     /**
-     * 0 = aktiv, nicht geprüft; 1 = aktiv, geprüft; 2 = pausiert, nicht geprüft; 3 = pausiert, geprüft
+     * @ORM\Column(type="string", length=50,nullable=true)
+     */
+    public $avatar;
+    
+    /**
+     * 0 = aktiv, nicht geprüft; 1 = aktiv, geprüft; 
      * 
      * @ORM\Column(type="smallint", nullable=true, options={"default":0})
      */
     public $status = 1;
+    
+    /**
+     * 0 = nicht geprüft; 1 = geprüft
+     *
+     * @ORM\Column(type="smallint", nullable=true, options={"default":0})
+     */
+    public $statuscheck = 0;
     
     /**
      * @ORM\Column(type="smallint", nullable=true, options={"default":1})
@@ -62,9 +74,9 @@ class Question
     /**
      * Schwierigkeitsgrad von 0 = sehr enfach bis 9 = schwer (für den User als 1 bis 10 dargestellt)
      * 
-     * @ORM\Column(type="smallint", nullable=true, options={"default":0})
+     * @ORM\Column(type="smallint", nullable=true, options={"default":5})
      */
-    public $difficulty = 0;
+    public $difficulty = 5;
     
     
     /**
@@ -114,13 +126,21 @@ class Question
     
     public $quizin = 0;
     
+    public $cat = '';
+    
+    public $tag = '';
+    
     
     public function __construct()
     {
+    	$this->id=0;
+    	
     	$this->answers = new ArrayCollection();
     	
     	$this->setCreated(new \DateTime());
     	$this->setUpdated(new \DateTime());
+    	
+    	$this->setPublished(new \DateTime());
     	
     	$this->cats = new ArrayCollection();
     	$this->tags = new ArrayCollection();
@@ -317,6 +337,22 @@ class Question
 		$this->quizquestions = $quizquestions;
 		return $this;
 	}
+	public function getStatuscheck() {
+		return $this->statuscheck;
+	}
+	public function setStatuscheck($statuscheck) {
+		$this->statuscheck = $statuscheck;
+		return $this;
+	}
+	public function getAvatar() {
+		return $this->avatar;
+	}
+	public function setAvatar($avatar) {
+		$this->avatar = $avatar;
+		return $this;
+	}
+	
+	
 	
 	
 }

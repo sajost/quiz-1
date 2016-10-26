@@ -1,0 +1,149 @@
+{% extends 'default/init.html.twig' %}
+
+{% if form is defined %}
+	{% form_theme form _self %}
+	{% block choice_widget_expanded %}
+	{% spaceless %}
+		<div {{ block('widget_container_attributes') }}>
+		{% for child in form %}
+			<div class="radio-block">
+				{{ form_widget(child) }}
+				{{ form_label(child) }}
+		</div>
+		{% endfor %}
+		</div>
+	{% endspaceless %}
+	{% endblock choice_widget_expanded %}
+{% endif %}
+
+
+{% block js %}
+	{{ parent() }}
+		<script src="{{ asset('js/x.js') }}"></script>
+		<script src="{{ asset('js/jquery.countdown.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+	<div id="" class="container">
+
+		<div id="panel" class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-sm-2">
+					</div>
+					<div class="col-sm-8">
+						<div class="text-center">
+							<h3 id="start-counter" class="start-counter" style="font-size:80px;font-weight:bold;">{{ quiz.timelimit }}</h3>
+							<div id="start-counter-f5" class="alert alert-danger" role="alert" style="display:none;margin-bottom:0;">
+  								Die Frage ist abgelaufen, aber <a href="#" class="alert-link">nächte Frag ist da</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+					</div>
+				</div>
+			</div>
+			<div class="panel-body">
+				<div class="text-center">
+					<h3 class="">{{ question.title }}</h3>
+					{% if not question.avatar is null and question.avatar!='' %}
+						<div class="item-avatar">
+							<img
+								width=""
+								height=""
+								alt="avatar"
+								src="{{ asset(['images/q-'~question.id~'/', question.avatar]|join) }}?timestamp={{ 'now'|date("s.u")|round(3) }}"
+								class=""
+							>
+						</div>
+					{% endif %}
+				</div>
+
+				<form
+					action="{{ path('questionx') }}"
+					method="post"
+					id="f-question"
+					data-toggle="validator"
+					role="form"
+				>
+					<div class="form-group">
+						{{ form_widget(form.answers, {'label_attr': {'class': 'radio'}}) }}
+						<div class="help-block with-errors">{{ form_errors(form.answers) }}</div>
+					</div>
+
+					<div class="text-center" id="spinner-next" style="display:none;">
+						<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+					</div>
+					
+					<div class="form-group">
+{# 						{{ form_widget(form.save, { 'label': 'Weiter','attr': { 'class':'btn btn-success btn-sm'} } ) }}#}
+						<div class="pull-right text-success">
+								<a
+									href="{{ path('highscore') }}"
+									class="btn btn-link btn-xs "
+									style="color:#d43f3a"
+								>Beenden</a>
+						</div>
+					</div>
+					<div style="display: none">
+						{{ form_rest(form) }}
+					</div>
+				</form>
+
+
+				<script type="text/javascript">
+					$(document).ready(function() {
+						// if there's a cookie with the quiz-id_question-id
+						//var cookie_qq = '{{'q'~quiz.id~'q'~question.id}}';
+						var quiz_id = '{{quiz.id}}';
+						var question_id = '{{question.id}}';
+						//alert( Cookies.get("quiz") );
+						//TODO remove answers if refreshed, then goto the next page
+						if (Cookies.get('quiz')==quiz_id && Cookies.get('question')==question_id){
+							$('input[name="form[answers]').bootstrapSwitch('toggleDisabled');
+							//$('.start-counter').html('Die Frage ist abgelaufen');
+							$('#start-counter').hide();
+							$('#start-counter-f5').show();
+							$('#spinner-next').fadeIn();
+							$('#form_answers').fadeOut(3000, function() {
+								$('input[name="form[answers]').bootstrapSwitch('destroy');
+								$('form#f-question').validator('destroy');
+								$('form#f-question').submit();
+								return false;
+							});
+							return false;
+						}else{
+							Cookies.set("quiz", quiz_id);
+							Cookies.set("question", question_id);
+						}
+
+
+						var route = "{{ path('questionx')|escape('js') }}";
+						var seconds = "{{ quiz.timelimit }}";
+						var ss = new Date().getTime() + (parseInt(seconds)*1000);
+						$('#start-counter').countdown(ss, {elapse: false})
+						.on('update.countdown', function(event) {
+							var $this = $(this);
+							$this.html(event.strftime('%-S'));
+							//$this.html($this.text()+', '+event.strftime('%-S'));
+						})
+						.on('finish.countdown', function(e){
+							var $this = $(this);
+							$('.start-counter').hide();
+							$('#form_answers').fadeOut(1000, function() {
+								$('#spinner-next').fadeIn();
+								$('form#f-question').validator('destroy');
+								$('form#f-question').submit();
+								return false;
+							});
+							return false;
+						});
+					})
+				</script>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+{% endblock %}

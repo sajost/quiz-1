@@ -1,0 +1,98 @@
+{# src/Resources/views/security/reg.html.twig #}
+{% extends 'security/init.html.twig' %}
+
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block js %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div id="" class="container">
+
+		<div id="panel" class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-xs-10">
+						<h3 class="panel-title">Da können Sie sich anmelden</h3>
+					</div>
+					<div class="col-xs-2">
+						<div class="btn-group pull-right" role="group" aria-label="group-login">
+							<a
+								class="btn btn-success btn-sm btn-block"
+								href="{{ path('security_reg') }}"
+								id="btn-login"
+							>Registrieren</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body">
+			<form action="{{ path('login') }}" method="post" class="" id="f-security-logon" data-toggle="validator" role="form">
+
+					<div class="form-group">
+						<label for="username">Benutzername/Email</label>
+							<input
+							type="text"
+							id="username"
+							name="_username"
+							value="{{ not last_username is defined ? '' : last_username }}"
+							class="form-control"
+							required
+						/>
+						<div class="help-block with-errors">
+							{% if error %}
+								<ul class="list-unstyled"><li>{{ error.messageKey|trans(error.messageData) }}</li></ul>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="password">Passwort</label>
+						<input type="password" id="password" name="_password" class="form-control" required/>
+						<div class="help-block with-errors"></div>
+					</div>
+
+					<div class="checkbox">
+						<label for="remember_me">
+							<input type="checkbox" id="remember_me" name="_remember_me" checked  class=""/>
+							Angemeldet bleiben
+						</label>
+
+						<div class="help-block with-errors"></div>
+					</div>
+
+
+					<div style="display: none">
+						<input type="hidden" name="_target_path" value="/start0" />
+					</div>
+
+					<div class="form-group">
+						<button class="btn btn-success btn-sm" type="submit">Login</button>
+						<button
+							type="button"
+							class="btn btn-link btn-sm"
+							data-toggle="modal"
+							data-target="#modal-password"
+						>Passwort vergessen?</button>
+						<div class="pull-right text-success">
+							<a
+								href="{{ path('start1') }}"
+								class="btn btn-success btn-link btn-lg"
+							>Ohne Anmeldung spielen</a>
+						</div>
+{# 						<a class="btn btn-link btn-sm" href="">Passwort vergessen?</a>#}
+{#             			<a class="btn btn-link btn-sm" href="">Name/Email vergessen?</a>#}
+					</div>
+				</form>
+			</div>
+		</div>
+
+{% include 'security/modal.password.html.twig' %}
+
+
+	</div>
+{% endblock %}

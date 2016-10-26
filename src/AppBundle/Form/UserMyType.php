@@ -39,7 +39,7 @@ class UserMyType extends AbstractType{
        		->add('tel3',TextType::class, array('attr' => array('maxlength'=>16,'label'=>'Telefon'),'required'=>false))
             ->add('dborn',BirthdayType::class, array(
 			    'format' => 'dd - MMMM - yyyy',
-			    'widget' => 'choice',
+			    'widget' => 'single_text',
 			    'years' => range(date('Y'), date('Y')-70),
             	'required'=>false
 			))

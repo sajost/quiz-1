@@ -15,56 +15,59 @@
 
 		<div id="panel" class="panel panel-default">
 			<div class="panel-heading">
-            	<h3 class="panel-title">Da ist die ganze Liste von allen Tags, KLicken zum Bearbeiten</h3>
+            	<div class="row">
+        			<div class="col-sm-3">
+        				<div class="form-group">
+                    		<a class="btn btn-danger btn" href="{{ path('admin_question_tag_ne',{eid:'+'}) }}" style="">+ Tag</a>
+                         </div>
+                	</div>
+                	<div class="col-sm-4">
+                		<div class="form-group">
+                			<div class="icon-addon addon-md">
+                      			<input type="text" class="form-control form-search" placeholder="Suche nach..." id="filter">
+                      			<label for="filter" class="btn-search glyphicon glyphicon-search" rel="tooltip" title="Filter"></label>
+                      		</div>
+                   		</div>
+                	</div>
+                	<div class="col-xs-5">
+                		<h3 class="panel-title text-right hidden-md hidden-sm hidden-xs">Da ist die ganze Liste von allen Tags, KLicken zum Bearbeiten</h3>
+                	</div>
+                </div>
             </div>
 			<div class="panel-body">
 				<div class="panel-scroll">
-				<table class="table table-bordered" fixed-header>
-					<thead>
-                        <tr>
-                          <th style="width:50px">#</th>
-                          <th style="width:250px">Titel</th>
-                        </tr>
-                    </thead>
-                    {% for e in questiontags %}
-                    	<tr>
-                    		<td style="width:50px">
-                    			<a class="" href="{{ path('admin_question_tage',{'eid':e.id}) }}" style="">{{ e.id }}</a>
-                    		</td>
-                    		<td style="width:250px">
-                    			<a class="" href="{{ path('admin_question_tage',{'eid':e.id}) }}" style="">{{ e.title }}</a>
-                    		</td>
-                		</tr>
-                	{% endfor %}
-				</table>
+    				<table class="table table-bordered" fixed-header>
+    					<thead>
+                            <tr>
+                              <th style="width:50px">#</th>
+                              <th style="width:250px">Titel</th>
+                              <th style="width:50px">Anzahl Fragen</th>
+                              <th style="width:50px">Status</th>
+                              <th style="width:50px">Aktion</th>
+                            </tr>
+                        </thead>
+                        {% for e in questiontags %}
+                        	<tr>
+                        		<td style="width:50px">
+                        			<a class="" href="{{ path('admin_question_tag_ne',{'eid':e.id}) }}" style="">{{ e.id }}</a>
+                        		</td>
+                        		<td style="width:250px">
+                        			<a class="filter" href="{{ path('admin_question_tag_ne',{'eid':e.id}) }}" style="">{{ e.title }}</a>
+                        		</td>
+                        		<td style="width:50px">
+                            		<span>{{ e.questions.count }}</span>
+                            	</td>
+                            	<td style="width:150px">
+                        			<span>{{ e.status|replace({'1': 'aktiv', '0': 'inaktiv'}) }}</span>
+                        		</td>
+                            	<td style="width:50px">
+                    				<a class="btn btn-success btn-xs" href="{{ path('admin_question_tag_ne',{'eid':e.id}) }}" style="">Bearbeiten</a>
+                        			<a class="btn btn-default btn-xs btn-del" data-href="{{ path('admin_question_tag_d',{'eid':e.id}) }}" style="">Entfernen</a>
+                            	</td>
+                    		</tr>
+                    	{% endfor %}
+    				</table>
             	</div>
-            	<br/>
-               {{ form_start(form) }}
-                	{{ form_errors(form) }}
-                	
-                	<h3>Here u can select Question-Tag for delete and press save</h3> 
-        	        {{ form_row(form.questiontags) }}
-        			<br/>
-        			<br/>
-            		    	
-            		<h3>Here u can add new Question-Tag and save</h3>
-            		{{ form_row(form.questiontagnew) }}
-            		<br/>
-            		<br/>
-            		
-                	
-                	<div style="display: none">{{ form_rest(form) }}</div>
-            		<div class="form-field">
-            			<button class="btn btn-primary btn-lg" type="submit">Speichern</button>
-            		</div>
-                
-            		<script type="text/javascript">
-            		//
-            		$( "#" ).each(function(index) {
-            			
-            		});
-            		</script>
-        	  {{ form_end(form) }}
 			</div>
 		</div>
 	</div>

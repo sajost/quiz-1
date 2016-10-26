@@ -1,0 +1,56 @@
+/*++++++++++COUNTER+++++++++++++++++*/
+@keyframes explosion {
+  10% {
+    content: "1";
+    color: #333;
+    font-size: 20px; }
+  20% {
+    content: "2";
+    color: #333;
+    font-size: 40px; }
+  30% {
+    content: "3";
+    color: #333;
+    font-size: 60px; }
+  40% {
+    content: "4";
+    color: #333;
+    font-size: 80px; }
+  50% {
+    content: "5";
+    color: #333;
+    font-size: 100px; }
+  60% {
+    content: "6";
+    color: #333;
+    font-size: 120px; }
+  70% {
+    content: "7";
+    color: #333;
+    font-size: 140px; }
+  80% {
+    content: "8";
+    color: #333;
+    font-size: 160px; }
+  90% {
+    content: "9";
+    color: #333;
+    font-size: 180px; }
+  100% {
+    content: "10";
+    color: #333;
+    font-size: 200px; } }
+.counter0 {
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+  .counter0:after {
+    font-size: 300px;
+    content: "Start!";
+    display: block;
+    color: #d9534f;
+    text-align: center;
+    animation: explosion 7s linear infinite reverse;
+    transition: color .1s ease; }
+
+/*# sourceMappingURL=graph.css.map */

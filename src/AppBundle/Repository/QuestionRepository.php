@@ -32,4 +32,15 @@ class QuestionRepository extends EntityRepository
 	
 		return $qb;
 	}
+	
+	public function getQuestionsStatusCount($status='1') {
+	
+		$qb = $this->createQueryBuilder ( 'e' )
+		->select('COUNT(e)')
+		->where('e.status = :status')
+		->setParameter('status', $status);
+		;
+	
+		return $qb->getQuery ()->getSingleScalarResult ();
+	}
 }

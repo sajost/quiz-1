@@ -1,13 +1,13 @@
-{# src/Resources/views/security/reg.html.twig #} 
-{% extends 'security/init.html.twig' %} 
+{# src/Resources/views/security/reg.html.twig #}
+{% extends 'security/init.html.twig' %}
 
 
 {% block stylesheets %}
-    {{ parent() }}
+	{{ parent() }}
 {% endblock %}
 
 {% block js %}
-    {{ parent() }}
+	{{ parent() }}
 {% endblock %}
 
 {% block body %}
@@ -17,98 +17,76 @@
 			<div class="panel-heading">
 				<div class="row">
 					<div class="col-xs-10">
-                		<h3 class="panel-title">Da können Sie sich anmelden</h3>
-                	</div>
-                	<div class="col-xs-2">
-                		<div class="btn-group pull-right" role="group" aria-label="group-login">
-    						<a
-    							class="btn btn-success btn-sm btn-block"
-    							href="{{ path('security_reg') }}"
-    							id="btn-login"
-    						>Registrieren</a>
+						<h3 class="panel-title">Da können Sie sich anmelden</h3>
+					</div>
+					<div class="col-xs-2">
+						<div class="btn-group pull-right" role="group" aria-label="group-login">
+							<a
+								class="btn btn-success btn-sm btn-block"
+								href="{{ path('security_reg') }}"
+								id="btn-login"
+							>Registrieren</a>
 						</div>
-                	</div>
-            	</div>
-            </div>
+					</div>
+				</div>
+			</div>
 			<div class="panel-body">
-               <form action="{{ path('login') }}" method="post" class="" id="f-security-logon" data-toggle="validator" role="form"> 
-               
-            		<div class="form-group">
-        				<label for="username">Benutzername/Email</label> 
-            				<input
-    						type="text"
-    						id="username"
-    						name="_username"
-    						value="{{ not last_username is defined ? '' : last_username }}"
-    						class="form-control"
-    						required
-    					/>
+			   <form action="{{ path('login') }}" method="post" class="" id="f-security-logon" data-toggle="validator" role="form">
+
+					<div class="form-group">
+						<label for="username">Benutzername/Email</label>
+							<input
+							type="text"
+							id="username"
+							name="_username"
+							value="{{ not last_username is defined ? '' : last_username }}"
+							class="form-control"
+							required
+						/>
 						<div class="help-block with-errors">
-        					{% if error %}
-        						<ul class="list-unstyled"><li>{{ error.messageKey|trans(error.messageData) }}</li></ul>
-    						{% endif %}
-        				</div>
-        			</div>
-        			
-        			<div class="form-group">
-        				<label for="password">Passwort</label>
-        				<input type="password" id="password" name="_password" class="form-control" required/>
-        				<div class="help-block with-errors"></div>
-        			</div>
-        			
-        			<div class="checkbox">
-        				<label for="remember_me">
-        					<input type="checkbox" id="remember_me" name="_remember_me" checked  class=""/>
-        					Angemeldet bleiben
-        				</label>
-        				
-        				<div class="help-block with-errors"></div>
-        			</div>
-        			
-                	
-                	<div style="display: none">
-                	    <input type="hidden" name="_target_path" value="/" />
-                	 </div>
-            		
-            		<div class="form-field">
-            			<button class="btn btn-primary btn-sm" type="submit">Login</button>
-    					<button
-    						type="button"
-    						class="btn btn-link btn-sm"
-    						data-toggle="modal"
-    						data-target="#modal-password"
-    					>Passwort vergessen?</button>
+							{% if error %}
+								<ul class="list-unstyled"><li>{{ error.messageKey|trans(error.messageData) }}</li></ul>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="password">Passwort</label>
+						<input type="password" id="password" name="_password" class="form-control" required/>
+						<div class="help-block with-errors"></div>
+					</div>
+
+					<div class="checkbox">
+						<label for="remember_me">
+							<input type="checkbox" id="remember_me" name="_remember_me" checked  class=""/>
+							Angemeldet bleiben
+						</label>
+
+						<div class="help-block with-errors"></div>
+					</div>
+
+
+					<div style="display: none">
+						<input type="hidden" name="_target_path" value="/" />
+					 </div>
+
+					<div class="form-group">
+						<button class="btn start0 btn-sm" type="submit">Login</button>
+						<button
+							type="button"
+							class="btn btn-link btn-sm"
+							data-toggle="modal"
+							data-target="#modal-password"
+						>Passwort vergessen?</button>
 {# 						<a class="btn btn-link btn-sm" href="">Passwort vergessen?</a>#}
 {#             			<a class="btn btn-link btn-sm" href="">Name/Email vergessen?</a>#}
-            		</div>
-            	</form>
+					</div>
+				</form>
 			</div>
 		</div>
-		
-<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" id="modal-password">
-  <div class="modal-dialog modal-password" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Passwort wiederherstellen</h4>
-      </div>
-      <div class="modal-body">
-      	 <form action="{{ path('password_send_request') }}" method="get" class="" id="f-password" data-toggle="validator" role="form">
-          <div class="form-group">
-            <label for="u" class="control-label">Benutzername/Email:</label>
-            <input type="text" class="form-control" id="u">
-            <div class="help-block with-errors"></div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" id="modal-cancel-password">Abbrechnen</button>
-        <button type="button" class="btn btn-primary" id="modal-ok-password">OK</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-		
-		
+
+{% include 'security/modal.password.html.twig' %}
+
+
 	</div>
-{% endblock %} 
+{% endblock %}

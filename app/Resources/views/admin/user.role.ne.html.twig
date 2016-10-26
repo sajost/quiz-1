@@ -1,0 +1,50 @@
+{# src/AppBundle/Resources/views/Admin/user.role.ne.html.twig #} 
+{% extends 'admin/init.html.twig' %} 
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div id="" class="container">
+
+		<div id="panel" class="panel panel-default">
+			<div class="panel-heading">
+            	<a class="" href="{{ path('admin_userrole') }}" style="">Back to UserRoles</a>
+            </div>
+			<div class="panel-body">
+        	
+               <form action="{{ path('admin_userrole_ne',{'eid':userrole.id}) }}" method="post" class="f-admin" id="f-admin-userrole">
+                	
+                	<h3>Here u can edit UserRole and save: {{ userrole.role }}</h3>
+                	<br/>
+                	
+                	
+            		{{ form_row(form.role) }}
+            		
+                	
+                	<div style="display:none ">
+                	    {{ form_rest(form) }}
+                	</div>
+            		<div class="form-field">
+            			<button class="btn btn-success btn-sm" type="submit">Speichern</button>
+            		</div>
+                
+            		<script type="text/javascript">
+            		//
+            		$( "#" ).each(function(index) {
+            			
+            		 });
+            		</script>
+               </form>
+			</div>
+		</div>
+		
+	</div>
+
+
+{% endblock %} 

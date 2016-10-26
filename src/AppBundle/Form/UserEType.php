@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Doctrine\ORM\EntityRepository;
 
 class UserEType extends AbstractType{
 	
@@ -53,13 +54,10 @@ class UserEType extends AbstractType{
             		'multiple' => false,
             		'expanded' => true,
             		'required' => true,
-            		'label_attr' => array(
-            			'class' => 'radio-inline'
-            		)
             ))
             ->add('dborn',BirthdayType::class, array(
 			    'format' => 'dd - MMMM - yyyy',
-			    'widget' => 'choice',
+			    'widget' => 'single_text',
 			    'years' => range(date('Y'), date('Y')-70),
             	'required'=>false
 			))
@@ -78,7 +76,9 @@ class UserEType extends AbstractType{
             ->add('avatar_h', TextType::class, array('required'=>false,'mapped' => false))
             ->add('avatar_w', TextType::class, array('required'=>false,'mapped' => false))
             ->add('userroles', EntityType::class, array(
-            		// query choices from this entity
+		            'query_builder' => function (EntityRepository $er) {
+		            	return $er->createQueryBuilder('u')->where('u.status=1');
+		            },
             		'class' => 'AppBundle:UserRole',
             		'choice_label' => 'role',
             		'multiple' => true,

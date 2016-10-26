@@ -14,6 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\ORM\EntityRepository;
 
 class UserType extends AbstractType{
 	
@@ -67,8 +68,8 @@ class UserType extends AbstractType{
             		'required' => true
             ))
             ->add('dborn',BirthdayType::class, array(
-			    'format' => 'dd - MMMM - yyyy',
-			    'widget' => 'choice',
+            	'widget' => 'single_text',
+			    'format' => 'dd.MM.yyyy',
 			    'years' => range(date('Y'), date('Y')-70),
             	'required'=>false
 			))
@@ -87,7 +88,9 @@ class UserType extends AbstractType{
             ->add('avatar_h', TextType::class, array('required'=>false,'mapped' => false))
             ->add('avatar_w', TextType::class, array('required'=>false,'mapped' => false))
             ->add('userroles', EntityType::class, array(
-            		// query choices from this entity
+		            'query_builder' => function (EntityRepository $er) {
+		            	return $er->createQueryBuilder('u')->where('u.status=1');
+		            },
             		'class' => 'AppBundle:UserRole',
             		'choice_label' => 'role',
             		'multiple' => true,

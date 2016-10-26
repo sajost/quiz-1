@@ -1,0 +1,30 @@
+/*++++++++++COUNTER+++++++++++++++++*/
+@keyframes explosion {
+	@for $i from 1 through 10 {
+		$number: $i * 10;
+		$percent: $number + "%";
+		#{$percent} {
+			content: $i + "";
+			color: #333;
+			font-size: $i * 20px;
+		}
+	}
+}
+
+.counter0 {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	&:after {
+		font-size: 300px;
+		content: "Start!";
+		display: block;
+		color: #d9534f;
+		text-align: center;
+		animation: explosion 7s linear infinite reverse;
+		transition: color .1s ease;
+	}
+}
+
+

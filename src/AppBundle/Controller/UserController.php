@@ -7,7 +7,6 @@ use AppBundle\Utils\Ses;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\UserMyType;
-use AppBundle\Form\UserUsername;
 use AppBundle\Form\UserUsernameType;
 use AppBundle\Form\UserEmailType;
 use AppBundle\Form\UserPasswordType;

@@ -25,9 +25,15 @@ class QuestionCat
     public $title;
     
     /**
-     * @ORM\Column(type="smallint", nullable=true, options={"default":0})
+     * @ORM\Column(type="smallint", nullable=true, options={"default":1})
      */
     public $status = 1;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="QuizCat", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="quizcat", referencedColumnName="id")
+     */
+    public $quizcat;
     
     
     /**
@@ -51,6 +57,8 @@ class QuestionCat
     
     public function __construct()
     {
+    	$this->id=0;
+    	
     	$this->questions = new \Doctrine\Common\Collections\ArrayCollection();
     	
     	$this->setCreated(new \DateTime());
@@ -123,6 +131,15 @@ class QuestionCat
 	public function __toString(){
 		return $this->title;
 	}
+	
+	public function getQuizcat() {
+		return $this->quizcat;
+	}
+	public function setQuizcat($quizcat) {
+		$this->quizcat = $quizcat;
+		return $this;
+	}
+	
 
     
 }

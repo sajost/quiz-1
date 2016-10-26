@@ -31,6 +31,10 @@ class UserRole implements RoleInterface
      */
     protected $role;
     
+    /**
+     * @ORM\Column(type="smallint", nullable=true, options={"default":1})
+     */
+    protected $status = 1;
     
     /**
      * @ORM\Column(type="datetime")
@@ -110,6 +114,14 @@ class UserRole implements RoleInterface
 		$this->users->removeElement($user);
 		return $this;
 	}
+	public function getStatus() {
+		return $this->status;
+	}
+	public function setStatus($status) {
+		$this->status = $status;
+		return $this;
+	}
+	
 	
     
         

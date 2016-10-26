@@ -24,6 +24,11 @@ class QuestionTag
      */
     public $title;
     
+    /**
+     * @ORM\Column(type="smallint", nullable=true, options={"default":1})
+     */
+    public $status = 1;
+    
     
     /**
      * @ORM\ManyToMany(targetEntity="Question", mappedBy="tags")
@@ -45,6 +50,7 @@ class QuestionTag
     
     public function __construct()
     {
+    	$this->id=0;
     	$this->setCreated(new \DateTime());
     	$this->setUpdated(new \DateTime());
     }
@@ -104,5 +110,13 @@ class QuestionTag
 	public function __toString(){
 		return $this->title;
 	}
+	public function getStatus() {
+		return $this->status;
+	}
+	public function setStatus($status) {
+		$this->status = $status;
+		return $this;
+	}
+	
 
 }

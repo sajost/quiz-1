@@ -1,0 +1,52 @@
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    {# src/AppBundle/Resources/views/Admin/carlogcate.html.twig #}
+{% extends 'admin/init.html.twig' %}
+
+{% block body %}
+	<div id="" class="container">
+
+		<div id="panel" class="panel panel-default">
+			<div class="panel-heading">
+            		<a class="btn btn-link" href="{{ path('admin_question_cat') }}" style="">Back to Categories</a>
+            </div>
+			<div class="panel-body">
+
+               <form action="{{ path('admin_question_cat_ne',{'eid':questioncat.id}) }}" method="post" id="f-admin-question-cat" data-toggle="validator" role="form">
+
+                	<div class="form-group">
+        				<label for="{{ form.title.vars.id }}">Kategorie</label>
+        				{{ form_widget(form.title) }}
+        				<div class="help-block with-errors">{{ form_errors(form.title) }}</div>
+        			</div>
+
+                	<div class="form-group">
+        				<label class="" for="{{ form.status.vars.id }}">Status</label>
+        				{{ form_widget(form.status, {'label_attr': {'class': 'radio-inline'}}) }}
+        				<div class="help-block with-errors">
+        					{{ form_errors(form.status) }}
+        				</div>
+        			</div>
+
+                	<div class="btn-group">
+						    {{ form_widget(form.save, { 'label': 'Speichern','attr': { 'class':'btn btn-success btn-sm'} } ) }}
+						</div>
+						<div class="btn-group">
+						    {{ form_widget(form.save_add, { 'label': 'Speichern und neue Frage','attr': { 'class':'btn btn-success btn-sm'} } ) }}
+						</div>
+
+                	<div style="display: none">{{ form_rest(form) }}</div>
+
+
+            		<script type="text/javascript">
+            		//
+//             		$(function(){
+//             			$(window).on('beforeunload', function(){
+//           			      return 'Are you sure you want to leave?';
+//           				});
+// 								});
+            		</script>
+               </form>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

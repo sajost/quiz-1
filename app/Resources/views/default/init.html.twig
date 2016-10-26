@@ -1,14 +1,14 @@
-{# app//Resources/views/Admin/init.html.twig #} 
-{% extends 'layout.html.twig' %} 
+{# app//Resources/views/Admin/init.html.twig #}
+{% extends 'layout.html.twig' %}
 
 {% block stylesheets %}
-    {{ parent() }}
-{#     <link href="{{ asset('css/default.css') }}" type="text/css" rel="stylesheet" />#}
+	{{ parent() }}
+    <link href="{{ asset('bs/css/font-awesome.min.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 
 {% block js %}
-    {{ parent() }}
-{#     <script src="{{ asset('js/default.js') }}"></script>#}
+	{{ parent() }}
+	<script src="{{ asset('js/jquery.cookie.js') }}"></script>
 {% endblock %}
 
 
@@ -17,31 +17,29 @@
 {# head1 in layout#}
 {% block head1 %}
 	<header class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-      	<div class="row row-eq-height">
-			<div class="col-xs-2">
-        	</div>
-        	<div class="col-xs-8">
-        		<a href="{{ path('home') }}">
-        			<img border="0" alt="Quiz-Com" src="{{ asset('images/quizcom-logo3.png') }}" width="auto" height="auto">
-        		</a>
-        	</div>
-        	<div class="col-xs-2">
-        		<div style="padding-top:10px;">
-        		{% if app.user %}
-                	<span>Angemeldet als <a class="navbar-link" href="{{ path('my_user') }}" id="btn-my-user">{{ app.user.username }}</a>
-                	</span>
-                {% else %}
-                	<div class="btn-group pull-right" role="group" aria-label="group-login">
-                        <a class=" btn btn-success btn-sm " href="{{ path('security_reg') }}" id="btn-login">Registrieren</a>
-                        <a class=" btn btn-success btn-sm " href="{{ path('login') }}" id="btn-login">Login</a>
-                    </div>
-                {% endif %}
-                </div>
-        	</div>
-    	</div>
-      </div>
-    </header>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-8 col-sm-offset-2 col-xs-12 ">
+				<a href="{{ path('home') }}">
+					<img border="0" alt="Quiz-Com" src="{{ asset('images/quizcom-logo3.png') }}" width="auto" height="auto">
+				</a>
+			</div>
+			<div class="col-sm-2 col-sm-offset-0 col-xs-8 col-xs-offset-4 ">
+				<div style="padding-top:10px;" class="text-right">
+					{% if app.user %}
+						<span>Angemeldet als <a class="navbar-link" href="{{ path('my_user') }}" id="btn-my-user">{{ app.user.username }}</a>
+						</span>
+					{% else %}
+						<div class="btn-group pull-right" role="group" aria-label="group-login">
+							<a class=" btn btn-success btn-sm " href="{{ path('security_reg') }}" id="btn-login">Registrieren</a>
+							<a class=" btn btn-success btn-sm " href="{{ path('login') }}" id="btn-login">Login</a>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+	</header>
 {% endblock %}
 
 

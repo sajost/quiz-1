@@ -1,0 +1,31 @@
+{% extends 'default/init.html.twig' %}
+
+{% block js %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div id="" class="container">
+
+		<div id="panel" class="panel panel-default">
+			<div class="panel-body">
+				<div class="text-center">
+					<h3 class="">Ergebnis als Gast</h3>
+				</div>
+				<div class="row">
+					<div class="col-sm-2"></div>
+					<div class="col-sm-8">
+						<span style="font-weight:bold">Punktzahl:</span>
+						<br/>
+						Glückwunsch!
+						<br/>
+						Du hast {{ app.session.get('quiz_score') }} Punkte erzielt.
+						<br/>
+					</div>
+					<div class="col-sm-2"></div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+{% endblock %}

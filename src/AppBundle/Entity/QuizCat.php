@@ -31,6 +31,13 @@ class QuizCat
     
     
     /**
+     * @ORM\OneToOne(targetEntity="QuestionCat", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="questioncat", referencedColumnName="id")
+     */
+    public $questioncat;
+    
+    
+    /**
      * @ORM\ManyToMany(targetEntity="Quiz", mappedBy="cats")
      */
     public $quizs;
@@ -51,6 +58,8 @@ class QuizCat
     
     public function __construct()
     {
+    	$this->id=0;
+    	
     	$this->quizs = new \Doctrine\Common\Collections\ArrayCollection();
     	
     	$this->setCreated(new \DateTime());
@@ -122,6 +131,14 @@ class QuizCat
 	public function __toString(){
 		return $this->title;
 	}
+	public function getQuestioncat() {
+		return $this->questioncat;
+	}
+	public function setQuestioncat($questioncat) {
+		$this->questioncat = $questioncat;
+		return $this;
+	}
+	
 
     
 }

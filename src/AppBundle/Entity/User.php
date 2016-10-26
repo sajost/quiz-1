@@ -23,145 +23,148 @@ class User implements AdvancedUserInterface, \Serializable {
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
 	protected $id;
-	
+
 	/**
 	 * @ORM\Column(type="string", length=50, unique=true)
 	 */
 	protected $unid;
-	
+
 	/**
 	 * @ORM\Column(type="string", length=20, unique=true)
 	 * @Assert\Length(
 	 * 			max = 16,
 	 *			min = 2,
 	 *			minMessage = "Passwort muss mindestens {{ limit }} Symbolen sein",
-	 *			maxMessage = "Passwort muss maximal {{ limit }} Symbolen sein" 
+	 *			maxMessage = "Passwort muss maximal {{ limit }} Symbolen sein"
 	 * 		)
-	 * 
+	 *
 	 * @Assert\NotBlank(message = "Benutzername darf nicht leer sein")
 	 */
 	protected $username;
-	
+
 	/**
 	 * @ORM\Column(type="string", length=20)
-	 * 
+	 *
 	 * @Assert\NotBlank(message = "Passwort darf nicht leer sein")
 	 * @Assert\Length(
 	 * 			max = 16,
 	 *			min = 3,
 	 *			minMessage = "Passwort muss mindestens {{ limit }} Symbolen sein",
-	 *			maxMessage = "Passwort muss maximal {{ limit }} Symbolen sein" 
+	 *			maxMessage = "Passwort muss maximal {{ limit }} Symbolen sein"
 	 * 		)
 	 */
 	protected $password;
-	
+
 	/**
 	 * by fogotten pwd, it generates code for new password
-	 * 
+	 *
 	 * @ORM\Column(type="string", length=128, nullable=true)
 	 */
 	protected $reset;
-	
-	
+
+
 	/**
 	 * @ORM\Column(type="string", length=64, unique=true)
-	 * 
+	 *
 	 * @Assert\NotBlank(message = "Email darf nicht leer sein")
 	 * @Assert\Length(
 	 * 			max = 50,
 	 *			min = 5,
 	 *			minMessage = "Email muss mindestens {{ limit }} Symbolen sein",
-	 *			maxMessage = "Email muss maximal {{ limit }} Symbolen sein" 
+	 *			maxMessage = "Email muss maximal {{ limit }} Symbolen sein"
 	 * 		)
 	 */
 	protected $email;
-	
+
 	/**
 	 * @ORM\Column(type="string", length=20, nullable=true)
 	 */
 	protected $phone;
-	
+
 	/**
 	 * @ORM\Column(type="smallint", nullable=true, options={"default":0})
 	 */
 	protected $status = 1;
-	
+
 	/**
 	 * @ORM\Column(type="string", length=20,nullable=true)
 	 */
 	protected $fname;
-	
+
 	/**
 	 * @ORM\Column(type="string", length=20,nullable=true)
 	 */
 	protected $lname;
-	
+
 	/**
 	 * @ORM\Column(type="string", length=20,nullable=true)
 	 */
 	protected $tel1;
-	
+
 	/**
 	 * @ORM\Column(type="string", length=20,nullable=true)
 	 */
 	protected $tel2;
-	
+
 	/**
 	 * @ORM\Column(type="string", length=20,nullable=true)
 	 */
 	protected $tel3;
-	
+
 	/**
 	 * @ORM\Column(type="smallint",nullable=true)
 	 */
 	protected $sex;
-	
+
 	/**
 	 * @ORM\Column(type="datetime",nullable=true)
 	 */
 	protected $dborn;
-	
+
 	/**
 	 * @ORM\Column(type="text",nullable=true)
 	 */
 	protected $about;
-	
+
 	/**
 	 * @ORM\Column(type="string", length=50,nullable=true)
 	 */
 	protected $avatar;
-	
+
 	/**
 	 * @ORM\Column(type="datetime")
 	 */
 	protected $created;
-	
+
 	/**
 	 * @ORM\Column(type="datetime")
 	 */
 	protected $updated;
-	
+
 	/**
 	 * Date/Time of the last activity
 	 *
 	 * @var \Datetime
-	 * 
+	 *
 	 * @ORM\Column(type="datetime", nullable=true)
 	 */
 	protected $lastact;
-	
+
 	/**
 	 * @ORM\ManyToMany(targetEntity="UserRole", inversedBy="users")
 	 * @ORM\JoinTable(name="users_roles")
 	 */
 	protected $userroles;
-	
+
 	/**
 	 *
 	 * @var string
 	 */
 	public $typ = 'user';
+
 	public function __construct() {
+		$this->id=0;
+
 		$this->userroles = new ArrayCollection();
 		// $g = new RandomStringGenerator();
 		// $this->setUnid($g->generate(32));//md5(uniqid('')));
@@ -169,7 +172,7 @@ class User implements AdvancedUserInterface, \Serializable {
 		$this->setCreated ( new \DateTime () );
 		$this->setUpdated ( new \DateTime () );
 	}
-	
+
 	/**
 	 * @ORM\PreUpdate
 	 */
@@ -197,7 +200,7 @@ class User implements AdvancedUserInterface, \Serializable {
 		$this->lastact = $lastact;
 		return $this;
 	}
-	
+
 	/**
 	 *
 	 * @return Bool Whether the user is active or not
@@ -207,14 +210,14 @@ class User implements AdvancedUserInterface, \Serializable {
 		$delay = new \DateTime ( '2 minutes ago' );
 		return ($this->getLastact () > $delay);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function getUsername() {
 		return $this->username;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -223,14 +226,14 @@ class User implements AdvancedUserInterface, \Serializable {
 		// see section on salt below
 		return null;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function getPassword() {
 		return $this->password;
 	}
-	
+
 	/**
 	 * Overwrite it if roles in the DB
 	 */
@@ -242,7 +245,7 @@ class User implements AdvancedUserInterface, \Serializable {
 		}
 		return $r;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -260,7 +263,7 @@ class User implements AdvancedUserInterface, \Serializable {
 	public function isEnabled() {
 		return $this->status == 1; // && (time()-(60*60*48)) < $this->getCreated();
 	}
-	
+
 	/**
 	 *
 	 * @see \Serializable::serialize()
@@ -271,10 +274,10 @@ class User implements AdvancedUserInterface, \Serializable {
 				$this->username,
 				$this->email,
 				$this->password,
-				$this->status 
+				$this->status
 		) );
 	}
-	
+
 	/**
 	 *
 	 * @see \Serializable::unserialize()
@@ -391,15 +394,18 @@ class User implements AdvancedUserInterface, \Serializable {
 	public function getTyp() {
 		return $this->typ;
 	}
-	
+
 	public function getUserroles() {
+// 		$criteria = Criteria::create();
+// 		$criteria->where(Criteria::expr()->eq('status', '1'));
+// 		return $this->userroles->matching($criteria);
 		return $this->userroles;
 	}
 	public function setUserroles($userroles) {
 		$this->userroles = $userroles;
 		return $this;
 	}
-	
+
 	/**
 	 * Add userroles
 	 *
@@ -412,7 +418,7 @@ class User implements AdvancedUserInterface, \Serializable {
 		$this->userroles[] = $userrole;
 		return $this;
 	}
-	
+
 	/**
 	 * Remove userroles
 	 *
@@ -431,9 +437,9 @@ class User implements AdvancedUserInterface, \Serializable {
 		$this->reset = $reset;
 		return $this;
 	}
-		
-	
-	
+
+
+
 	// public function __sleep()
 	// {
 	// return array('id', 'username', 'email', 'password', 'status');

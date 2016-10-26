@@ -11,29 +11,26 @@ use AppBundle\Entity\Quiz;
 use AppBundle\Entity\QuizCat;
 use AppBundle\Entity\QuizQuestion;
 use AppBundle\Entity\User;
+use AppBundle\Entity\UserRole;
+use AppBundle\Form\QuestionCatType;
+use AppBundle\Form\QuestionTagType;
 use AppBundle\Form\QuestionType;
 use AppBundle\Form\QuizType;
 use AppBundle\Form\UserEType;
+use AppBundle\Form\UserRoleType;
 use AppBundle\Form\UserType;
 use AppBundle\Utils\Ses;
-use Doctrine\ORM\EntityRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\CallbackTransformer;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use AppBundle\Form\UserRoleType;
-use AppBundle\Entity\UserRole;
+use AppBundle\Form\QuizQuestionType;
 
 class AdminController extends QController {
-	
+
 	/**
 	 * @Route("admin/", name="admin")
 	 * @Security("has_role('ROLE_ADMIN')")
@@ -41,15 +38,19 @@ class AdminController extends QController {
 	 */
 	public function indexAction(Request $request) {
 		//+++++++++++++++++++++++ @Security ADMINS ONLY++++++++++++++++++++++++++++++++++
-		return $this->render ( 'admin/index.html.twig', array (
-				'y' => 'y'
+		$quizs = $this->em()->getRepository('AppBundle:Quiz')->findBy(array(), array('title' => 'ASC'));
+		return $this->render ( 'admin/quiz.html.twig', array (
+				'quizs' => $quizs,
 		) );
+// 		return $this->render ( 'admin/index.html.twig', array (
+// 				'y' => 'y'
+// 		) );
 	}
-	
+
 	/**
 	 * @Route("uuu", name="admin_uuu")
 	 * @Method({"GET"})
-	 * @Template("admin/uuu.html.twig")	
+	 * @Template("admin/uuu.html.twig")
 	 * TODO -block it by production server
 	 */
 	public function uuuAction(Request $request) {
@@ -58,22 +59,22 @@ class AdminController extends QController {
 		return array('uuu' => $uuu);
 	}
 
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * @Security("has_role('ROLE_ADMIN')")
-	 * 
+	 *
 	 * @param Request $request
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
 	 */
 	public function globalAction(Request $request) {
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-		
-	
+
+
 		//$city = $this->em()->getRepository('AppBundle:City')->find($ciid);
-	
+
 		$dd = array('1' => 'What');
 		$form = $this->createFormBuilder($dd)
 		->add('id', 'hidden', array(
@@ -86,14 +87,14 @@ class AdminController extends QController {
 				'data' => $this->p('notify_use'),
 		))
 		->getForm();
-			
+
 		if ($request->isMethod ( 'POST' )) {
 			$form->handleRequest ( $request );
 			if ($form->isValid ()) {
 				//------------------edit notify_off
 				$notify_off = $form->get('notify_off')->getData();
 				if (!is_null($notify_off) & $notify_off!=""){
-					$this->p('notify_off',$notify_off); 
+					$this->p('notify_off',$notify_off);
 					$this->get('session')->set('admin_notify_off_ok', 'notify_off is OK');
 				}else{
 					$this->get('session')->set('admin_notify_off_ok', 'Nothing is edited');
@@ -110,63 +111,48 @@ class AdminController extends QController {
 				//$citys = $this->em()->getRepository('AppBundle:City')->getCitysByCountry($coid);
 			}
 		}
-	
+
 		return $this->render ( 'AppBundle:Admin:global.html.twig', array (
 				'dd' => $dd,
 				'form'=>$form->createView()
 		) );
 	}
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * @Route("admin/userrole", name="admin_userrole")
 	 * @Security("has_role('ROLE_SUPER')")
 	 */
 	public function userroleAction(Request $request) {
 		//*************RIGHTS************************************
-	
-		$userrole = new UserRole();
-	
-		$form = $this->createForm ( UserRoleType::class, $userrole );
-		$form2 = clone $form;
-			
-		if ($request->isMethod ( 'POST' )) {
-			$form->handleRequest ( $request );
-			if ($form->isValid ()) {
-				//$p = $request->get ( 'userrole' );
-				//var_dump($p);
-				$this->em()->persist ( $userrole );
-				$this->em()->flush ();
-				$this->get('session')->set('admin_userrole_ok', 'UserRole is OK');
-				$form = $form2;//disable a message for resend data by page-refresh
-			}else{
-				$this->get('session')->set('admin_userrole_ok', 'Nothing is created');
-			}
-		}
-		$userroles = $this->em()->getRepository('AppBundle:UserRole')->findBy(array(), array('role' => 'ASC'));
-			
+
+		$userroles = $this->em()->getRepository('AppBundle:UserRole')->findBy(array('status'=>'1'), array('role' => 'ASC'));
+
 		return $this->render ( 'admin/user.role.html.twig', array (
 				'userroles' => $userroles,
-				'userrole' => $userrole,
-				'form'=>$form->createView()
 		) );
 	}
-	
-	
+
+
 	/**
-	 * @Route("admin/userrolee/{eid}", name="admin_userrolee")
+	 * @Route("admin/userrolene/{eid}", name="admin_userrole_ne")
 	 * @Security("has_role('ROLE_SUPER')")
 	 */
-	public function userroleeAction(Request $request,$eid=null) {
+	public function userroleneAction(Request $request,$eid=null) {
 		//*************RIGHTS************************************
-	
-		$userrole = $this->em()->getRepository('AppBundle:UserRole')->find($eid);
-	
+
+		if ($eid==null || $eid==0){
+			$userrole = new UserRole();
+		}else{
+			$userrole = $this->em()->getRepository('AppBundle:UserRole')->find($eid);
+		}
+		if ($userrole==null) $userrole = new UserRole();
+
 		$form = $this->createForm ( UserRoleType::class, $userrole );
 		$form2 = clone $form;
-			
+
 		if ($request->isMethod ( 'POST' )) {
 			$form->handleRequest ( $request );
 			if ($form->isValid ()) {
@@ -180,120 +166,57 @@ class AdminController extends QController {
 				$this->get('session')->set('admin_userrole_ok', 'Nothing is created');
 			}
 		}
-	
-		return $this->render ( 'admin/user.rolee.html.twig', array (
+
+		return $this->render ( 'admin/user.role.ne.html.twig', array (
 				'userrole' => $userrole,
 				'form'=>$form->createView()
 		) );
 	}
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * @Route("admin/user", name="admin_user")
 	 * @Security("has_role('ROLE_SUPER')")
 	 */
 	public function userAction(Request $request) {
 		//*************RIGHTS************************************
-	
-		$user = new User();
-	
-		$form = $this->createForm ( UserType::class, $user );
-		$form2 = clone $form;
-			
-		if ($request->isMethod ( 'POST' )) {
-			$form->handleRequest ( $request );
-			if ($form->isValid ()) {
-				
-				$p = $request->get ( 'user' );
-				//var_dump($p);
-				// crop & resize the avatar image
-				if ($p ['avatar'] != null && $p ['avatar'] != '') {
-					if (!Ses::imgCrop (
-							Ses::getUpDirTmp ( $user->getUsername() ) . "/" . $p ['avatar'],
-							$p ['avatar_x'],
-							$p ['avatar_y'],
-							$p ['avatar_w'],
-							$p ['avatar_h'] )) {
-								$this->get('session')->set ( "admin_user_ok", 'The Image-Crop-Function return false, check logs' );
-							}
-					$img_constraint = array (
-							'constraint' => array (
-									'width' => 100,
-									'height' => 100
-							)
-					);
-					$avatar=Ses::after('tmp_', $p ['avatar']);
-					Ses::imgResize ( Ses::getUpDirTmp ($user->getUsername()) . "/" . $p ['avatar'], Ses::getUpDirTmp ($user->getUsername()) . "/" . $avatar, $img_constraint );
-					$user->setAvatar($avatar); 
-				}
-				$this->em()->persist ( $user );
-				$this->em()->flush ();
-				$this->get('session')->set('admin_user_ok', 'User is OK');
-				$form = $form2;//disable a message for resend data by page-refresh
-			}else{
-				$this->get('session')->set('admin_user_ok', 'Nothing is created');
-			}
-		}
+
 		$users = $this->em()->getRepository('AppBundle:User')->findBy(array(), array('username' => 'ASC'));
-			
+
 		return $this->render ( 'admin/user.html.twig', array (
 				'users' => $users,
-				'user' => $user,
-				'form'=>$form->createView()
 		) );
 	}
-	
+
+
 	/**
-	 *	upAvatarAction
-	 * @Route("admin/usere/avatar", name="admin_usere_avatar")
-	 *
-	 * @param
-	 *
-	 */
-	public function upAvatarAction(Request $request) {
-		$ret1 = null;
-		if (is_object(parent::upFotoAction1($ret1))) return $ret1;
-		
-		//TODO check username if already exist, then return validation-message, check only by new users
-	
-		$fd = $request->files->get('user');
-		$un = $request->get('user_username');
-		$ffoto = $fd['avatar_f'];//$request->files->get('user[avatar_f]', array(), true);
-		//var_dump($request->files->all());
-		//$ix = $blog->getFotos()->count()+1;
-		$typ="admin_avatar";
-		$img_min_w = 100;
-		$img_min_h = 100;
-		$img_p_big = array(	'constraint' => array('width' => 200, 'height' => 200));
-		$img_p_sm = array(	'constraint' => array('width' => 100, 'height' => 100));
-	
-		return new JsonResponse(
-				parent::upFotoAction2(1,1,$ffoto,$typ,$img_min_w,$img_min_h,$img_p_sm,$img_p_big,$un),
-				200,
-				array('Content-Type'=>'application/json')
-				);
-	
-	}
-	
-	
-	/**
-	 * @Route("admin/usere/{eid}", name="admin_usere")
+	 * @Route("admin/userne/{eid}", name="admin_user_ne")
 	 * @Security("has_role('ROLE_SUPER')")
 	 */
-	public function usereAction(Request $request,$eid=null) {
+	public function userneAction(Request $request,$eid=null) {
 		//*************RIGHTS************************************
-	
-		$user = $this->em()->getRepository('AppBundle:User')->find($eid);
-	
-		$form = $this->createForm ( UserEType::class, $user ); 
-		$form2 = clone $form;
-			
+
+		if ($eid==null || $eid==0){
+			$user = new User();
+		}else{
+			$user = $this->em()->getRepository('AppBundle:User')->find($eid);
+		}
+		if ($user==null || !$user->getId()) {
+			$user = new User();
+			$form = $this->createForm ( UserType::class, $user );
+		}else{
+			$form = $this->createForm ( UserEType::class, $user );
+		}
+
+
+		//$form2 = clone $form;
+
 		if ($request->isMethod ( 'POST' )) {
 			$form->handleRequest ( $request );
 			if ($form->isValid ()) {
-				
+
 				$p = $request->get ( 'user' );
 				//var_dump($p);
 				// crop & resize the avatar image
@@ -306,7 +229,7 @@ class AdminController extends QController {
 							$p ['avatar_h'] )) {
 								$this->get('session')->set ( "admin_user_ok", 'The Image-Crop-Function return false, check logs' );
 							}
-						
+
 					$img_constraint = array (
 							'constraint' => array (
 									'width' => 100,
@@ -316,339 +239,415 @@ class AdminController extends QController {
 					$avatar=Ses::after('tmp_', $p ['avatar']);
 					//dump($avatar);
 					Ses::imgResize ( Ses::getUpDirTmp ($user->getUsername()) . "/" . $p ['avatar'], Ses::getUpDirTmp ($user->getUsername()) . "/" . $avatar, $img_constraint );
-					$user->setAvatar($avatar); 
+					$user->setAvatar($avatar);
 				}
-				
+
+				//special case for super admins
+				if($user->getUsername()=="admin" || $user->getUsername()=="support" || $user->getUsername()=="service"){
+					//$user->addUserRole('ROLE_ADMIN');
+					//$ur = $this->r('UserRole')->findOneBy(array('role'=>'ROLE_SUPER'));
+					$ur = $this->r('UserRole')->findOneBy(array('role'=>'ROLE_SUPER'));
+					$user->addUserRole($ur);
+				}
+
 				$this->em()->persist ( $user );
 				$this->em()->flush ();
 				$this->get('session')->set('admin_user_ok', 'User is OK');
-				$user = $this->em()->getRepository('AppBundle:User')->find($eid);
-				$form = $form2;//disable a message for resend data by page-refresh
+				//$user = $this->em()->getRepository('AppBundle:User')->find($user->getId());
+				//$form = $form2;//disable a message for resend data by page-refresh
+				return $this->redirect ( $this->generateUrl ( 'admin_user',array(
+						'_'=>'y'
+				)) );
 			}else{
 				$this->get('session')->set('admin_user_ok', 'Nothing is created');
 			}
 		}
-		
-		return $this->render ( 'admin/usere.html.twig', array (
+
+		return $this->render ( 'admin/user.ne.html.twig', array (
 				'user' => $user,
 				'form'=>$form->createView()
 		) );
 	}
-	
-	
-	
+
 	/**
-	 * @Route("admin/qcat", name="admin_question_cat")
+	 * @Route("admin/useroff/{eid}", name="admin_user_off", requirements={"eid": "\d+"})
+	 * @Security("has_role('ROLE_ADMIN')")
+	 */
+	public function useroffAction(Request $request, $eid=null) {
+		//*************RIGHTS************************************
+
+		if ($eid==null || $eid==0){
+			$this->get('session')->set('admin_user_ok', 'Nothing is deleted');
+		}else{
+			$user = $this->em()->getRepository('AppBundle:User')->find($eid);
+		}
+		if ($user==null) {
+			$this->get('session')->set('admin_user_ok', 'Nothing is deleted');
+		}else{
+			$user->setStatus(0);
+			$this->em()->persist($user);
+			$this->em()->flush ();
+			$this->get('session')->set('admin_user_ok', 'User deactivation is OK');
+		}
+
+		return $this->redirect ( $this->generateUrl ( 'admin_user') );
+	}
+
+	/**
+	 * @Route("admin/useron/{eid}", name="admin_user_on", requirements={"eid": "\d+"})
+	 * @Security("has_role('ROLE_ADMIN')")
+	 */
+	public function useronAction(Request $request, $eid=null) {
+		//*************RIGHTS************************************
+
+		if ($eid==null || $eid==0){
+			$this->get('session')->set('admin_user_ok', 'Nothing is deleted');
+		}else{
+			$user = $this->em()->getRepository('AppBundle:User')->find($eid);
+		}
+		if ($user==null) {
+			$this->get('session')->set('admin_user_ok', 'Nothing is deleted');
+		}else{
+			$user->setStatus(1);
+			$this->em()->persist($user);
+			$this->em()->flush ();
+			$this->get('session')->set('admin_user_ok', 'User activation is OK');
+		}
+
+		return $this->redirect ( $this->generateUrl ( 'admin_user') );
+	}
+
+	/**
+	 *	userAvatarAction
+	 * @Route("aj/user/avatar", name="aj_user_avatar")
+	 *
+	 * @param
+	 *
+	 */
+	public function userAvatarAction(Request $request) {
+		$ret1 = null;
+		if (is_object(parent::upFotoAction1($ret1))) return $ret1;
+
+		//TODO check username if already exist, then return validation-message, check only by new users
+
+		$fd = $request->files->get('user');
+		$un = $request->get('user_username');
+		$ffoto = $fd['avatar_f'];//$request->files->get('user[avatar_f]', array(), true);
+		//var_dump($request->files->all());
+		//$ix = $blog->getFotos()->count()+1;
+		$typ="admin_avatar";
+		$img_min_w = 100;
+		$img_min_h = 100;
+		$img_p_big = array(	'constraint' => array('width' => 200, 'height' => 200));
+		$img_p_sm = array(	'constraint' => array('width' => 100, 'height' => 100));
+
+		return new JsonResponse(
+				parent::upFotoAction2(1,1,$ffoto,$typ,$img_min_w,$img_min_h,$img_p_sm,$img_p_big,$un),
+				200,
+				array('Content-Type'=>'application/json')
+		);
+
+	}
+
+
+	/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+
+
+	/**
+	 * @Route("admin/questioncat", name="admin_question_cat")
 	 * @Security("has_role('ROLE_ADMIN')")
 	 */
 	public function questioncatAction(Request $request) {
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-	
+
 		$questioncats = $this->em()->getRepository('AppBundle:QuestionCat')->getQuestionCatsAll();
-		//$questioncats = array();
-	
-		$defaultData = array('1' => 'What');
-		$form = $this->createFormBuilder($defaultData)
-		->add('questioncatnew', TextType::class, array(
-				'label' => false,
-				'required'=>false,
-		))
-		->add('questioncats', EntityType::class, array(
-				'label' => false,
-				'class' => 'AppBundle:QuestionCat',
-				'choice_label' => 'title',
-				'expanded' => true,
-				'multiple' => true,
-				'required'=>false,
-				'query_builder' => function (EntityRepository $er) {
-					return $er->createQueryBuilder ( 'e' )->select ( 'e' )->addOrderBy ( 'e.title', 'ASC' );
-				},
-				))
-		->add('submit',SubmitType::class)
-		->getForm();
-					
-					
-		if ($request->isMethod ( 'POST' )) {
-			$form->handleRequest ( $request );
-			if ($form->isValid ()) {
-				//------------------remove
-				$questioncats = $form->get('questioncats')->getData();
-				foreach($questioncats as $e_del) {
-					if (true !== is_null ($e_del)){
-						$this->em()->remove($e_del);
-						$this->em()->flush();
-					}
-				}
-				//------------------new
-				//$questioncatnew = preg_split ('/\n|\r\n?/', $form->get('questioncatnew')->getData());
-				$questioncatnew = $form->get('questioncatnew')->getData();
-				//var_dump($questioncatnew);
-				$e = null;$e_old=null;
-				//foreach($questioncatnew as $dnew) {
-				$dnew = $questioncatnew;
-				if (!is_null($dnew) & $dnew!==""){
-					$e_old = $this->em()->getRepository('AppBundle:QuestionCat')->getQuestionCatByCat(strtolower($dnew));
-					if (true === is_null ($e_old)){
-						$e = new QuestionCat();
-						$e->setTitle($questioncatnew);
-						$this->em()->persist($e);
-						$this->em()->flush();
-					}
-				}
-				$e_old=null;
-				//}
-				if ($e!=null){
-					$this->get('session')->set('admin_questioncat_ok', 'QuestionCat is OK');
-				}else {
-					$this->get('session')->set('admin_questioncat_ok', 'Nothing is created');
-				}
-				return $this->redirect ( $this->generateUrl ( 'admin_question_cat') );
-			}
-		}
-			
+
 		return $this->render ( 'admin/question.cat.html.twig', array (
 				'questioncats' => $questioncats,
-				'form'=>$form->createView()
 		) );
 	}
-	
+
 	/**
-	 * @Route("admin/qcate/{eid}", name="admin_question_cate")
+	 * @Route("admin/questioncat/{eid}", name="admin_question_cat_ne")
 	 * @Security("has_role('ROLE_ADMIN')")
 	 */
-	public function questioncateAction(Request $request,$eid=null) {
+	public function questioncatneAction(Request $request,$eid=null) {
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-	
-	
-		$questioncat = $this->em()->getRepository('AppBundle:QuestionCat')->find($eid);
-	
-		$defaultData = array('1' => 'What');
-		$form = $this->createFormBuilder($defaultData)
-		->add('eid', HiddenType::class, array(
-				'data' => $eid,
-		))
-		->add('title', TextType::class, array(
-				'data' => $questioncat->getTitle(),
-		))
-		->getForm();
-			
+
+		$title_old = '';
+		if ($eid==null || $eid==0){
+			$questioncat = new QuestionCat();
+		}else{
+			$questioncat = $this->em()->getRepository('AppBundle:QuestionCat')->find($eid);
+			$title_old = $questioncat->getTitle();
+		}
+		if ($questioncat==null) $questioncat = new QuestionCat();
+
+
+		$form = $this->createForm ( QuestionCatType::class, $questioncat );
 		if ($request->isMethod ( 'POST' )) {
 			$form->handleRequest ( $request );
 			if ($form->isValid ()) {
 				//------------------edit questioncat
-				$dedit = $form->get('title')->getData();
-				if (!is_null($dedit) & $dedit!=""){
-					$questioncat->setTitle($dedit);
-					$this->em()->persist ( $questioncat );
-					$this->em()->flush();
-					$this->get('session')->set('admin_questioncate_ok', 'QuestionCat is OK');
+				if ($questioncat->getQuizcat()==null){
+					$quizcat = $this->em()->getRepository('AppBundle:QuizCat')->getQuizCatByCat(strtolower($title_old));
+					//dump($quizcat);
+					if (true === is_null ($quizcat)){
+						$quizcat = new QuizCat();
+						$quizcat->setTitle($questioncat->getTitle());
+						$quizcat->setQuestioncat($questioncat);
+						$questioncat->setQuizcat($quizcat);
+						$this->em()->persist ( $quizcat );
+					}else{
+						$questioncat->setQuizcat($quizcat);
+						$quizcat->setQuestioncat($questioncat);
+					}
 				}else{
-					$this->get('session')->set('admin_questioncate_ok', 'Nothing is edited');
+					$questioncat->getQuizcat()->setTitle($questioncat->getTitle());
+					$questioncat->getQuizcat()->setQuestioncat($questioncat);
+				}
+				$this->em()->persist ( $questioncat );
+				$this->em()->flush();
+				$this->get('session')->set('admin_questioncate_ok', 'QuestionCat+QuizCat is OK');
+				if ($form->get('save_add')->isClicked()) {
+					return $this->redirect($this->generateUrl('admin_question_ne',array('eid'=>'+')));
 				}
 				return $this->redirect ( $this->generateUrl ( 'admin_question_cat') );
 				//$questioncats = $this->em()->getRepository('AppBundle:QuestionCat')->getQuestionCatsByCountry($coid);
 			}
 		}
-	
-		return $this->render ( 'admin/question.cate.html.twig', array (
+
+		return $this->render ( 'admin/question.cat.ne.html.twig', array (
 				'questioncat' => $questioncat,
 				'form'=>$form->createView(),
 		) );
 	}
 
+	/**
+	 * @Route("admin/questioncat/-/{eid}", name="admin_question_cat_d", requirements={"eid": "\d+"})
+	 * @Security("has_role('ROLE_ADMIN')")
+	 */
+	public function questioncatdAction(Request $request,$eid=null) {
+		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
+
+		if ($eid==null || $eid==0){
+			$this->get('session')->set('admin_question_cat_ok', 'Nothing is deleted');
+		}else{
+			$questioncat = $this->em()->getRepository('AppBundle:QuestionCat')->find($eid);
+		}
+		if ($questioncat==null) {
+			$this->get('session')->set('admin_question_cat_ok', 'Nothing is deleted');
+		}else{
+			$quizcat = $questioncat->getQuizcat();
+			$questioncat->setQuizcat(null);
+			$quizcat->setQuestioncat(null);
+			$this->em()->flush ();
+			$this->em()->remove($questioncat);
+			$this->em()->remove($quizcat);
+			$this->em()->flush ();
+			$this->get('session')->set('admin_question_cat_ok', 'Question-Cat deletion is OK');
+		}
+
+		return $this->redirect ( $this->generateUrl ( 'admin_question_cat'));
+
+	}
+
 
 
 	/**
-	 * @Route("admin/qtag", name="admin_question_tag")
+	 * @Route("admin/questiontag", name="admin_question_tag")
 	 * @Security("has_role('ROLE_ADMIN')")
 	 */
 	public function questiontagAction(Request $request) {
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-	
+
 		$questiontags = $this->em()->getRepository('AppBundle:QuestionTag')->getQuestionTagsAll();
 		//$questiontags = array();
-	
-		$defaultData = array('1' => 'What');
-		$form = $this->createFormBuilder($defaultData)
-		->add('questiontagnew', TextType::class, array(
-				'label' => false,
-				'required'=>false,
-		))
-		->add('questiontags', EntityType::class, array(
-				'label' => false,
-				'class' => 'AppBundle:QuestionTag',
-				'choice_label' => 'title',
-				'expanded' => true,
-				'multiple' => true,
-				'required'=>false,
-				'query_builder' => function (EntityRepository $er) {
-				return $er->createQueryBuilder ( 'e' )->select ( 'e' )->addOrderBy ( 'e.title', 'ASC' );
-				},
-				))
-				->add('submit',SubmitType::class)
-				->getForm();
-					
-					
-				if ($request->isMethod ( 'POST' )) {
-					$form->handleRequest ( $request );
-					if ($form->isValid ()) {
-						//------------------remove
-						$questiontags = $form->get('questiontags')->getData();
-						foreach($questiontags as $e_del) {
-							if (true !== is_null ($e_del)){
-								$this->em()->remove($e_del);
-								$this->em()->flush();
-							}
-						}
-						//------------------new
-						//$questiontagnew = preg_split ('/\n|\r\n?/', $form->get('questiontagnew')->getData());
-						$questiontagnew = $form->get('questiontagnew')->getData();
-						//var_dump($questiontagnew);
-						$e = null;$e_old=null;
-						//foreach($questiontagnew as $dnew) {
-						$dnew = $questiontagnew;
-						if (!is_null($dnew) & $dnew!==""){
-							$e_old = $this->em()->getRepository('AppBundle:QuestionTag')->getQuestionTagByTag(strtolower($dnew));
-							if (true === is_null ($e_old)){
-								$e = new QuestionTag();
-								$e->setTitle($questiontagnew);
-								$this->em()->persist($e);
-								$this->em()->flush();
-							}
-						}
-						$e_old=null;
-						//}
-						if ($e!=null){
-							$this->get('session')->set('admin_questiontag_ok', 'QuestionTag is OK');
-						}else {
-							$this->get('session')->set('admin_questiontag_ok', 'Nothing is created');
-						}
-						return $this->redirect ( $this->generateUrl ( 'admin_question_tag') );
-					}
-				}
-					
-				return $this->render ( 'admin/question.tag.html.twig', array (
-						'questiontags' => $questiontags,
-						'form'=>$form->createView()
-				) );
+
+		return $this->render ( 'admin/question.tag.html.twig', array (
+				'questiontags' => $questiontags,
+		) );
 	}
-	
+
 	/**
-	 * @Route("admin/qtage/{eid}", name="admin_question_tage")
+	 * @Route("admin/questiontag/{eid}", name="admin_question_tag_ne")
 	 * @Security("has_role('ROLE_ADMIN')")
 	 */
-	public function questiontageAction(Request $request,$eid=null) {
+	public function questiontagneAction(Request $request,$eid=null) {
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-	
-	
-		$questiontag = $this->em()->getRepository('AppBundle:QuestionTag')->find($eid);
-	
-		$defaultData = array('1' => 'What');
-		$form = $this->createFormBuilder($defaultData)
-		->add('eid', HiddenType::class, array(
-				'data' => $eid,
-		))
-		->add('title', TextType::class, array(
-				'data' => $questiontag->getTitle(),
-		))
-		->getForm();
-			
+
+		if ($eid==null || $eid==0){
+			$questiontag = new QuestionTag();
+		}else{
+			$questiontag = $this->em()->getRepository('AppBundle:QuestionTag')->find($eid);
+		}
+		if ($questiontag==null) $questiontag = new QuestionTag();
+
+		$form = $this->createForm ( QuestionTagType::class, $questiontag );
 		if ($request->isMethod ( 'POST' )) {
 			$form->handleRequest ( $request );
 			if ($form->isValid ()) {
 				//------------------edit questiontag
-				$dedit = $form->get('title')->getData();
-				if (!is_null($dedit) & $dedit!=""){
-					$questiontag->setTitle($dedit);
-					$this->em()->persist ( $questiontag );
-					$this->em()->flush();
-					$this->get('session')->set('admin_question_tage_ok', 'QuestionTag is OK');
-				}else{
-					$this->get('session')->set('admin_questiontage_ok', 'Nothing is edited');
-				}
+				//dump($questiontag);
+				$this->em()->persist ( $questiontag );
+				$this->em()->flush ();
+				$this->get('session')->set('admin_question_tag_ok', 'QuestionTag is OK');
 				return $this->redirect ( $this->generateUrl ( 'admin_question_tag') );
 				//$questiontags = $this->em()->getRepository('AppBundle:QuestionTag')->getQuestionTagsByCountry($coid);
 			}
 		}
-	
-		return $this->render ( 'admin/question.tage.html.twig', array (
+
+		return $this->render ( 'admin/question.tag.ne.html.twig', array (
 				'questiontag' => $questiontag,
 				'form'=>$form->createView()
 		) );
 	}
-	
-	
-	
+
+
+	/**
+	 * @Route("admin/questiontag/-/{eid}", name="admin_question_tag_d", requirements={"eid": "\d+"})
+	 * @Security("has_role('ROLE_ADMIN')")
+	 */
+	public function questiontagdAction(Request $request,$eid=null) {
+		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
+
+		if ($eid==null || $eid==0){
+			$this->get('session')->set('admin_question_tag_ok', 'Nothing is deleted');
+		}else{
+			$questiontag = $this->em()->getRepository('AppBundle:QuestionTag')->find($eid);
+		}
+		if ($questiontag==null) {
+			$this->get('session')->set('admin_question_tag_ok', 'Nothing is deleted');
+		}else{
+			$this->em()->remove($questiontag);
+			$this->em()->flush ();
+			$this->get('session')->set('admin_question_tag_ok', 'Question-Tag deletion is OK');
+		}
+
+
+		return $this->redirect ( $this->generateUrl ( 'admin_question_tag'));
+
+		$questiontags = $this->em()->getRepository('AppBundle:QuestionTag')->getQuestionTagsAll();
+		return $this->render ( 'admin/question.tag.html.twig', array (
+				'questiontags' => $questiontags,
+		) );
+	}
+
+
 	/**
 	 * @Route("admin/question", name="admin_question")
 	 * @Security("has_role('ROLE_ADMIN')")
 	 */
 	public function questionAction(Request $request) {
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-	
-		$questions = $this->em()->getRepository('AppBundle:Question')->getQuestionsAll();
-		//$questions = array();
-	
-		$question = $this->getQuestionForm();
 
-	
-		$form = $this->createForm ( QuestionType::class, $question );
-		$form2 = clone $form;
-			
-		if ($request->isMethod ( 'POST' )) {
-			$form->handleRequest ( $request );
-			if ($form->isValid ()) {
-				$index = 1;
-				foreach ($question->getAnswers() as $answer){
-					if ($index > $question->answercount || $answer->getTitle()=="") $question->removeAnswer($answer);
-					$index++;
-				}
-				
-				$this->em()->persist ( $question );
-				$this->em()->flush ();
-				$this->get('session')->set('admin_question_ok', 'Question is OK');
-				$form = $form2;
-			}else{
-				$this->get('session')->set('admin_question_ok', 'Nothing is created');
-			}
-		}
 		$questions = $this->em()->getRepository('AppBundle:Question')->findBy(array(), array('title' => 'ASC'));
+		$ql_active = $this->em()->getRepository('AppBundle:Question')->getQuestionsStatusCount();
+		$quizs = $this->em()->getRepository('AppBundle:Quiz')->findBy(array(), array('title' => 'ASC'));
 		return $this->render ( 'admin/question.html.twig', array (
+				'quizs' => $quizs,
 				'questions' => $questions,
-				'form'=>$form->createView()
+				'ql_active' => $ql_active,
 		) );
 	}
-	
+
 	/**
-	 * @Route("admin/questione/{eid}", name="admin_questione")
+	 * @Route("admin/question/{eid}", name="admin_question_ne")
 	 * @Security("has_role('ROLE_ADMIN')")
 	 */
-	public function questioneAction(Request $request,$eid=null) {
+	public function questionneAction(Request $request,$eid=null) {
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-	
+		if ($eid==null || $eid==0){$eid=0;}
 		$question = $this->getQuestionForm($eid);
 		//dump("aaa ".$question->getAnswers()->count());
-	
-		$form = $this->createForm ( QuestionType::class, $question );
+
+		$form = $this->createForm ( QuestionType::class, $question, array('em' => $this->em()) );
 		//$form->get('answercount')->setData($answercount);
 		//$form2 = clone $form;
-			
+
 		if ($request->isMethod ( 'POST' )) {
 			$form->handleRequest ( $request );
+			//dump($question->cats);
 			if ($form->isValid ()) {
-				$index = 1;
+				//dump($question->cats);
+				$index = 1;$itrue=0;
 				foreach ($question->getAnswers() as $answer){
-					if ($index > $question->answercount || $answer->getTitle()=="") $question->removeAnswer($answer);
+					if ($index > $question->answercount || $answer->getTitle()=="") {
+						$question->removeAnswer($answer);
+					}else{
+						if ($answer->getStatus()==1) $itrue++;
+					}
 					$index++;
 				}
+				//add count of true answers
+				$question->setTruecount($itrue);
 				
+// 				if ($question->cat!=""){
+// 					$c = new QuestionCat();
+// 					$c->setTitle($question->cat);
+// 					$c2 = new QuizCat();
+// 					$c2->setTitle($question->cat);
+// 					$c->setQuizcat($c2);
+// 					$this->em()->persist ( $c );
+// 					$this->em()->persist ( $c2 );
+// 					$question->addCat($c);
+// 				}
+
+// 				if ($question->tag!=""){
+// 					$c = new QuestionTag();
+// 					$c->setTitle($question->tag);
+// 					$this->em()->persist ( $c );
+// 					$question->addTag($c);
+// 				}
+
+				$p = $request->get ( 'question' ); 
+				//var_dump($p);
+				// crop & resize the avatar image, if image is selected
+				if ($p ['avatar_x'] != null && $p ['avatar_x'] != '') {
+					if (!Ses::imgCrop (
+							Ses::getUpDirTmp ( 'q-'.$question->getId() ) . "/" . $p ['avatar'],
+							$p ['avatar_x'],
+							$p ['avatar_y'],
+							$p ['avatar_w'],
+							$p ['avatar_h'] )) {
+								$this->get('session')->set ( "admin_question", 'The Image-Crop-Function return false, check logs' );
+							}
+
+							$img_constraint = array (
+									'constraint' => array (
+											'width' => 100,
+											'height' => 100
+									)
+							);
+							$avatar=Ses::after('tmp_', $p ['avatar']);
+							//dump($avatar);
+							Ses::imgResize ( Ses::getUpDirTmp ('q-'.$question->getId()) . "/" . $p ['avatar'], Ses::getUpDirTmp ('q-'.$question->getId()) . "/" . $avatar, $img_constraint );
+							$question->setAvatar($avatar);
+				}
+
 				$this->em()->persist ( $question );
 				$this->em()->flush ();
-				$this->get('session')->set('admin_question_ok', 'Question is OK');
-				
+				//move new created image with id=0 to its real id-folder,  if image is selected
+				if ($p ['avatar_x'] != null && $p ['avatar_x'] != '') {
+					if ($eid==0){
+						if (!is_dir(Ses::getUpDirTmp ('q-'.$question->getId()))) {
+							mkdir(Ses::getUpDirTmp ('q-'.$question->getId()));
+						}
+						rename(Ses::getUpDirTmp ('q-0') . "/" . $p ['avatar'], Ses::getUpDirTmp ('q-'.$question->getId()) . "/" . $p ['avatar']);
+						rename(Ses::getUpDirTmp ('q-0') . "/" . $avatar, Ses::getUpDirTmp ('q-'.$question->getId()) . "/" . $avatar);
+					}
+				}
+				$this->get('session')->set('admin_question', 'Question is OK');
+				//dump($question);
+				//dump($eid);
+
+				if ($form->get('save_add')->isClicked()) {
+					return $this->redirect ( $this->generateUrl ( 'admin_question_ne',array(
+							'eid'=>'+'
+					)) );
+				}
 				//redirect for full data submit
-				return $this->redirect ( $this->generateUrl ( 'admin_questione',array(
-						'eid' => $question->getId(),
+				return $this->redirect ( $this->generateUrl ( 'admin_question',array(
 						'_'=>'y'
 				)) );
 				//$answercount=$question->getAnswers()->count();
@@ -659,14 +658,75 @@ class AdminController extends QController {
 				$this->get('session')->set('admin_question_ok', 'Nothing is saved');
 			}
 		}
-	
-		return $this->render ( 'admin/questione.html.twig', array (
+
+		return $this->render ( 'admin/question.ne.html.twig', array (
 				'question' => $question,
 				'form'=>$form->createView(),
 				'answercount'=>$question->answercount
 		) );
 	}
-	
+
+	/**
+	 * @Route("admin/question/-/{eid}", name="admin_question_d", requirements={"eid": "\d+"})
+	 * @Security("has_role('ROLE_ADMIN')")
+	 */
+	public function questiondAction(Request $request,$eid=null) {
+		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
+
+		if ($eid==null || $eid==0){
+			$this->get('session')->set('admin_question', 'Nothing is deleted');
+		}else{
+			$question = $this->em()->getRepository('AppBundle:Question')->find($eid);
+		}
+		if ($question==null) {
+			$this->get('session')->set('admin_question', 'Nothing is deleted');
+		}else{
+			$this->em()->remove($question);
+			$this->em()->flush ();
+			$this->get('session')->set('admin_question', 'Question- deletion is OK');
+		}
+
+		return $this->redirect ( $this->generateUrl ( 'admin_question'));
+
+		$questions = $this->em()->getRepository('AppBundle:Question')->getQuestionsAll();
+		return $this->render ( 'admin/question.html.twig', array (
+				'questions' => $questions,
+		) );
+	}
+
+
+	/**
+	 *	questionAvatarAction
+	 * @Route("aj/question/avatar", name="aj_question_avatar")
+	 *
+	 * @param
+	 *
+	 */
+	public function questionAvatarAction(Request $request) {
+		$ret1 = null;
+		if (is_object(parent::upFotoAction1($ret1))) return $ret1;
+
+		//TODO check username if already exist, then return validation-message, check only by new users
+
+		$fd = $request->files->get('question');
+		$un = 'q-'.$request->get('question_id');
+		$ffoto = $fd['avatar_f'];//$request->files->get('user[avatar_f]', array(), true);
+		//var_dump($request->get('question_id'));
+		//$ix = $blog->getFotos()->count()+1;
+		$typ="admin_avatar";
+		$img_min_w = 100;
+		$img_min_h = 100;
+		$img_p_big = array(	'constraint' => array('width' => 200, 'height' => 200));
+		$img_p_sm = array(	'constraint' => array('width' => 100, 'height' => 100));
+
+		return new JsonResponse(
+				parent::upFotoAction2(1,1,$ffoto,$typ,$img_min_w,$img_min_h,$img_p_sm,$img_p_big,$un),
+				200,
+				array('Content-Type'=>'application/json')
+		);
+
+	}
+
 	/**
 	 * @param unknown $eid
 	 * @return \AppBundle\Entity\Question|object
@@ -674,10 +734,17 @@ class AdminController extends QController {
 	private function getQuestionForm($eid=null){
 		if ($eid==null){
 			$question = new Question();
+			$question->setId(0);
+			$question->setUser($this->u());
 		}else{
 			$question = $this->em()->getRepository('AppBundle:Question')->find($eid);
 		}
-		
+		if ($question==null) {
+			$question = new Question();
+			$question->setId(0);
+			$question->setUser($this->u());
+		}
+
 		$answercount=4;
 		if ($question->getAnswers()->count()<1){
 			for ($x = 1; $x <= 8; $x++) {
@@ -694,6 +761,7 @@ class AdminController extends QController {
 				$question->addAnswer($answer1);
 			}
 		}else if ($question->getAnswers()->count()<3){
+			$answercount=2;
 			for ($x = 1; $x <= 6; $x++) {
 				//answer - 1
 				$answer1 = new Answer();
@@ -701,6 +769,7 @@ class AdminController extends QController {
 				$question->addAnswer($answer1);
 			}
 		}else if ($question->getAnswers()->count()<4){
+			$answercount=3;
 			for ($x = 1; $x <= 5; $x++) {
 				//answer - 1
 				$answer1 = new Answer();
@@ -708,6 +777,7 @@ class AdminController extends QController {
 				$question->addAnswer($answer1);
 			}
 		}else if ($question->getAnswers()->count()<5){
+			$answercount=4;
 			for ($x = 1; $x <= 4; $x++) {
 				//answer - 1
 				$answer1 = new Answer();
@@ -744,174 +814,44 @@ class AdminController extends QController {
 		$question->answercount=$answercount;
 		return $question;
 	}
-	
-	
-	
-	/**
-	 * @Route("admin/quizcat", name="admin_quiz_cat")
-	 * @Security("has_role('ROLE_ADMIN')")
-	 */
-	public function quizcatAction(Request $request) {
-		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-	
-		$quizcats = $this->em()->getRepository('AppBundle:QuizCat')->getQuizCatsAll();
-		//$quizcats = array();
-	
-		$defaultData = array('1' => 'What');
-		$form = $this->createFormBuilder($defaultData)
-		->add('quizcatnew', TextType::class, array(
-				'label' => false,
-				'required'=>false,
-		))
-		->add('quizcats', EntityType::class, array(
-				'label' => false,
-				'class' => 'AppBundle:QuizCat',
-				'choice_label' => 'title',
-				'expanded' => true,
-				'multiple' => true,
-				'required' => false,
-				'query_builder' => function (EntityRepository $er) {
-						return $er->createQueryBuilder ( 'e' )->select ( 'e' )->addOrderBy ( 'e.title', 'ASC' );
-					},
-				))
-				->add('submit',SubmitType::class)
-				->getForm();
-					
-					
-				if ($request->isMethod ( 'POST' )) {
-					$form->handleRequest ( $request );
-					if ($form->isValid ()) {
-						//------------------remove
-						$quizcats = $form->get('quizcats')->getData();
-						foreach($quizcats as $e_del) {
-							if (true !== is_null ($e_del)){
-								$this->em()->remove($e_del);
-								$this->em()->flush();
-							}
-						}
-						//------------------new
-						//$quizcatnew = preg_split ('/\n|\r\n?/', $form->get('quizcatnew')->getData());
-						$quizcatnew = $form->get('quizcatnew')->getData();
-						//var_dump($quizcatnew);
-						$e = null;$e_old=null;
-						//foreach($quizcatnew as $dnew) {
-						$dnew = $quizcatnew;
-						if (!is_null($dnew) & $dnew!==""){
-							$e_old = $this->em()->getRepository('AppBundle:QuizCat')->getQuizCatByCat(strtolower($dnew));
-							if (true === is_null ($e_old)){
-								$e = new QuizCat();
-								$e->setTitle($quizcatnew);
-								$this->em()->persist($e);
-								$this->em()->flush();
-							}
-						}
-						$e_old=null;
-						//}
-						if ($e!=null){
-							$this->get('session')->set('admin_quizcat_ok', 'QuizCat is OK');
-						}else {
-							$this->get('session')->set('admin_quizcat_ok', 'Nothing is created');
-						}
-						return $this->redirect ( $this->generateUrl ( 'admin_quiz_cat') );
-					}
-				}
-					
-				return $this->render ( 'admin/quiz.cat.html.twig', array (
-						'quizcats' => $quizcats,
-						'form'=>$form->createView()
-				) );
-	}
-	
-	/**
-	 * @Route("admin/quizcate/{eid}", name="admin_quiz_cate")
-	 * @Security("has_role('ROLE_ADMIN')")
-	 */
-	public function quizcateAction(Request $request,$eid=null) {
-		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-	
-	
-		$quizcat = $this->em()->getRepository('AppBundle:QuizCat')->find($eid);
-	
-		$defaultData = array('1' => 'What');
-		$form = $this->createFormBuilder($defaultData)
-		->add('eid', HiddenType::class, array(
-				'data' => $eid,
-		))
-		->add('title', TextType::class, array(
-				'data' => $quizcat->getTitle(),
-		))
-		->getForm();
-			
-		if ($request->isMethod ( 'POST' )) {
-			$form->handleRequest ( $request );
-			if ($form->isValid ()) {
-				//------------------edit quizcat
-				$dedit = $form->get('title')->getData();
-				if (!is_null($dedit) & $dedit!=""){
-					$quizcat->setTitle($dedit);
-					$this->em()->persist ( $quizcat );
-					$this->em()->flush();
-					$this->get('session')->set('admin_quizcate_ok', 'QuizCat is OK');
-				}else{
-					$this->get('session')->set('admin_quizcate_ok', 'Nothing is edited');
-				}
-				return $this->redirect ( $this->generateUrl ( 'admin_quiz_cat') );
-			}
-		}
-	
-		return $this->render ( 'admin/quiz.cate.html.twig', array (
-				'quizcat' => $quizcat,
-				'form'=>$form->createView(),
-		) );
-	}
-	
-	
+
+
+
 	/**
 	 * @Route("admin/quiz", name="admin_quiz")
 	 * @Security("has_role('ROLE_ADMIN')")
 	 */
 	public function quizAction(Request $request) {
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-	
-		$quizs = $this->em()->getRepository('AppBundle:Quiz')->getQuizsAll();
-		//$quizs = array();
-	
-		$quiz = new Quiz();
-	
-		$form = $this->createForm ( QuizType::class, $quiz );
-		$form2 = clone $form;
-			
-		if ($request->isMethod ( 'POST' )) {
-			$form->handleRequest ( $request );
-			if ($form->isValid ()) {
-				$this->em()->persist ( $quiz );
-				$this->em()->flush ();
-				$this->get('session')->set('admin_quiz_ok', 'Quiz is OK');
-				$form = $form2;
-			}else{
-				$this->get('session')->set('admin_quiz_ok', 'Nothing is created');
-			}
-		}
+
 		$quizs = $this->em()->getRepository('AppBundle:Quiz')->findBy(array(), array('title' => 'ASC'));
 		return $this->render ( 'admin/quiz.html.twig', array (
 				'quizs' => $quizs,
-				'form'=>$form->createView()
 		) );
 	}
-	
+
 	/**
-	 * @Route("admin/quize/{eid}", name="admin_quize")
+	 * @Route("admin/quiz/{eid}", name="admin_quiz_ne")
 	 * @Security("has_role('ROLE_ADMIN')")
 	 */
-	public function quizeAction(Request $request,$eid=null) {
+	public function quizneAction(Request $request,$eid=null) {
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-	
-		$quiz = $this->em()->getRepository('AppBundle:Quiz')->find($eid);
+
+		if ($eid==null || $eid==0){
+			$quiz = new Quiz();
+			$quiz->setUser($this->u());
+		}else{
+			$quiz = $this->em()->getRepository('AppBundle:Quiz')->find($eid);
+		}
+		if ($quiz==null) {
+			$quiz = new Quiz();
+			$quiz->setUser($this->u());
+		}
 		//$quizs = array();
-	
+
 		$form = $this->createForm ( QuizType::class, $quiz );
 		$form2 = clone $form;
-			
+
 		if ($request->isMethod ( 'POST' )) {
 			$form->handleRequest ( $request );
 			if ($form->isValid ()) {
@@ -919,7 +859,7 @@ class AdminController extends QController {
 				$this->em()->flush ();
 				$this->get('session')->set('admin_quiz_ok', 'Quiz is OK');
 				$form = $form2;
-				return $this->redirect ( $this->generateUrl ( 'admin_quize',array(
+				return $this->redirect ( $this->generateUrl ( 'admin_quiz_ne',array(
 						'eid' => $quiz->getId(),
 						'_'=>'y'
 				)) );
@@ -927,33 +867,65 @@ class AdminController extends QController {
 				$this->get('session')->set('admin_quiz_ok', 'Nothing is created');
 			}
 		}
-		return $this->render ( 'admin/quize.html.twig', array (
+		return $this->render ( 'admin/quiz.ne.html.twig', array (
 				'quiz' => $quiz,
 				'form'=>$form->createView()
 		) );
 	}
-	
+
+
+	/**
+	 * @Route("admin/quiz/-/{eid}", name="admin_quiz_d", requirements={"eid": "\d+"})
+	 * @Security("has_role('ROLE_ADMIN')")
+	 */
+	public function quizdAction(Request $request,$eid=null) {
+		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
+
+		if ($eid==null || $eid==0){
+			$this->get('session')->set('admin_quiz_ok', 'Nothing is deleted');
+		}else{
+			$quiz = $this->em()->getRepository('AppBundle:Quiz')->find($eid);
+			$this->em()->remove($quiz);
+			$this->em()->flush ();
+			$this->get('session')->set('admin_quiz_ok', 'Quiz deletion is OK');
+		}
+		if ($quiz==null) $this->get('session')->set('admin_quiz_ok', 'Nothing is deleted');
+
+
+		$quizs = $this->em()->getRepository('AppBundle:Quiz')->findBy(array(), array('title' => 'ASC'));
+		return $this->render ( 'admin/quiz.html.twig', array (
+				'quizs' => $quizs,
+		) );
+	}
+
 	/**
 	 * @Route("admin/quizquestion/all/{eid}", name="admin_quizquestion_all")
 	 * @Security("has_role('ROLE_ADMIN')")
 	 */
 	public function quizquestionallAction(Request $request,$eid=null) {
 		//+++++++++++++++++++++++ADMINS ONLY++++++++++++++++++++++++++++++++++
-	
+
 		$quiz = $this->em()->getRepository('AppBundle:Quiz')->find($eid);
-		$titles = array();
+
+// 		$titles = array();
+		$questions = array();
 		foreach ($quiz->getCats() as $c){
-			$titles[]=strtolower($c->getTitle());
+			//dump($c->getQuestioncat()->getQuestions());
+			if (!is_null($c->getQuestioncat()->getQuestions())) {
+				$questions = $questions + $c->getQuestioncat()->getQuestions()->toArray();
+				//$questions = array_unique (array_merge ($questions, $c->getQuestioncat()->getQuestions()->toArray()));
+			}
+// 			$titles[]=strtolower($c->getTitle());
 		}
-		
-		$questions = $this->em()->getRepository('AppBundle:Question')
-		->createQueryBuilder('q')
-		->select(array('q', 'c'))
-		->innerJoin('q.cats', 'c')
-		->andWhere('lower(c.title) IN (:titles)')
-		->setParameter('titles', $titles)
-		->getQuery()->getResult();
-		
+
+// 		$questions = $this->em()->getRepository('AppBundle:Question')
+// 		->createQueryBuilder('q')
+// 		->select(array('q', 'c'))
+// 		->innerJoin('q.cats', 'c')
+// 		->andWhere('lower(c.title) IN (:titles)')
+// 		->setParameter('titles', $titles)
+// 		->getQuery()->getResult();
+
 		//$questions = $this->em()->getRepository('AppBundle:Question')->getQuestionsAll();
 		foreach ($quiz->getQuizquestions() as $qq) {
 			foreach ($questions as $question) {
@@ -963,20 +935,70 @@ class AdminController extends QController {
 		        }
 			}
 		}
-		
+
 		$question = $this->getQuestionForm();
-		$form = $this->createForm ( QuestionType::class, $question );
-			
+		foreach ($quiz->getCats() as $cat) {
+			$question->addCat($cat->getQuestioncat());
+		}
+		$form = $this->createForm ( QuizQuestionType::class, $question );
+
 		if ($request->isMethod ( 'POST' )) {
 			$form->handleRequest ( $request );
 			if ($form->isValid ()) {
-				$index = 1;
+				$index = 1;$itrue=0;
 				foreach ($question->getAnswers() as $answer){
-					if ($index > $question->answercount || $answer->getTitle()=="") $question->removeAnswer($answer);
+					if ($index > $question->answercount || $answer->getTitle()=="") {
+						$question->removeAnswer($answer);
+					}else{
+						if ($answer->getStatus()==1) $itrue++;
+					}
 					$index++;
 				}
+				//add count of true answers
+				$question->setTruecount($itrue);
+				//add new tag if neccessary
+// 				if ($question->tag!=""){
+// 					$c = new QuestionTag();
+// 					$c->setTitle($question->tag);
+// 					$this->em()->persist ( $c );
+// 					$question->addTag($c);
+// 				}
+				
+				$p = $request->get ( 'question' );
+				//var_dump($p);
+				// crop & resize the avatar image
+				if ($p ['avatar_x'] != null && $p ['avatar_x'] != '') {
+					if (!Ses::imgCrop (
+							Ses::getUpDirTmp ( 'q-'.$question->getId() ) . "/" . $p ['avatar'],
+							$p ['avatar_x'],
+							$p ['avatar_y'],
+							$p ['avatar_w'],
+							$p ['avatar_h'] )) {
+								$this->get('session')->set ( "admin_question", 'The Image-Crop-Function return false, check logs' );
+							}
+				
+							$img_constraint = array (
+									'constraint' => array (
+											'width' => 100,
+											'height' => 100
+									)
+							);
+							$avatar=Ses::after('tmp_', $p ['avatar']);
+							//dump($avatar);
+							Ses::imgResize ( Ses::getUpDirTmp ('q-'.$question->getId()) . "/" . $p ['avatar'], Ses::getUpDirTmp ('q-'.$question->getId()) . "/" . $avatar, $img_constraint );
+							$question->setAvatar($avatar);
+				}
+				
 				$this->em()->persist ( $question );
 				$this->em()->flush ();
+				//move new created image with id=0 to its real id-folder,  if image is selected
+				if ($p ['avatar_x'] != null && $p ['avatar_x'] != '') {
+					if (!is_dir(Ses::getUpDirTmp ('q-'.$question->getId()))) {
+						mkdir(Ses::getUpDirTmp ('q-'.$question->getId()));
+					}
+					rename(Ses::getUpDirTmp ('q-0') . "/" . $p ['avatar'], Ses::getUpDirTmp ('q-'.$question->getId()) . "/" . $p ['avatar']);
+					rename(Ses::getUpDirTmp ('q-0') . "/" . $avatar, Ses::getUpDirTmp ('q-'.$question->getId()) . "/" . $avatar);
+				}
 				$this->get('session')->set('admin_quizquestion_all_ok', 'Question is OK');
 				return $this->redirect ( $this->generateUrl ( 'admin_quizquestion_all',array(
 						'eid' => $quiz->getId(),
@@ -986,18 +1008,18 @@ class AdminController extends QController {
 				$this->get('session')->set('admin_quizquestion_all_ok', 'Nothing is created');
 			}
 		}
-		
+
 		return $this->render ( 'admin/quiz.question.all.html.twig', array (
 				'quiz' => $quiz,
 				'questions' => $questions,
 				'form'=>$form->createView()
 		) );
 	}
-	
-	
+
+
 	/**
 	 * @Route("admin/quezquestion/aj", name="admin_quizquestion_aj")
-	 * 
+	 *
 	 * @param Request $request
 	 * @throws NotFoundHttpException
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\JsonResponse
@@ -1009,16 +1031,16 @@ class AdminController extends QController {
 	        throw $this->createAccessDeniedException();
 	    }
 		//*************RIGHTS************************************
-	
+
 		if (! $request->isXmlHttpRequest()) {
 			throw new NotFoundHttpException();
 		}
-	
+
 		$id1 = $request->query->get('id1');
 		$id2 = $request->query->get('id2');
 		$act = $request->query->get('act');
 		//init current user
-		//TODO check if Quiz-Cat is equal to Question-Cat, if not then Exception 
+		//TODO check if Quiz-Cat is equal to Question-Cat, if not then Exception
 		$quiz=null;$question=null;
 		$quiz = $this->em()->getRepository ( 'AppBundle:Quiz' )->find ( $id1 );
 		if (!$quiz) throw $this->createNotFoundException ( 'Quiz is not found, id='. $id1 );
@@ -1061,9 +1083,9 @@ class AdminController extends QController {
 			//$this->em()->persist($qq);
 			$this->em()->flush();
 		}
-			
-	
+
+
 		return new JsonResponse([]);
 	}
-}	
-	
+}
+

@@ -1,11 +1,6 @@
 {# app//Resources/views/Admin/init.html.twig #} 
 {% extends 'layout.html.twig' %} 
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link href="{{ asset('css/security.css') }}" type="text/css" rel="stylesheet" />
-{% endblock %}
-
 {% block js %}
     {{ parent() }}
     <script src="{{ asset('js/security.js') }}"></script>

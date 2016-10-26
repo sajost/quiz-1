@@ -96,6 +96,32 @@ If (fso.FolderExists(InputFolder & "quiz\var\logs\")) Then
 End If
 
 
+'remove sessions
+If (fso.FolderExists(InputFolder & "quiz\var\sessions\")) Then
+	Set folder = fso.GetFolder(InputFolder & "quiz\var\sessions\" )
+	' delete all files in  folder
+	for each f in folder.Files
+	   On Error Resume Next
+	   name = f.name
+	   f.Delete True
+	   If Err Then
+		 WScript.Echo "Error deleting:" & Name & " - " & Err.Description
+	   End If
+	   On Error GoTo 0
+	Next
+	' delete all subfolders and files
+	For Each f In folder.SubFolders
+	   On Error Resume Next
+	   name = f.name
+	   f.Delete True
+	   If Err Then
+		 WScript.Echo "Error deleting:" & Name & " - " & Err.Description
+	   End If
+	   On Error GoTo 0
+	Next
+End If
+
+
 'search new folder to move files
 Dim inr
 Dim i

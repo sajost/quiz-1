@@ -72,6 +72,13 @@ String.prototype.email = function () {
     return pattern.test(this);
 };
 
+
+$.expr[':'].equals = $.expr.createPseudo(function(arg) {
+    return function( elem ) {
+        return $(elem).text().match("^" + arg + "$");
+    };
+});
+
 function unid() {
   function s4() {
     return Math.floor((1 + Math.random()) * 0x10000)

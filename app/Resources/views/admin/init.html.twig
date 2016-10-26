@@ -1,19 +1,20 @@
-{# app//Resources/views/Admin/init.html.twig #} 
-{% extends 'layout.html.twig' %} 
+{# app//Resources/views/Admin/init.html.twig #}
+{% extends 'layout.html.twig' %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    <link href="{{ asset('css/admin.css') }}" type="text/css" rel="stylesheet" />
+		{{ parent() }}
+		<link href="{{ asset('css/admin.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 
 {% block js %}
-    {{ parent() }}
-    <script type="text/javascript" src="{{ asset('js/admin.js') }}"></script>
+		{{ parent() }}
+		<script type="text/javascript" src="{{ asset('js/cropper.js') }}"></script>
+		<script type="text/javascript" src="{{ asset('js/admin.js') }}"></script>
 {% endblock %}
 
 {# put input + label of checkbox in the div#}
 {% if form is defined %}
-    {% form_theme form  'admin/form.fields.html.twig' %}
+		{% form_theme form  'admin/form.fields.html.twig' %}
 {# 	{% form_theme form _self %}#}
 {# 	{% block choice_widget_expanded %}#}
 {# 	{% spaceless %}#}
@@ -27,7 +28,7 @@
 {# 	    </div>#}
 {# 	{% endspaceless %}#}
 {# 	{% endblock choice_widget_expanded %} #}
-	
+
 {# 		{% block radio_widget %}#}
 {#         {% spaceless %}#}
 {#             <label  class="radio-inline" for="{{ id }}">#}
@@ -43,33 +44,179 @@
 {# head1 in layout#}
 {% block head1 %}
 	<header class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-      	<div class="row row-eq-height">
-			<div class="col-xs-2">
-        	</div>
-        	<div class="col-xs-8">
-        		<a href="{{ path('admin') }}">
-        			<img border="0" alt="Quiz-Admin" src="{{ asset('images/quizadmin-logo.png') }}" width="auto" height="auto">
-        		</a>
-        	</div>
-        	<div class="col-xs-2">
-        		<div style="padding-top:10px;" class="text-center">
-        		{% if app.user %}
-                	<span>Angemeldet als </span><a href="{{ path('my_user') }}" class="navbar-link">{{ app.user.username }}</a>
-                {% else %}
-                	<span>Anonymous </span>
-                {% endif %}
-                </div>
-        	</div>
-    	</div>
-      </div>
-    </header>
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-8 col-sm-offset-2 col-xs-12">
+						<a href="{{ path('admin') }}">
+							<img border="0" alt="Quiz-Admin" class="img-responsive center-block" src="{{ asset('images/quizadmin-logo.png') }}" width="auto" height="auto">
+						</a>
+					</div>
+
+					<div class="col-sm-2 col-sm-offset-0 col-xs-8 col-xs-offset-4 ">
+						<div style="padding-top:10px;" class="text-right">
+							{% if app.user %}
+								<span>Angemeldet als </span><a href="{{ path('my_user') }}" class="navbar-link">{{ app.user.username }}</a>
+							{% else %}
+								<span>Anonymous </span>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
 {% endblock %}
-
-
 {# head2 in layout#}
+{% block head2 %}
+		<div class="container">
+			<div
+				id="panel"
+				class="panel panel-default"
+			>
+				<div class="panel-heading">
+{#     		DESKTOP DEVICES                #}
+					<div class="row row-eq-height hidden-xs">
+						<div class="col-sm-10 col-sm-offset-1 text-center">
+							<div
+								class="btn-toolbar btn-toolbar-centered"
+								role="toolbar"
+								aria-label="admin-toolbar"
+								style=""
+							>
+								<div
+									class="btn-group"
+									role="group"
+									aria-label="admin-group-1"
+								>
+									{# <a class="btn btn-success btn-sm {% if app.request.get('_route') ==
+									'admin_quiz_cat' %} active {% endif %}" href="{{ path('admin_quiz_cat') }}"
+									style="">Quiz-Categories</a>#} <a
+										class="btn btn-success btn-sm {% if app.request.get('_route') == 'admin' or app.request.get('_route') == 'admin_quiz' %} active {% endif %}"
+										href="{{ path('admin_quiz') }}"
+										style=""
+									>Quizze</a>
+								</div>
+								<div
+									class="btn-group"
+									role="group"
+									aria-label="admin-group-2"
+								>
+									<a
+										class="btn btn-success btn-sm {% if app.request.get('_route') == 'admin_question' %} active {% endif %}"
+										href="{{ path('admin_question') }}"
+										style=""
+									>Fragen</a>
+									<a
+										class="btn btn-success btn-sm {% if app.request.get('_route') == 'admin_question_cat' %} active {% endif %}"
+										href="{{ path('admin_question_cat') }}"
+										style=""
+									>Kategorie</a>
+									<a
+										class="btn btn-success btn-sm {% if app.request.get('_route') == 'admin_question_tag' %} active {% endif %}"
+										href="{{ path('admin_question_tag') }}"
+										style=""
+									>Tag</a>
 
-
+								</div>
+								<div
+									class="btn-group"
+									role="group"
+									aria-label="admin-group-3"
+								>
+									<a
+										class="btn btn-success btn-sm {% if app.request.get('_route') == 'admin_userrole' %} active {% endif %}"
+										href="{{ path('admin_userrole') }}"
+										style=""
+									>Rolle</a> <a
+										class="btn btn-success btn-sm {% if app.request.get('_route') == 'admin_user' %} active {% endif %}"
+										href="{{ path('admin_user') }}"
+										style=""
+									>Benutzer</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					{#     		MODILE DEVICES                #}
+					<div class="row row-eq-height visible-xs-block">
+						<div class="col-xs-1 col-xxs-1">
+						</div>
+						<div class="col-xs-1 col-xxs-1">
+						</div>
+						<div class="col-xs-2 text-center col-xxs-2">
+							<div
+								class="btn-group"
+								role="group"
+								aria-label="admin-group-1"
+							>
+								<button
+									type="button"
+									class="btn btn-default dropdown-toggle btn btn-success btn-sm {% if app.request.get('_route') == 'admin' or 'admin_quiz' in app.request.get('_route') %} active {% endif %}"
+									data-toggle="dropdown"
+									aria-haspopup="true"
+									aria-expanded="false"
+								>
+									Quizze<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">
+									<li><a href="{{ path('admin_quiz') }}">Quizze</a></li>
+								</ul>
+							</div>
+						</div>
+						<div class="col-xs-1  col-xxs-1">
+						</div>
+						<div class="col-xs-2 text-center col-xxs-2">
+							<div
+								class="btn-group"
+								role="group"
+								aria-label="admin-group-2"
+							>
+								<button
+									type="button"
+									class="btn btn-default dropdown-toggle btn btn-success btn-sm {% if 'admin_question' in app.request.get('_route') %} active {% endif %}"
+									data-toggle="dropdown"
+									aria-haspopup="true"
+									aria-expanded="false"
+								>
+									Frage<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">
+									<li><a href="{{ path('admin_question') }}">Frage</a></li>
+									<li><a href="{{ path('admin_question_cat') }}">Kategorie</a></li>
+									<li><a href="{{ path('admin_question_tag') }}">Tag</a></li>
+								</ul>
+							</div>
+						</div>
+						<div class="col-xs-1  col-xxs-1">
+						</div>
+						<div class="col-xs-2 text-center col-xxs-2">
+							<div
+								class="btn-group"
+								role="group"
+								aria-label="admin-group-3"
+							>
+								<button
+									type="button"
+									class="btn btn-default dropdown-toggle btn btn-success btn-sm {% if 'admin_user' in app.request.get('_route')  %} active {% endif %}"
+									data-toggle="dropdown"
+									aria-haspopup="true"
+									aria-expanded="false"
+								>
+									Benutzer<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">
+									<li><a href="{{ path('admin_userrole') }}">Rolle</a></li>
+									<li><a href="{{ path('admin_user') }}">Benutzer</a></li>
+								</ul>
+							</div>
+						</div>
+						<div class="col-xs-1 col-xxs-1">
+						</div>
+						<div class="col-xs-1  col-xxs-1">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+{% endblock %}
 {% block body %}
 
 {% endblock %}

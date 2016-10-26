@@ -3,7 +3,7 @@
 	<div class="item-pre item-avatar" style="">
 		<img
 			width=""
-			height="100px"
+			height=""
 			alt="avatar"
 			src="{{ asset(['images/'~un~'/', fnor]|join) }}?timestamp={{ 'now'|date("s.u")|round(3) }}"
 			class=""
@@ -11,10 +11,9 @@
 	</div>
 	
 	<div class="imagelist-ctrl">
-		<div class="btn btn-default btn-xs" id="crop-avatar-{{ id }}">
+		<div class="btn btn-default btn-xs" id="crop-avatar-{{ id }}" data-target="#modal-avatar" data-toggle="modal" >
 			<span
 				class="glyphicon glyphicon-edit"
-				data-toggle="modal" data-target="#modal-avatar"
 			></span><span class="">Scheren</span>
 		</div>
 		<div class="btn btn-default btn-xs" id="change-avatar-{{ id }}">
@@ -52,7 +51,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" id="modal-cancel-avatar">Close</button>
-        <button type="button" class="btn btn-primary" id="modal-ok-avatar">OK</button>
+        <button type="button" class="btn btn-success" id="modal-ok-avatar">OK</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

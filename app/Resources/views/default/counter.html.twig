@@ -1,0 +1,62 @@
+{% extends 'default/init.html.twig' %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block js %}
+	{{ parent() }}
+	<script src="{{ asset('js/jquery.countdown.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+	<div id="" class="container">
+
+		<div id="panel" class="panel panel-default">
+			<div class="panel-body">
+				<div class="text-center">
+					<h3 id="start-counter" class="start-counter" style="font-size:200px;font-weight:bold;"></h3>
+					<img class="start-counter-ready img-responsive center-block" style="display:none;" src="{{ asset('images/start0.png') }}"/>
+				</div>
+					<script type="text/javascript">
+						var route = "{{ path('questionx')|escape('js') }}";
+						var ss = new Date().getTime() + 3000;
+						$('#start-counter').countdown(ss, {elapse: false})
+						.on('update.countdown', function(event) {
+							var $this = $(this);
+							var curFontSize = $this.css('font-size');
+							$this.css("font-size",parseInt(curFontSize)-6);
+							$this.html(event.strftime('%-S'));
+							//$this.html($this.text()+', '+event.strftime('%-S'));
+						})
+						.on('finish.countdown', function(e){
+							var $this = $(this);
+							$('.start-counter').hide();
+							$('.start-counter-ready').fadeIn(3000, function() {
+								window.location.href=route;
+								return false;
+							});
+							return false;
+						});;
+					</script>
+			</div>
+{# 				<div class="row">#}
+{# 					<div class="span2"></div>#}
+{# 					<div class="span8"><img class="center-block" src="{{ asset('images/start0.png') }}"/></div>#}
+{# 					<div class="span2"></div>#}
+{# 				</div>#}
+{# 				<div class="row">#}
+{# 					<div class="span2"></div>#}
+{# 					<div class="span8">#}
+{# 						<div class="loader center-block"><span>33</span></div>#}
+{# 					</div>#}
+{# 					<div class="span2"></div>#}
+{# 				</div>#}
+{# 				<div style="height: 200px;display: flex;  justify-content: center;  align-items: center;  font-weight: bold;">#}
+{# 					<div class="counter0"></div>#}
+{# 				</div>#}
+		</div>
+	</div>
+
+	</div>
+{% endblock %}

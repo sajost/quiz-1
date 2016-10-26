@@ -9,3 +9,11 @@ form > div {
 	max-height: 500px !important;
     overflow-y: auto;
 }
+
+.form-group-share, .form-group-joker {
+  margin-left: 20px;
+}
+
+.has-error .form-control .btn-group {
+	float: none;
+}
