@@ -91,3 +91,10 @@ BOOTSTRAP-> PLUGINS
     margin: 0 auto;
 }
 
+.btn-toolbar-centered {
+  text-align: center;
+}
+
+.btn-toolbar-centered .btn-group {
+  float: none !important;
+}

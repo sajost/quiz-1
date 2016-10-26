@@ -473,7 +473,7 @@ class SecurityController extends QController {
 	/**
 	 * @Route("e", name="security_error")
 	 * @Method({"GET"})
-	 * @Template("security/error.html.twig")	
+	 * @Template("security/exception_full.html.twig")	
 	 *
 	 * @param Request $request
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response

@@ -1,4 +1,4 @@
-{# src/AppBundle/Resources/views/Admin/user.rolee.html.twig #} 
+{# src/AppBundle/Resources/views/Admin/user.role.ne.html.twig #} 
 {% extends 'admin/init.html.twig' %} 
 
 {% block stylesheets %}
@@ -18,7 +18,7 @@
             </div>
 			<div class="panel-body">
         	
-               <form action="{{ path('admin_userrolee',{'eid':userrole.id}) }}" method="post" class="f-admin" id="f-admin-userrole">
+               <form action="{{ path('admin_userrole_ne',{'eid':userrole.id}) }}" method="post" class="f-admin" id="f-admin-userrole">
                 	
                 	<h3>Here u can edit UserRole and save: {{ userrole.role }}</h3>
                 	<br/>

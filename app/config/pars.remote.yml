@@ -6,11 +6,11 @@ parameters:
     database_name: d023c41d
     database_user: d023c41d
     database_password: enter1234
-    mailer_transport: smtp
-    mailer_host: w010ca9a.kasserver.com
+    mailer_transport: sendmail
+    mailer_host: smtp.1und1.de
     mailer_port: 587
-    mailer_user: support@quizz.de
-    mailer_password: enter1234
+    mailer_user: support@fafa24.de
+    mailer_password: enter3200
     mailer_encryption: tls
     notify_off: 0
     notify_use: 2 #2-PHP,1-SWIFT

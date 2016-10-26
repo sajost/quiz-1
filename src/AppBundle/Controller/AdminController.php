@@ -127,42 +127,27 @@ class AdminController extends QController {
 	public function userroleAction(Request $request) {
 		//*************RIGHTS************************************
 	
-		$userrole = new UserRole();
-	
-		$form = $this->createForm ( UserRoleType::class, $userrole );
-		$form2 = clone $form;
-			
-		if ($request->isMethod ( 'POST' )) {
-			$form->handleRequest ( $request );
-			if ($form->isValid ()) {
-				//$p = $request->get ( 'userrole' );
-				//var_dump($p);
-				$this->em()->persist ( $userrole );
-				$this->em()->flush ();
-				$this->get('session')->set('admin_userrole_ok', 'UserRole is OK');
-				$form = $form2;//disable a message for resend data by page-refresh
-			}else{
-				$this->get('session')->set('admin_userrole_ok', 'Nothing is created');
-			}
-		}
 		$userroles = $this->em()->getRepository('AppBundle:UserRole')->findBy(array(), array('role' => 'ASC'));
 			
 		return $this->render ( 'admin/user.role.html.twig', array (
 				'userroles' => $userroles,
-				'userrole' => $userrole,
-				'form'=>$form->createView()
 		) );
 	}
 	
 	
 	/**
-	 * @Route("admin/userrolee/{eid}", name="admin_userrolee")
+	 * @Route("admin/userrolene/{eid}", name="admin_userrole_ne")
 	 * @Security("has_role('ROLE_SUPER')")
 	 */
-	public function userroleeAction(Request $request,$eid=null) {
+	public function userroleneAction(Request $request,$eid=null) {
 		//*************RIGHTS************************************
 	
-		$userrole = $this->em()->getRepository('AppBundle:UserRole')->find($eid);
+		if ($eid==null || $eid==0){
+			$userrole = new UserRole();
+		}else{
+			$userrole = $this->em()->getRepository('AppBundle:UserRole')->find($eid);
+		}
+		if ($userrole==null) $userrole = new UserRole();
 	
 		$form = $this->createForm ( UserRoleType::class, $userrole );
 		$form2 = clone $form;
@@ -181,7 +166,7 @@ class AdminController extends QController {
 			}
 		}
 	
-		return $this->render ( 'admin/user.rolee.html.twig', array (
+		return $this->render ( 'admin/user.role.ne.html.twig', array (
 				'userrole' => $userrole,
 				'form'=>$form->createView()
 		) );

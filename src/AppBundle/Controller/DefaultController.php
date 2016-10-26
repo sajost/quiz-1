@@ -19,13 +19,13 @@ class DefaultController extends QController {
 		 if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')){
 			//  authenticated (NON anonymous)
 		 	
-			$quizs = $this->r('Quiz')->findAll();
+			$quizs = $this->r('Quiz')->getQuizsAll();
 	
 			return $this->render ( 'default/index.html.twig', array (
 					'quizs' => $quizs,
 			) );
 		}else{
-			$quizs = $this->r('Quiz')->findAll();
+			$quizs = $this->r('Quiz')->getQuizsAll();
 			
 			return $this->render ( 'default/index.html.twig', array (
 					'quizs' => $quizs,

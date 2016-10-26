@@ -69,6 +69,39 @@
 
 {# head2 in layout#}
 
+{% block head2 %}
+	<div class="container">
+		<div id="panel" class="panel panel-default">
+			<div class="panel-heading">
+            	<div class="row row-eq-height">
+        			<div class="col-xs-2">
+                	</div>
+                	<div class="col-xs-8">
+                		<div class="btn-toolbar btn-toolbar-centered" role="toolbar" aria-label="admin-toolbar" style="">
+                        	<div class="btn-group" role="group" aria-label="admin-group-1">
+                        		<a class="btn btn-primary btn-sm {% if app.request.get('_route') == 'admin_userrole' %} active {% endif %}" href="{{ path('admin_userrole') }}" style="">User-Rolle</a>
+                          		<a class="btn btn-primary btn-sm {% if app.request.get('_route') == 'admin_user' %} active {% endif %}" href="{{ path('admin_user') }}" style="">Users</a>
+                          	</div>
+                          	<div class="btn-group" role="group" aria-label="admin-group-2">
+                          		<a class="btn btn-primary btn-sm {% if app.request.get('_route') == 'admin_question_cat' %} active {% endif %}" href="{{ path('admin_question_cat') }}" style="">Question-Categories</a>
+				    			<a class="btn btn-primary btn-sm {% if app.request.get('_route') == 'admin_question_tag' %} active {% endif %}" href="{{ path('admin_question_tag') }}" style="">Question-Tags</a>
+				    			<a class="btn btn-primary btn-sm {% if app.request.get('_route') == 'admin_question' %} active {% endif %}" href="{{ path('admin_question') }}" style="">Questions</a>
+                          	</div>
+                          	<div class="btn-group" role="group" aria-label="admin-group-3">
+								<a class="btn btn-primary btn-sm {% if app.request.get('_route') == 'admin_quiz_cat' %} active {% endif %}" href="{{ path('admin_quiz_cat') }}" style="">Quiz-Categories</a>
+				    			<a class="btn btn-primary btn-sm {% if app.request.get('_route') == 'admin_quiz' %} active {% endif %}" href="{{ path('admin_quiz') }}" style="">Quizs</a>
+                          	</div>
+                        </div>
+                	</div>
+                	<div class="col-xs-2">
+                		
+                	</div>
+            	</div>
+            </div>
+      </div>
+	</div>
+{% endblock %}
+
 
 {% block body %}
 
