@@ -292,7 +292,7 @@ function initQQ(){
 				success: function(data) {
 					//toggle(btn);
 				},
-				error: function (r, s, err) {
+				error: function (r, s, err) { 
 					$(styl).each(function() {
 					toggle($(this));
 						});
