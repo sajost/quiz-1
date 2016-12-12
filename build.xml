@@ -3,10 +3,10 @@
 
 <!-- Compile .scss and .sass files in the public/sass directory using SASS -->
 <target name="sass.compile">
-<property name="sass.dir" value="css" />
+<property name="sass.dir" value="scss" />
 <property name="css.dir" value="css" />
 
-<apply executable="c:\ruby\bin\sass.bat" dest="${css.dir}" verbose="true" force="true" failonerror="true">
+<apply executable="c:\Users\Public\ruby\bin\sass.bat" dest="${css.dir}" verbose="true" force="true" failonerror="true">
 	<arg value="--unix-newline" />
 	<arg value="--compass" />
 	<arg value="--trace"/>
@@ -23,7 +23,7 @@
 
 <!-- Compile .scss files in the public/sass directory using Compass -->
 <target name="compass.compile">
-	<exec executable="compass" dir="${basedir}/css">
+	<exec executable="compass" dir="${basedir}/scss">
 	<arg value="compile" />
 	</exec>
 	<eclipse.refreshLocal resource="xa/public" depth="infinite"/>
