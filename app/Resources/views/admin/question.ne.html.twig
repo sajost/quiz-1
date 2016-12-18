@@ -21,7 +21,7 @@
 				class=""
 				href="{{ path('admin_question') }}"
 				style=""
-			>Back to Questions</a>
+			>Zurück zur Fragen-Übersicht</a>
 		</div>
 		<div class="panel-body">
 			<form
@@ -32,7 +32,7 @@
 				role="form"
 			>
 
-				<h3>Da kannst eine Frage bearbeiten und speichern</h3>
+				<h3>Frage bearbeiten und speichern.</h3>
 				<br />
 
 				<div class="form-group">
@@ -48,7 +48,7 @@
 					class="form-group"
 					id="f-avatar"
 				>
-					<label for="{{ form.avatar.vars.id }}">Avatar</label> <span
+					<label for="{{ form.avatar.vars.id }}">Bild</label> <span
 						class="form-notes"
 					> Minimal größe ist 100x100 px, Maximal 400x400 px </span>
 					<div
@@ -136,7 +136,7 @@
 					<label
 						class=""
 						for="{{ form.status.vars.id }}"
-					>Fragen-Status</label>
+					>Frage-Status</label>
 					<div class="form-radio">
 						{{ form_widget(form.status, {'label_attr': {'class': 'radio-inline'}}) }}
 					</div>
@@ -210,7 +210,7 @@
 
 
 				<div class="form-group">
-					<label for="{{ form.cats.vars.id }}">Kategorie</label>
+					<label for="{{ form.cats.vars.id }}">Kategorien</label>
 					{{ form_widget(form.cats, { 'attr': { 'class':'select2', 'data-error':'Auswahl ist notwendig'} } ) }}
 					<div class="help-block with-errors">
 						{{ form_errors(form.cats) }}
@@ -227,7 +227,7 @@
 
 
 				<div class="form-group">
-					<label for="{{ form.tags.vars.id }}">Taggen</label>
+					<label for="{{ form.tags.vars.id }}">Tags</label>
 					{{ form_widget(form.tags, { 'attr': { 'class':'select2' } } ) }}
 					<div class="help-block with-errors">
 						{{ form_errors(form.tags) }}
