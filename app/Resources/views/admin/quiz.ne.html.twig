@@ -7,12 +7,12 @@
 
 		<div id="panel" class="panel panel-default">
 			<div class="panel-heading">
-            	<a class="" href="{{ path('admin_quiz') }}" style="">Back to Quizs</a>
+            	<a class="" href="{{ path('admin_quiz') }}" style="">Zurück zur Quiz-Übersicht</a>
             </div>
 			<div class="panel-body">
                 <form action="{{ path('admin_quiz_ne',{'eid':quiz.id}) }}" method="post" id="f-admin-quiz" data-toggle="validator" role="form">
 
-            		<h3>Da kannst eine Quiz bearbeiten und speichern</h3>
+            		<h3>Quiz bearbeiten und speichern.</h3>
             		<br/>
 
             		<div class="form-group">
@@ -154,7 +154,7 @@
         			</div>
 
         			<div class="form-group">
-        				<label for="{{ form.trueanswer.vars.id }}">Frage-Typs</label>
+        				<label for="{{ form.trueanswer.vars.id }}">Frage-Typen</label>
         				{{ form_widget(form.trueanswer, {'label_attr': {'class': 'radio-inline'}}) }}
         				<div class="help-block with-errors">{{ form_errors(form.trueanswer) }}</div>
         			</div>
